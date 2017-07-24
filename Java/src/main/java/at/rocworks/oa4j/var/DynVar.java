@@ -17,17 +17,37 @@ import org.json.simple.JSONArray;
  */
 public class DynVar extends Variable implements Serializable, Iterable<Variable> {
     private final ArrayList<Variable> value = new ArrayList<>();
+    private VariableType type = VariableType.Unknown;
+
+    public int getElementsTypeAsNr() {
+        return type.value;
+    }
 
     public DynVar(Variable... vars) {
-        for(Variable var: vars)
-            value.add(var);
+        for(Variable var: vars) {
+            add(var);
+        }
+    }
+
+    public DynVar(Object... vars) {
+        for(Object var: vars) {
+            add(Variable.newVariable(var));
+        }
     }
 
     public DynVar(Iterator<Variable> iterator) {
-        iterator.forEachRemaining((var)->value.add(var));
+        iterator.forEachRemaining((var)->add(var));
     }
-       
+
+    public void add(Object value) {
+        add(Variable.newVariable(value));
+    }
+
     public void add(Variable value) {
+        if (type==VariableType.Unknown)
+            type=value.isA();
+        else if (type!=value.isA())
+            type=VariableType.AnyTypeVar;
         this.value.add(value);
     }
     
@@ -57,7 +77,7 @@ public class DynVar extends Variable implements Serializable, Iterable<Variable>
     
     @Override
     public Object getValueObject() {
-        return value; 
+        return value;
     }        
     
     public List<Variable> asList() {
@@ -91,6 +111,11 @@ public class DynVar extends Variable implements Serializable, Iterable<Variable>
         return asList().iterator();
     }
 
-    public boolean contains(Variable var) { return value.contains(var); }
-    public int indexOf(Variable var) { return value.indexOf(var); }
+    public boolean contains(Variable var) {
+        return value.contains(var);
+    }
+
+    public int indexOf(Variable var) {
+        return value.indexOf(var);
+    }
 }

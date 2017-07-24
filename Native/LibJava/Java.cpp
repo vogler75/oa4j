@@ -435,20 +435,26 @@ VariablePtr Java::convertJVariable(JNIEnv *env, jobject jVariable)
 		if (DEBUG) std::cout << "convertJVariable:13:DynVar" << std::endl;
 		jclass cls = env->GetObjectClass(jVariable);
 
+		// get size of dyn
 		jm = env->GetMethodID(cls, "size", "()I");
 		jint size = env->CallIntMethod(jVariable, jm);
 		if (DEBUG) std::cout << "convertJVariable:13:DynVar size=" << size << std::endl;
 
-		//DynVar *var = new DynVar();
-		DynVar *var = new DynVar(ANYTYPE_VAR);
+		// get type of dyn
+		jm = env->GetMethodID(cls, "getElementsTypeAsNr", "()I");
+		jint type = env->CallIntMethod(jVariable, jm);
+		if (DEBUG) std::cout << "convertJVariable:13:DynVar type=" << type<< std::endl;
+				
+		if (type==0/*unknown/undefined*/) type=ANYTYPE_VAR;
+		DynVar *var = new DynVar((VariableType)type);
+
 		jobject jValue;
 		VariablePtr varPtrTmp;
 		jm = env->GetMethodID(cls, "get", "(I)Lat/rocworks/oa4j/var/Variable;");
 		for (jint i = 0; i < size; i++) {
 			jValue = env->CallObjectMethod(jVariable, jm, i);
 			varPtrTmp = Java::convertJVariable(env, jValue);
-			//var->append(varPtrTmp);
-			var->append(new AnyTypeVar(varPtrTmp));
+			var->append(type == ANYTYPE_VAR ? new AnyTypeVar(varPtrTmp) : varPtrTmp);
 			env->DeleteLocalRef(jValue);
 		}
 

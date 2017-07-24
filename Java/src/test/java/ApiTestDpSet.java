@@ -3,8 +3,7 @@
 
 import at.rocworks.oa4j.base.JClient;
 import at.rocworks.oa4j.base.JManager;
-import at.rocworks.oa4j.var.FloatVar;
-import at.rocworks.oa4j.var.TextVar;
+import at.rocworks.oa4j.var.*;
 import at.rocworks.oa4j.base.JDebug;
 //import javafx.util.Pair;
 
@@ -34,11 +33,17 @@ public class ApiTestDpSet {
     
     private void run() throws InterruptedException {
         int ret;
-        
+
+        //DynVar ds = new DynVar(new TextVar("hello"), new TextVar("dynamic"), new TextVar("string"));
+        //JClient.dpSet("test.dyn_string", ds);
+
+        DynVar di = new DynVar(1.0, 2.0, 3.0);
+        JClient.dpSet("test.dyn_int", di);
+
         JDebug.out.info("--- DPSET BEG ---");
         ret = JClient.dpSet()
                 .add("System1:ExampleDP_Trend1.", new FloatVar(Math.random()))
-                .add("System1:ExampleDP_SumAlert.:_original.._value", new TextVar("hello world"))
+                .add("System1:ExampleDP_SumAlert.:_original.._value", "hello world")
                 .await()
                 .getRetCode();
         JDebug.out.log(Level.INFO, "retCode={0}", ret);
@@ -57,9 +62,6 @@ public class ApiTestDpSet {
         JDebug.out.log(Level.INFO, "retCode={0}", ret);
         JDebug.out.info("--- DPSETTIMED END ---");
 
-        //JDebug.out.info("--- DPSET ARRAY BEG ---");
-        //ret = JClient.dpSet(Arrays.asList(new Pair("ExampleDP_Trend1.", 1.0), new Pair("ExampleDP_SumAlert.", "hello world"))).await().getRetCode();
-        //JDebug.out.log(Level.INFO, "retCode={0}", ret);
-        //JDebug.out.info("--- DPSET ARRAY END ---");
+        Thread.sleep(1000);
     }    
 }
