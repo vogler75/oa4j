@@ -1,0 +1,2 @@
+-Djava.library.path=bin
+-Djava.class.path=lib/winccoa-java-1.0-SNAPSHOT.jar;lib/json-simple-1.1.1.jar

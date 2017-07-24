@@ -1,0 +1,688 @@
+V 13
+3
+LANG:10001 11 address_smp
+LANG:10000 11 address_smp
+LANG:10027 11 address_smp
+PANEL,-1 -1 620 480 N "_3DFace" 1
+"$1"
+"main()
+{
+  string dp;
+  
+  if ($1==\"\")
+  {
+    RootPanelOn(
+      \"vision/MessageWarning\",
+      paGetCatStr(\"para\",\"warning\"),
+      makeDynString(paGetCatStr(\"para\",\"novision\")));
+  }
+  if (!paIsNative[paMyModuleId()])
+  {
+    sprintf(dp, \"_Ui_%d.\", myManNum());
+    dpSetWait(dp+\"PanelOff.ModuleName:_original.._value\",myModuleName(),
+          dp+\"PanelOff.PanelName:_original.._value\",\"address\");
+  }
+  paInitPanel($1,\":_address\");
+}
+
+" 0
+ E E E E 1 -1 -1 0  0 0
+"refFileName"0  1
+E E 3
+"CBRef" "0"
+"EClose" E
+"dpi" "96"
+0 0 0
+""
+NC
+DISPLAY_LAYER, 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0
+LAYER, 0 
+1
+LANG:10001 6 Layer1
+2 14
+"programname"
+""
+1 28 10 E E E 1 E 1 E N "schwarz" E N "_Transparent" E E
+ E E
+888 0 0 0 0 0
+"//EventOnFocus" 0
+ E E
+0
+3
+LANG:10001 0 
+LANG:10000 0 
+LANG:10027 0 
+
+3
+"sizePolicy" "Fixed Fixed"
+"dashclr"N "_Transparent"
+"antiAliased" "0"
+E E 0 1 1 0 1 E U  0 E 30 10 253 30
+0 2 0 "0s" 0 0 0 192 0 0  30 10 1
+3
+LANG:10001 26 arial,-1,18,5,50,0,0,0,0,0
+LANG:10000 26 arial,-1,18,5,50,0,0,0,0,0
+LANG:10027 26 arial,-1,18,5,50,0,0,0,0,0
+0 3
+LANG:10001 27 Peripherie - Sample Treiber
+LANG:10000 27 Peripherie - Sample Treiber
+LANG:10027 27 Peripherie - Sample Treiber
+1 72 0 "" 0
+0
+1 74 1 "" 0
+0
+6 25
+"Border1"
+""
+1 10 60 E E E 1 E 1 E N "_3DText" E N "_Transparent" E E
+ E E
+888 0 0 0 0 0
+E E E
+0
+3
+LANG:10001 0 
+LANG:10000 0 
+LANG:10027 0 
+
+2
+"dashclr"N "_Transparent"
+"antiAliased" "0"
+E E 0 1 1 0 1 E U  0 E 10 60 610 110
+2 26
+"Text1"
+""
+1 30 50 E E E 1 E 1 E N "_3DText" E N "_3DFace" E E
+ E E
+888 0 0 0 0 0
+"//EventOnFocus" 0
+ E E
+0
+3
+LANG:10001 0 
+LANG:10000 0 
+LANG:10027 0 
+
+3
+"sizePolicy" "Fixed Fixed"
+"dashclr"N "_Transparent"
+"antiAliased" "0"
+E E 0 1 1 0 1 E U  1 E 30 50 93 65
+0 0 0 "0s" 0 0 0 192 0 0  30 50 1
+3
+LANG:10001 26 arial,-1,13,5,50,0,0,0,0,0
+LANG:10000 26 arial,-1,13,5,50,0,0,0,0,0
+LANG:10027 26 arial,-1,13,5,50,0,0,0,0,0
+0 3
+LANG:10001 11  reference 
+LANG:10000 10  Referenz 
+LANG:10027 11  reference 
+2 36
+"Text2"
+""
+1 510 50 E E E 1 E 1 E N "_3DText" E N "_3DFace" E E
+ E E
+888 0 0 0 0 0
+"//EventOnFocus" 0
+ E E
+0
+3
+LANG:10001 0 
+LANG:10000 0 
+LANG:10027 0 
+
+3
+"sizePolicy" "Fixed Fixed"
+"dashclr"N "_Transparent"
+"antiAliased" "0"
+E E 0 1 1 0 1 E U  1 E 510 50 597 65
+0 0 0 "0s" 0 0 0 192 0 0  510 50 1
+3
+LANG:10001 26 arial,-1,13,5,50,0,0,0,0,0
+LANG:10000 26 arial,-1,13,5,50,0,0,0,0,0
+LANG:10027 26 arial,-1,13,5,50,0,0,0,0,0
+0 3
+LANG:10001 15  driver number 
+LANG:10000 15  Treibernummer 
+LANG:10027 15  driver number 
+6 52
+"Border2"
+""
+1 10 200 E E E 1 E 1 E N "_3DText" E N "_Transparent" E E
+ E E
+888 0 0 0 0 0
+E E E
+0
+3
+LANG:10001 0 
+LANG:10000 0 
+LANG:10027 0 
+
+2
+"dashclr"N "_Transparent"
+"antiAliased" "0"
+E E 0 1 1 0 1 E U  0 E 10 200 610 300
+2 53
+"Text3"
+""
+1 295 190 E E E 1 E 1 E N "_3DText" E N "_3DFace" E E
+ E E
+888 0 0 0 0 0
+"//EventOnFocus" 0
+ E E
+0
+3
+LANG:10001 0 
+LANG:10000 0 
+LANG:10027 0 
+
+3
+"sizePolicy" "Fixed Fixed"
+"dashclr"N "_Transparent"
+"antiAliased" "0"
+E E 0 1 1 0 1 E U  1 E 30 190 89 205
+0 0 0 "0s" 0 0 0 192 0 0  30 190 1
+3
+LANG:10001 26 arial,-1,13,5,50,0,0,0,0,0
+LANG:10000 26 arial,-1,13,5,50,0,0,0,0,0
+LANG:10027 26 arial,-1,13,5,50,0,0,0,0,0
+0 3
+LANG:10001 11  direction 
+LANG:10000 14 Richtung/Modus
+LANG:10027 11  direction 
+6 55
+"Border3"
+""
+1 10 130 E E E 1 E 1 E N "_3DText" E N "_Transparent" E E
+ E E
+888 0 0 0 0 0
+E E E
+0
+3
+LANG:10001 0 
+LANG:10000 0 
+LANG:10027 0 
+
+2
+"dashclr"N "_Transparent"
+"antiAliased" "0"
+E E 0 1 1 0 1 E U  0 E 10 130 610 180
+2 56
+"Text4"
+""
+1 30 120 E E E 1 E 1 E N "_3DText" E N "_3DFace" E E
+ E E
+888 0 0 0 0 0
+"//EventOnFocus" 0
+ E E
+0
+3
+LANG:10001 0 
+LANG:10000 0 
+LANG:10027 0 
+
+3
+"sizePolicy" "Fixed Fixed"
+"dashclr"N "_Transparent"
+"antiAliased" "0"
+E E 0 1 1 0 1 E U  1 E 30 120 117 135
+0 0 0 "0s" 0 0 0 192 0 0  30 120 1
+3
+LANG:10001 26 arial,-1,13,5,50,0,0,0,0,0
+LANG:10000 26 arial,-1,13,5,50,0,0,0,0,0
+LANG:10027 26 arial,-1,13,5,50,0,0,0,0,0
+0 3
+LANG:10001 14 Transformation
+LANG:10000 14 Transformation
+LANG:10027 14 Transformation
+2 64
+"Text5"
+""
+1 300 120 E E E 1 E 1 E N "_WindowText" E N "_3DFace" E E
+ E E
+891 0 0 0 0 0
+E E E
+0
+3
+LANG:10001 0 
+LANG:10000 0 
+LANG:10027 0 
+
+3
+"sizePolicy" "Fixed Fixed"
+"dashclr"N "_Transparent"
+"antiAliased" "0"
+E E 0 1 1 0 1 E U  1 E 302 122 358 137
+0 2 0 "0s" 0 0 0 192 0 0  302 122 1
+3
+LANG:10001 26 Arial,-1,13,5,40,0,0,0,0,0
+LANG:10000 26 Arial,-1,13,5,40,0,0,0,0,0
+LANG:10027 26 Arial,-1,13,5,40,0,0,0,0,0
+0 3
+LANG:10001 8 Subindex
+LANG:10000 8 Subindex
+LANG:10027 8 Subindex
+2 66
+"Text6"
+""
+1 410 190 E E E 1 E 1 E N "_3DText" E N "_3DFace" E E
+ E E
+893 0 0 0 0 0
+"//EventOnFocus" 0
+ E E
+0
+3
+LANG:10001 0 
+LANG:10000 0 
+LANG:10027 0 
+
+3
+"sizePolicy" "Fixed Fixed"
+"dashclr"N "_Transparent"
+"antiAliased" "0"
+E E 0 1 1 0 1 E U  1 E 410 190 476 205
+0 0 0 "0s" 0 0 0 192 0 0  410 190 1
+3
+LANG:10001 26 arial,-1,13,5,50,0,0,0,0,0
+LANG:10000 26 arial,-1,13,5,50,0,0,0,0,0
+LANG:10027 26 arial,-1,13,5,50,0,0,0,0,0
+0 3
+LANG:10001 12  poll group 
+LANG:10000 12  Pollgruppe 
+LANG:10027 12  poll group 
+2 70
+"Text8"
+""
+1 423 191 E E E 1 E 1 E N "_3DText" E N "_3DFace" E E
+ E E
+897 0 0 0 0 0
+"//EventOnFocus" 0
+ E E
+0
+3
+LANG:10001 0 
+LANG:10000 0 
+LANG:10027 0 
+
+3
+"sizePolicy" "Fixed Fixed"
+"dashclr"N "_Transparent"
+"antiAliased" "0"
+E E 0 1 1 0 1 E U  1 E 180 191 246 206
+0 0 0 "0s" 0 0 0 192 0 0  180 191 1
+3
+LANG:10001 26 arial,-1,13,5,50,0,0,0,0,0
+LANG:10000 26 arial,-1,13,5,50,0,0,0,0,0
+LANG:10027 26 arial,-1,13,5,50,0,0,0,0,0
+0 3
+LANG:10001 10 input mode
+LANG:10000 12 Eingangsmode
+LANG:10027 10 input mode
+20 12
+"lowlevel"
+""
+1 409 249 E E E 1 E 1 E N "_3DText" E N "_3DFace" E E
+ E E
+888 0 0 0 0 0
+E E E
+0
+3
+LANG:10001 0 
+LANG:10000 0 
+LANG:10027 0 
+
+0
+3
+LANG:10001 26 arial,-1,13,5,50,0,0,0,0,0
+LANG:10000 26 arial,-1,13,5,50,0,0,0,0,0
+LANG:10027 26 arial,-1,13,5,50,0,0,0,0,0
+0  408 248 562 281
+1
+T 
+3
+LANG:10001 20 low level comparison
+LANG:10000 17 alt/neu Vergleich
+LANG:10027 20 low level comparison
+
+0 
+1
+LANG:10001 0 
+E E
+0 0 0 0 0
+1
+E E
+EE1 76 2 "0" 0
+0
+21 35
+"Treiber"
+""
+1 527 69 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+ E E
+888 0 0 0 0 0
+E E E
+0
+3
+LANG:10001 0 
+LANG:10000 0 
+LANG:10027 0 
+
+0
+3
+LANG:10001 26 arial,-1,13,5,50,0,0,0,0,0
+LANG:10000 26 arial,-1,13,5,50,0,0,0,0,0
+LANG:10027 26 arial,-1,13,5,50,0,0,0,0,0
+0  527 68 587 95
+0
+
+E
+E
+E
+
+N 1 256 1 1 1 1
+19 51
+"einaus"
+""
+1 30 209 E E E 1 E 1 E N "_3DText" E N "_3DFace" E E
+ E E
+888 0 0 0 0 0
+E E E
+0
+3
+LANG:10001 0 
+LANG:10000 0 
+LANG:10027 0 
+
+0
+3
+LANG:10001 26 arial,-1,13,5,50,0,0,0,0,0
+LANG:10000 26 arial,-1,13,5,50,0,0,0,0,0
+LANG:10027 26 arial,-1,13,5,50,0,0,0,0,0
+0  28 208 152 282
+3
+T 
+3
+LANG:10001 6 Output
+LANG:10000 7 Ausgang
+LANG:10027 6 Output
+
+0 
+1
+LANG:10001 0 
+E E
+0 0 0 0 0
+T 
+3
+LANG:10001 5 Input
+LANG:10000 7 Eingang
+LANG:10027 5 Input
+
+1 
+1
+LANG:10001 0 
+E E
+0 0 0 0 0
+T 
+3
+LANG:10001 12 Input/Output
+LANG:10000 12 Ein-/Ausgang
+LANG:10027 12 Input/Output
+
+0 
+1
+LANG:10001 0 
+E E
+0 0 0 0 0
+1
+E "main()
+{
+  int i;
+
+  getValue(\"\",\"number\",i);
+  setMultiValue(\"lowlevel\",\"visible\",i>0);
+}" 0
+
+22 57
+"trans_art"
+""
+1 28 138 E E E 1 E 1 E N {0,0,0} E N "_Window" E E
+ E E
+888 0 0 0 0 0
+E E E
+0
+3
+LANG:10001 0 
+LANG:10000 0 
+LANG:10027 0 
+
+0
+3
+LANG:10001 26 arial,-1,13,5,50,0,0,0,0,0
+LANG:10000 26 arial,-1,13,5,50,0,0,0,0,0
+LANG:10027 26 arial,-1,13,5,50,0,0,0,0,0
+0  28 138 248 167
+3
+3
+LANG:10001 6 String
+LANG:10000 6 String
+LANG:10027 6 String
+
+1
+3
+LANG:10001 7 Integer
+LANG:10000 12 ByteOfString
+LANG:10027 12 ByteOfString
+
+0
+1
+LANG:10001 5 Float
+
+0
+
+E
+E
+E
+ 1 0
+20 62
+"cboAddressActive"
+""
+1 30 320 E E E 1 E 1 E N "_3DText" E N "_3DFace" E E
+ E E
+889 0 0 0 0 0
+E E E
+0
+3
+LANG:10001 0 
+LANG:10000 0 
+LANG:10027 0 
+
+0
+3
+LANG:10001 26 Arial,-1,13,5,40,0,0,0,0,0
+LANG:10000 26 Arial,-1,13,5,40,0,0,0,0,0
+LANG:10027 26 Arial,-1,13,5,40,0,0,0,0,0
+0  28 318 122 352
+1
+T 
+3
+LANG:10001 6 Active
+LANG:10000 6 Active
+LANG:10027 6 Active
+
+0 
+1
+LANG:10001 0 
+E E
+0 0 0 0 0
+1
+E E
+EE21 63
+"subindex"
+""
+1 300 140 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+ E E
+890 0 0 0 0 0
+E E E
+0
+3
+LANG:10001 0 
+LANG:10000 0 
+LANG:10027 0 
+
+0
+3
+LANG:10001 26 Arial,-1,13,5,40,0,0,0,0,0
+LANG:10000 26 Arial,-1,13,5,40,0,0,0,0,0
+LANG:10027 26 Arial,-1,13,5,40,0,0,0,0,0
+0  298 138 452 165
+0
+
+E
+E
+E
+
+N 0 100 1 0 1 1
+14 65
+"reference"
+""
+1 30 70 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+ E E
+892 0 0 0 0 0
+E E E
+0
+3
+LANG:10001 0 
+LANG:10000 0 
+LANG:10027 0 
+
+0
+3
+LANG:10001 26 Arial,-1,13,5,40,0,0,0,0,0
+LANG:10000 26 Arial,-1,13,5,40,0,0,0,0,0
+LANG:10027 26 Arial,-1,13,5,40,0,0,0,0,0
+0  28 68 172 95
+3 "0s" 0 0 0 0 0 -1  E E E
+14 67
+"pollgroup"
+""
+1 410 211 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+ E E
+894 0 0 0 0 0
+E E E
+0
+3
+LANG:10001 0 
+LANG:10000 0 
+LANG:10027 0 
+
+0
+3
+LANG:10001 26 Arial,-1,13,5,40,0,0,0,0,0
+LANG:10000 26 Arial,-1,13,5,40,0,0,0,0,0
+LANG:10027 26 Arial,-1,13,5,40,0,0,0,0,0
+0  408 209 552 236
+3 "0s" 0 0 0 0 0 -1  E E E
+19 71
+"inputmode"
+""
+1 180 210 E E E 1 E 1 E N "_3DText" E N "_3DFace" E E
+ E E
+898 0 0 0 0 0
+E E E
+0
+3
+LANG:10001 0 
+LANG:10000 0 
+LANG:10027 0 
+
+0
+3
+LANG:10001 26 arial,-1,13,5,50,0,0,0,0,0
+LANG:10000 26 arial,-1,13,5,50,0,0,0,0,0
+LANG:10027 26 arial,-1,13,5,50,0,0,0,0,0
+0  178 209 302 283
+3
+T 
+3
+LANG:10001 11 Spontaneous
+LANG:10000 7 Spontan
+LANG:10027 11 Spontaneous
+
+0 
+1
+LANG:10001 0 
+E E
+0 0 0 0 0
+T 
+3
+LANG:10001 7 Polling
+LANG:10000 8 Zyklisch
+LANG:10027 7 Polling
+
+1 
+1
+LANG:10001 0 
+E E
+0 0 0 0 0
+T 
+3
+LANG:10001 12 Single query
+LANG:10000 13 Einzelabfrage
+LANG:10027 12 Single query
+
+0 
+1
+LANG:10001 0 
+E E
+0 0 0 0 0
+1
+E "main()
+{
+  int i;
+
+  getValue(\"\",\"number\",i);i++;
+  setMultiValue(\"lowlevel\",\"visible\",i==1);
+}" 0
+
+0
+LAYER, 1 
+1
+LANG:10001 6 Layer2
+0
+LAYER, 2 
+1
+LANG:10001 6 Layer3
+0
+LAYER, 3 
+1
+LANG:10001 6 Layer4
+0
+LAYER, 4 
+1
+LANG:10001 6 Layer5
+0
+LAYER, 5 
+1
+LANG:10001 6 Layer6
+0
+LAYER, 6 
+1
+LANG:10001 6 Layer7
+0
+LAYER, 7 
+1
+LANG:10001 6 Layer8
+0
+3 0 "" -1
+"" ""
+"para/dpe.ref" 308 10 T 0 U 
+1
+"$DPE""$1"
+3 1 "" -1
+"" ""
+"para/lock_unlock.ref" 6 12 T 0 U 
+1
+"$1""$1"
+3 2 "" -1
+"" ""
+"para/buttons.ref" 220 440 T 0 1 0 1 -210 0
+0
+0

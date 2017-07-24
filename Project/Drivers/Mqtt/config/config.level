@@ -1,0 +1,2 @@
+[javadrv]
+classPath="bin;lib\\winccoa-java-1.0-SNAPSHOT.jar;lib\\json-simple-1.1.1.jar;lib\\junit-4.10.jar;lib\\hamcrest-core-1.1.jar;lib\\org.eclipse.paho.client.mqttv3-1.1.1.jar"

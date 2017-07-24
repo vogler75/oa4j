@@ -1,0 +1,25 @@
+version 1
+
+auth "" ""
+#Manager         | Start  | SecKill | Restart# | ResetMin | Options
+WCCILpmon        | manual |      30 |        3 |        1 |
+WCCILdata        | always |      30 |        3 |        1 |
+WCCOAvalarch     | always |      30 |        3 |        1 |-num 0
+WCCOAvalarch     | always |      30 |        3 |        1 |-num 1
+WCCOAvalarch     | always |      30 |        3 |        1 |-num 2
+WCCOAvalarch     | always |      30 |        3 |        1 |-num 3
+WCCOAvalarch     | always |      30 |        3 |        1 |-num 4
+WCCOAvalarch     | always |      30 |        3 |        1 |-num 5
+WCCILevent       | always |      30 |        3 |        1 |
+WCCILproxy       | always |      30 |        2 |        2 |
+WCCOActrl        | always |      30 |        3 |        1 |-f pvss_scripts.lst
+WCCILsim         | always |      30 |        3 |        1 |
+WCCOAui          |   once |      30 |        3 |        1 |-m gedi
+WCCOAjava        | manual |      30 |        2 |        2 |-num 2 -c ApiTestDpConnect
+WCCOAui          | manual |      30 |        2 |        2 |-num 2 -p JavaCtrlExt.pnl
+WCCOAjavadrv     | always |      30 |        2 |        2 |-num 3 -cp bin/Mqtt.jar -url tcp://localhost -cid winccoa -json -clean false -qos 0
+WCCOAjava        | always |      30 |        2 |        2 |-num 10 -class at/rocworks/oa4j/logger/logger/Frontend -logger config/frontend.config
+WCCOAjava        | always |      30 |        2 |        2 |-num 11 -class at/rocworks/oa4j/logger/logger/Backend -logger config/backend-influx.config
+WCCOAjava        | manual |      30 |        2 |        2 |-num 12 -class at/rocworks/oa4j/logger/logger/Backend -logger config/backend-elastic.config
+WCCOAjava        | manual |      30 |        2 |        2 |-num 13 -class at/rocworks/oa4j/logger/logger/Backend -logger config/backend-mongo.config
+WCCOAjava        | manual |      30 |        2 |        2 |-num 14 -class at/rocworks/oa4j/logger/logger/Backend -logger config/backend-kafka.config

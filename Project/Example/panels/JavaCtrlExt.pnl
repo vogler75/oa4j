@@ -1,0 +1,307 @@
+V 13
+1
+LANG:10001 0 
+PANEL,-1 -1 471 174 N "_3DFace" 0
+"#uses \"JavaCtrlExt\"
+
+main()
+{
+    startJVM();
+}
+
+" 0
+ E E E E 1 -1 -1 0  70 90
+""0  1
+E E 3
+"CBRef" "1"
+"EClose" E
+"dpi" "96"
+0 0 0
+""
+DISPLAY_LAYER, 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0
+LAYER, 0 
+1
+LANG:10001 0 
+13 3
+"PUSH_BUTTON3"
+""
+1 30 60 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ E E
+2 0 0 0 0 0
+E E E
+0
+1
+LANG:10001 0 
+
+0
+1
+LANG:10001 35 MS Shell Dlg 2,-1,11,5,50,0,0,0,0,0
+0  28 53 152 79
+
+T 
+1
+LANG:10001 8 javaCall
+"main()
+{
+  dyn_anytype out;
+  dyn_anytype in = makeDynAnytype(\"hallo\", 1, getCurrentTime());
+  int ret = javaCall(\"ApiTestExternHdl\", \"myFunTest\", in, out);
+  DebugTN(ret, out);
+}" 0
+ E E E
+13 4
+"PUSH_BUTTON4"
+""
+1 30 100 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ E E
+3 0 0 0 0 0
+E E E
+0
+1
+LANG:10001 0 
+
+1
+"isToggle" ""
+1
+LANG:10001 35 MS Shell Dlg 2,-1,11,5,50,0,0,0,0,0
+0  28 93 152 119
+
+T 
+1
+LANG:10001 13 javaCall Loop
+"main()
+{
+  dyn_anytype out;
+  int i=0;
+  while ( this.toggleState ) {
+    i++;
+    nr.text=i;
+    int ret = javaCall(\"ApiTestExternHdl\", \"myFunTest\", makeDynString(\"hallo\", \"du\", i), out);
+  }
+}" 0
+ E E E
+13 5
+"PUSH_BUTTON5"
+""
+1 170 60 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ E E
+4 0 0 0 0 0
+E E E
+0
+1
+LANG:10001 0 
+
+0
+1
+LANG:10001 35 MS Shell Dlg 2,-1,11,5,50,0,0,0,0,0
+0  168 53 292 79
+
+T 
+1
+LANG:10001 8 javaCall
+"main()
+{
+  dyn_anytype out;
+  int ret = javaCallAsync(\"ApiTestExternHdl\", \"myFunTest\", makeDynString(\"hello\", \"world\"), out);
+  DebugTN(ret, out);
+}
+" 0
+ E E E
+13 6
+"PUSH_BUTTON6"
+""
+1 170 100 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ E E
+5 0 0 0 0 0
+E E E
+0
+1
+LANG:10001 0 
+
+1
+"isToggle" ""
+1
+LANG:10001 35 MS Shell Dlg 2,-1,11,5,50,0,0,0,0,0
+0  168 93 292 119
+
+T 
+1
+LANG:10001 13 javaCall Loop
+"main()
+{
+  dyn_anytype out;
+  int i=0;
+  while ( this.toggleState ) {
+    i++;
+    nr.text=i;    
+    int ret = javaCallAsync(\"ApiTestExternHdl\", \"myFunTest\", makeDynString(\"hello\", \"world\", i), out);
+  }
+}" 0
+ E E E
+14 7
+"nr"
+""
+1 311 100.5 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+ E E
+6 0 0 0 0 0
+E E E
+0
+1
+LANG:10001 0 
+
+0
+1
+LANG:10001 35 MS Shell Dlg 2,-1,11,5,50,0,0,0,0,0
+0  309 95 433 118
+3 "0s" 0 0 0 0 0 -1  E E E
+2 8
+"PRIMITIVE_TEXT1"
+""
+1 60 30 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+ E E
+7 0 0 0 0 0
+E E E
+0
+1
+LANG:10001 0 
+
+3
+"sizePolicy" "Fixed Fixed"
+"dashclr"N "_Transparent"
+"antiAliased" "0"
+E E 0 1 1 2 1 E U  0 E 60 30 85 42
+0 2 2 "0s" 0 0 0 192 0 0  60 30 1
+1
+LANG:10001 35 MS Shell Dlg 2,-1,11,5,50,0,0,0,0,0
+0 1
+LANG:10001 4 Sync
+2 9
+"PRIMITIVE_TEXT2"
+""
+1 214.5 30 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+ E E
+8 0 0 0 0 0
+E E E
+0
+1
+LANG:10001 0 
+
+3
+"sizePolicy" "Fixed Fixed"
+"dashclr"N "_Transparent"
+"antiAliased" "0"
+E E 0 1 1 2 1 E U  0 E 214.5 30 245 42
+0 2 2 "0s" 0 0 0 192 0 0  214.5 30 1
+1
+LANG:10001 35 MS Shell Dlg 2,-1,11,5,50,0,0,0,0,0
+0 1
+LANG:10001 5 Async
+13 10
+"PUSH_BUTTON7"
+""
+1 169.75 140 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ E E
+9 0 0 0 0 0
+E E E
+0
+1
+LANG:10001 0 
+
+0
+1
+LANG:10001 35 MS Shell Dlg 2,-1,11,5,50,0,0,0,0,0
+0  168 133 292 159
+
+T 
+1
+LANG:10001 23 javaCall with Callbacks
+"main()
+{
+  dyn_anytype out;
+
+  int ret = javaCallAsync(\"ApiTestExternHdl\", \"TestDpTest\", makeDynString(\"hello\", \"world\"), out);
+  DebugTN(ret, out);
+
+  int ret = javaCallAsync(\"ApiTestExternHdl\", \"NestedCall\", makeDynString(\"hello\", \"world\"), out);
+  DebugTN(ret, out);
+}
+
+// Java Program will call this Script to execute some code in the UI
+void jEvalScript(anytype args)
+{
+  if ( dynlen(args) < 3 )
+    DebugTN(\"jEvalScript not enough arguments: \", args);
+  else {
+    int ret; evalScript(ret, args[1], args[2], args[3]);
+  }
+}
+" 0
+ E E E
+13 11
+"PUSH_BUTTON8"
+""
+1 29.75 140 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ E E
+10 0 0 0 0 0
+E E E
+0
+1
+LANG:10001 0 
+
+0
+1
+LANG:10001 35 MS Shell Dlg 2,-1,11,5,50,0,0,0,0,0
+0  28 133 152 159
+
+T 
+1
+LANG:10001 23 javaCall with Callbacks
+"main()
+{
+  dyn_anytype out;
+
+  int ret = javaCall(\"ApiTestExternHdl\", \"TestDpTest\", makeDynString(\"hello\", \"world\"), out);
+  DebugTN(ret, out);
+}
+
+// Java Program will call this Script to execute some code in the UI
+void jEvalScript(anytype args)
+{
+  if ( dynlen(args) < 3 )
+    DebugTN(\"jEvalScript not enough arguments: \", args);
+  else {
+    int ret; evalScript(ret, args[1], args[2], args[3]);
+  }
+}
+" 0
+ E E E
+0
+LAYER, 1 
+1
+LANG:10001 0 
+0
+LAYER, 2 
+1
+LANG:10001 0 
+0
+LAYER, 3 
+1
+LANG:10001 0 
+0
+LAYER, 4 
+1
+LANG:10001 0 
+0
+LAYER, 5 
+1
+LANG:10001 0 
+0
+LAYER, 6 
+1
+LANG:10001 0 
+0
+LAYER, 7 
+1
+LANG:10001 0 
+0
+0

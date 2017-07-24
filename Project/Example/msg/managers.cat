@@ -1,0 +1,59 @@
+WCCILpmon,Process Monitor
+WCCILevent,Event Manager
+WCCILdata,Database Manager
+WCCOAvalarch,Archive Manager
+WCCOActrl,Control Manager
+WCCILredu,Redundancy Manager
+WCCOAascii,ASCII Manager
+WCCILdist,Distribution Manager
+WCCOAdde,DDE Server
+WCCOAui,User Interface
+WCCOAopc,OPC DA Client
+WCCILsim,Simulation Driver
+WCCOArk512,RK512 Driver
+WCCOApr,Profibus FMS/DP
+WCCOAssi,SSI Driver
+WCCOApager,Windows Pager/SMS
+WCCOAabb,ABB Driver
+WCCOAads,Pintsch Bamag Driver
+WCCOAopcAE,OPC AE Client
+WCCOAiec,IEC 60870 101/104 Driver
+WCCOAmod,Modbus Driver
+WCCOAoledb,OLE DB Provider
+WCCOAsnmp,SNMP Manager
+WCCOAsnmpa,SNMP LiveAgent
+WCCOAtls,TLS Driver
+WCCOAtlsgw,TLS Gateway
+WCCILsplit,Split Mode Manager
+WCCOAopcsrvAE,OPC AE Server
+WCCOAopcsrv,OPC DA Server
+WCCOArdb,RDB Archive Manager
+WCCOArdbRHEL4,RDB Archive Manager (RHEL4;Oracle 10)
+WCCOApid,PID Controller
+WCCOAtlp,Teleperm M Driver
+WCCOAabbudp,Arcnet Driver
+WCCOAasx,ASX Driver
+WCCOAs7,S7 Driver
+WCCOAnis,Nis Driver
+WCCOAdx,PRODX Manager
+WCCOAetmplc,EtmPlc Driver
+WCCOAsbus,SBUS Driver
+WCCOAcerb,CERBERUS Driver
+WCCOAdnp3,DNP3 Driver
+WCCOAbacnet,BACNet Driver
+WCCOAsinaut,Sinaut Driver
+WCCOAdl,DynamicLogic Driver
+WCCOAchmgr,Channel Manager
+WCCOAopcua,OPC UA Client
+WCCOAopcuasrv,OPC UA Server
+WCCOAvideoOA,Video Manager
+WCCOAvrmprx,VRM Proxy
+WCCILproxy,Multiplexing Proxy
+WCCOAeip,EIP Driver
+WCCOAiec61850,IEC 61850/61400 Client
+WCCOAreporting,Reporting Manager
+WCCOAopchdasrv,OPC HDA Server
+WCCOAopchda,OPC HDA Client
+WCCOAmodsrv,Modbus TCP Server
+WCCOAjava,Java Manager
+WCCOAjavadrv,Java Driver

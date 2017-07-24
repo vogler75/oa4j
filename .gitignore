@@ -1,0 +1,81 @@
+# User-specific stuff:
+.idea/**/workspace.xml
+.idea/**/tasks.xml
+.idea/dictionaries
+
+# Sensitive or high-churn files:
+.idea/**/dataSources/
+.idea/**/dataSources.ids
+.idea/**/dataSources.xml
+.idea/**/dataSources.local.xml
+.idea/**/sqlDataSources.xml
+.idea/**/dynamic.xml
+.idea/**/uiDesigner.xml
+
+# Gradle:
+.idea/**/gradle.xml
+.idea/**/libraries
+
+# CMake
+cmake-build-debug/
+
+# Mongo Explorer plugin:
+.idea/**/mongoSettings.xml
+
+## File-based project format:
+*.iws
+
+## Plugin-specific files:
+
+# mpeltonen/sbt-idea plugin
+.idea_modules/
+
+# JIRA plugin
+atlassian-ide-plugin.xml
+
+# Cursive Clojure plugin
+.idea/replstate.xml
+
+# Crashlytics plugin (for Android Studio and IntelliJ)
+com_crashlytics_export_strings.xml
+crashlytics.properties
+crashlytics-build.properties
+fabric.properties
+
+# Projects
+.DS_Store
+bin
+lib
+out
+log
+target
+classpath.txt
+/Java/.idea
+/Scala/.idea
+/Project/Example/db
+/Project/Example/log
+
+# Native
+/Native/LibJava/*.o
+/Native/Manager/*.o
+/Native/Manager/bin
+/Native/Manager/x64
+/Native/Manager/Release
+/Native/Manager/WCCOAJavaManager.sdf
+/Native/Manager/WCCOAJavaManager.opensdf
+/Native/Manager/WCCOAJavaManager.v12.suo
+/Native/Driver/*.o
+/Native/Driver/bin
+/Native/Driver/x64
+/Native/Driver/Release
+/Native/Driver/WCCOAJavaDrv.sdf
+/Native/Driver/WCCOAJavaDrv.opensdf
+/Native/Driver/WCCOAJavaDrv.v12.suo
+/Native/CtrlExt/*.o
+/Native/CtrlExt/bin
+/Native/CtrlExt/x64
+/Native/CtrlExt/Release
+/Native/CtrlExt/JavaCtrlExt.sdf
+/Native/CtrlExt/JavaCtrlExt.opensdf
+/Native/CtrlExt/JavaCtrlExt.v12.suo
+/Native/Builds

@@ -1,0 +1,18 @@
+# ascii dump of database
+
+# DpType
+TypeName
+_JavaDrv._JavaDrv	1#1
+	Config	25#2
+
+# Datapoint/DpId
+DpName	TypeName	ID
+_JavaDrv1	_JavaDrv	464
+_JavaDrv2	_JavaDrv	465
+_JavaDrv3	_JavaDrv	466
+_JavaDrv4	_JavaDrv	467
+_JavaDrv5	_JavaDrv	468
+_JavaDrv6	_JavaDrv	469
+_JavaDrv7	_JavaDrv	470
+_JavaDrv8	_JavaDrv	471
+_JavaDrv9	_JavaDrv	472

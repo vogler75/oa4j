@@ -1,0 +1,25 @@
+[java]
+# java user dir (-Duser.dir), defaults to project directory
+#userDir = "<project-dir>"
+
+# java library path (-Djava.library.path), defaults to the project bin directory, WCCOAjava.dll must be located there
+#libraryPath = "<project-dir>/bin" 
+
+# java class path (-Djava.class.path), defaults to project/bin directory
+classPath = "bin;bin/winccoa-java.jar"
+
+# if you have long class paths you can use a file
+#configFile = "config.java"
+
+[javadrv]
+# java user dir (-Duser.dir), defaults to project directory
+#userDir = "<project-dir>"
+
+# java library path (-Djava.library.path), defaults to the project bin directory, WCCOAjava.dll must be located there
+#libraryPath = "<project-dir>/bin" 
+
+# java class path (-Djava.class.path), defaults to project/bin directory
+classPath = "bin;lib/winccoa-java-1.0-SNAPSHOT.jar;lib/json-simple-1.1.1.jar"
+
+# if you have long class paths you can use a file
+#configFile = "config.javadrv"
