@@ -29,6 +29,6 @@ set API_INCL=%API_INCL%;%JAVA_HOME%\include;%JAVA_HOME%\include\win32
 set API_LIB=%API_LIB%;%JAVA_HOME%\lib\jvm.lib
 set PATH=%PATH%;%JAVA_HOME%\bin\;%JAVA_HOME%\jre\bin\server\
 
-devenv ..\Native\Manager\WCCOAJavaManager.sln /rebuild
-devenv ..\Native\Driver\WCCOAJavaDrv.sln /rebuild
-devenv ..\Native\CtrlExt\JavaCtrlExt.sln /rebuild
+devenv ..\Manager\WCCOAJavaManager.sln /rebuild
+devenv ..\Driver\WCCOAJavaDrv.sln /rebuild
+devenv ..\CtrlExt\JavaCtrlExt.sln /rebuild
