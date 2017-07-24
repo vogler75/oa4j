@@ -40,4 +40,4 @@ The control extension JavaCtrlExt must be loaded and a Subclass of ExternHdlFunc
     int ret = javaCall("ApiTestExternHdl", "myFunTest", in, out);
 ```
 ## Compiled Versions can be downloaded from here<br>
-https://drive.google.com/drive/folders/0B5KMeZJHdWWAWkJ1LW9tZGRMNlE?usp=sharing
+http://rocworks.at/oa4j/
