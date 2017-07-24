@@ -16,10 +16,9 @@ The JClient class is an easy to use static class. It should be thread safe and c
 JManager m = new JManager();
 m.init(args).start(); 
 ret = JClient.dpSet()
-  .add("ExampleDP_Trend1.", new FloatVar(Math.random()))
-  .add(":ExampleDP_SumAlert.", new TextVar("hello world"))
-  .await()
-  .getRetCode();
+  .add("ExampleDP_Trend1.", Math.random())
+  .add("ExampleDP_SumAlert.", "hello world")
+  .await();
 m.stop();
 ```
 ## Driver (oa4j/Native/Driver <-> at.rocworks.oa4j.driver)<br>
