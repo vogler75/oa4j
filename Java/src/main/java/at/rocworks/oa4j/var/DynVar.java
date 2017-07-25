@@ -43,10 +43,12 @@ public class DynVar extends Variable implements Serializable, Iterable<Variable>
     }
 
     public void add(Variable value) {
-        if (type==VariableType.Unknown)
-            type=value.isA();
-        else if (type!=value.isA())
-            type=VariableType.AnyTypeVar;
+        if (value!=null) {
+            if (type == VariableType.Unknown)
+                type = value.isA();
+            else if (type != value.isA())
+                type = VariableType.AnyTypeVar;
+        }
         this.value.add(value);
     }
     
