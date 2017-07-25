@@ -181,13 +181,13 @@
   <component name="libraryTable">
     <library name="Maven: at.rocworks.oa4j:winccoa-java:1.0-SNAPSHOT">
       <CLASSES>
-        <root url="jar://$MAVEN_REPOSITORY$/at/rocworks/oa4j/winccoa-java/1.0-SNAPSHOT/winccoa-java-1.0-20170724.144651-6.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/at/rocworks/oa4j/winccoa-java/1.0-SNAPSHOT/winccoa-java-1.0-SNAPSHOT.jar!/" />
       </CLASSES>
       <JAVADOC>
-        <root url="jar://$MAVEN_REPOSITORY$/at/rocworks/oa4j/winccoa-java/1.0-SNAPSHOT/winccoa-java-1.0-20170724.144651-6-javadoc.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/at/rocworks/oa4j/winccoa-java/1.0-SNAPSHOT/winccoa-java-1.0-SNAPSHOT-javadoc.jar!/" />
       </JAVADOC>
       <SOURCES>
-        <root url="jar://$MAVEN_REPOSITORY$/at/rocworks/oa4j/winccoa-java/1.0-SNAPSHOT/winccoa-java-1.0-20170724.144651-6-sources.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/at/rocworks/oa4j/winccoa-java/1.0-SNAPSHOT/winccoa-java-1.0-SNAPSHOT-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: com.googlecode.json-simple:json-simple:1.1.1">
@@ -201,17 +201,6 @@
         <root url="jar://$MAVEN_REPOSITORY$/com/googlecode/json-simple/json-simple/1.1.1/json-simple-1.1.1-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Maven: junit:junit:4.10">
-      <CLASSES>
-        <root url="jar://$MAVEN_REPOSITORY$/junit/junit/4.10/junit-4.10.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$MAVEN_REPOSITORY$/junit/junit/4.10/junit-4.10-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$MAVEN_REPOSITORY$/junit/junit/4.10/junit-4.10-sources.jar!/" />
-      </SOURCES>
-    </library>
     <library name="Maven: org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.1.1">
       <CLASSES>
         <root url="jar://$MAVEN_REPOSITORY$/org/eclipse/paho/org.eclipse.paho.client.mqttv3/1.1.1/org.eclipse.paho.client.mqttv3-1.1.1.jar!/" />
@@ -221,17 +210,6 @@
       </JAVADOC>
       <SOURCES>
         <root url="jar://$MAVEN_REPOSITORY$/org/eclipse/paho/org.eclipse.paho.client.mqttv3/1.1.1/org.eclipse.paho.client.mqttv3-1.1.1-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: org.hamcrest:hamcrest-core:1.1">
-      <CLASSES>
-        <root url="jar://$MAVEN_REPOSITORY$/org/hamcrest/hamcrest-core/1.1/hamcrest-core-1.1.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$MAVEN_REPOSITORY$/org/hamcrest/hamcrest-core/1.1/hamcrest-core-1.1-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$MAVEN_REPOSITORY$/org/hamcrest/hamcrest-core/1.1/hamcrest-core-1.1-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="winccoa-java-1.0-SNAPSHOT">
