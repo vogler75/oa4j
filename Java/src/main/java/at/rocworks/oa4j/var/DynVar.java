@@ -9,7 +9,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import org.json.simple.JSONArray;
 
 /**
  *
@@ -65,9 +64,9 @@ public class DynVar extends Variable implements Serializable, Iterable<Variable>
     
     @Override
     public String formatValue() {
-        JSONArray arr = new JSONArray();
-        arr.addAll(value);
-        return arr.toString();
+        ArrayList<String> arr = new ArrayList<>(value.size());
+        value.forEach(var->arr.add(var.toString()));
+        return "["+String.join(",", arr)+"]";
     }
 
     @Override

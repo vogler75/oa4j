@@ -5,8 +5,8 @@
  */
 package at.rocworks.oa4j.var;
 
+import java.util.ArrayList;
 import java.util.HashMap;
-import org.json.simple.JSONObject;
 
 /**
  *
@@ -29,12 +29,11 @@ public class LangTextVar extends Variable {
     }
     
     @Override
-    public String formatValue() {       
-        JSONObject json = new JSONObject();       
-        value.forEach((String lang, String text)->{
-            json.put(lang, text);
-        });
-        return json.toString();        }
+    public String formatValue() {
+        ArrayList<String> arr = new ArrayList<>(value.size());
+        value.forEach((String lang, String text)->arr.add(lang+"->"+text));
+        return "["+String.join(",", arr)+"]";
+    }
 
     @Override
     public VariableType isA() {

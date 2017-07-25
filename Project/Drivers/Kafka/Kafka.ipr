@@ -170,16 +170,19 @@
     <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
     <property name="settings.editor.splitter.proportion" value="0.2" />
   </component>
+  <component name="VcsDirectoryMappings">
+    <mapping directory="$PROJECT_DIR$/../../.." vcs="Git" />
+  </component>
   <component name="libraryTable">
     <library name="Maven: at.rocworks.oa4j:winccoa-java:1.0-SNAPSHOT">
       <CLASSES>
-        <root url="jar://$MAVEN_REPOSITORY$/at/rocworks/oa4j/winccoa-java/1.0-SNAPSHOT/winccoa-java-1.0-SNAPSHOT.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/at/rocworks/oa4j/winccoa-java/1.0-SNAPSHOT/winccoa-java-1.0-20170724.144651-6.jar!/" />
       </CLASSES>
       <JAVADOC>
-        <root url="jar://$MAVEN_REPOSITORY$/at/rocworks/oa4j/winccoa-java/1.0-SNAPSHOT/winccoa-java-1.0-SNAPSHOT-javadoc.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/at/rocworks/oa4j/winccoa-java/1.0-SNAPSHOT/winccoa-java-1.0-20170724.144651-6-javadoc.jar!/" />
       </JAVADOC>
       <SOURCES>
-        <root url="jar://$MAVEN_REPOSITORY$/at/rocworks/oa4j/winccoa-java/1.0-SNAPSHOT/winccoa-java-1.0-SNAPSHOT-sources.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/at/rocworks/oa4j/winccoa-java/1.0-SNAPSHOT/winccoa-java-1.0-20170724.144651-6-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: com.googlecode.json-simple:json-simple:1.1.1">
@@ -237,9 +240,9 @@
         <root url="jar://$MAVEN_REPOSITORY$/org/xerial/snappy/snappy-java/1.1.2.6/snappy-java-1.1.2.6-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="winccoa-java-0.1">
+    <library name="winccoa-java-1.0-SNAPSHOT">
       <CLASSES>
-        <root url="jar://$PROJECT_DIR$/../../../Java/target/winccoa-java-0.1.jar!/" />
+        <root url="jar://$PROJECT_DIR$/../../../Java/lib/winccoa-java-1.0-SNAPSHOT.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />

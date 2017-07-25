@@ -1,9 +1,4 @@
-import at.rocworks.oa4j.driver.JDriverItem;
-import at.rocworks.oa4j.driver.JDriverItemList;
-import at.rocworks.oa4j.driver.JDriverSimple;
-import at.rocworks.oa4j.driver.JTransFloatVarJson;
-import at.rocworks.oa4j.driver.JTransIntegerVarJson;
-import at.rocworks.oa4j.driver.JTransTextVar;
+import at.rocworks.oa4j.driver.*;
 import at.rocworks.oa4j.jni.Transformation;
 
 import at.rocworks.oa4j.base.JDebug;
@@ -79,7 +74,7 @@ public class Main {
         public Transformation newTransformation(String name, int type) {
             switch (type) {
                 case 1000:
-                    return new JTransTextVar(name, type);
+                    return new JTransTextVarJson(name, type);
                 case 1001:
                     return new JTransIntegerVarJson(name, type);
                 case 1002:
@@ -216,6 +211,96 @@ public class Main {
         @Override
         public boolean detachOutput(String addr) {
             return true;
+        }
+    }
+
+    public static class JTransTextVarJson extends JTransTextVar {
+        private static final int SIZE=4096;
+
+        public JTransTextVarJson(String name, int type) {
+            super(name, type, SIZE);
+        }
+
+        @Override
+        protected byte[] toPeriph_(String val) { return toPeriph(val); }
+        public static byte[] toPeriph(String val) {
+            JSONObject json = new JSONObject();
+            json.put("Value", val);
+            return json.toJSONString().getBytes();
+        }
+
+        @Override
+        protected String toVal_(byte[] data) { return toVal(data); }
+        public static String toVal(byte[] data) throws IllegalArgumentException {
+            JSONObject json = (JSONObject)JSONValue.parse(new String(data));
+            Object val = json.get("Value");
+            if ( val instanceof String )
+                return (String)val;
+            else {
+                throw new IllegalArgumentException("unhandled value type " + val.getClass().getName());
+            }
+        }
+    }
+
+    public static class JTransFloatVarJson extends JTransFloatVar {
+
+        private static final int SIZE=1024;
+
+        public JTransFloatVarJson(String name, int type) {
+            super(name, type, SIZE);
+        }
+
+        @Override
+        protected byte[] toPeriph_(Double val) { return toPeriph(val); }
+        public static byte[] toPeriph(Double val) {
+            JSONObject json = new JSONObject();
+            json.put("Value", val);
+            return json.toJSONString().getBytes();
+        }
+
+        @Override
+        protected Double toVal_(byte[] data) { return toVal(data); }
+        public static Double toVal(byte[] data) throws IllegalArgumentException {
+            JSONObject json = (JSONObject) JSONValue.parse(new String(data));
+            Object val = json.get("Value");
+            if (val == null) {
+                throw new IllegalArgumentException("no key \"Value\" in json object!");
+            } else if (val instanceof Double) {
+                return (Double)val;
+            } else if (val instanceof Long) { // if there is no dot in the string
+                return ((Long)val).doubleValue();
+            }
+            else {
+                throw new IllegalArgumentException("unhandled value type " + val.getClass().getName());
+            }
+        }
+    }
+
+    public static class JTransIntegerVarJson extends JTransIntegerVar {
+        private static final int SIZE=1024;
+
+        public JTransIntegerVarJson(String name, int type) {
+            super(name, type, SIZE);
+        }
+
+        @Override
+        protected byte[] toPeriph_(Integer val) { return toPeriph(val); }
+        public static byte[] toPeriph(Integer val) {
+            JSONObject json = new JSONObject();
+            json.put("Value", val);
+            return json.toJSONString().getBytes();
+        }
+
+        @Override
+        protected Integer toVal_(byte[] data) { return toVal(data); }
+        public static Integer toVal(byte[] data) throws IllegalArgumentException {
+            JSONObject json = (JSONObject)JSONValue.parse(new String(data));
+            Object val = json.get("Value");
+            if ( val instanceof Long )
+                return ((Long)val).intValue();
+            else {
+                throw new IllegalArgumentException("unhandled value type " + val.getClass().getName());
+            }
         }
     }
 }

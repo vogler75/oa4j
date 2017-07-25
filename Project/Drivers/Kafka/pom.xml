@@ -49,6 +49,8 @@
             <groupId>at.rocworks.oa4j</groupId>
             <artifactId>winccoa-java</artifactId>
             <version>1.0-SNAPSHOT</version>
+<!--            <scope>system</scope>
+            <systemPath>${project.basedir}/../../../Java/lib/winccoa-java-1.0-SNAPSHOT.jar</systemPath>-->
         </dependency>
         <dependency>
             <groupId>org.apache.kafka</groupId>

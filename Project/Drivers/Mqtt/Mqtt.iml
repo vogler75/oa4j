@@ -11,7 +11,7 @@
     </content>
     <orderEntry type="jdk" jdkName="1.8" jdkType="JavaSDK" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="winccoa-java-0.1" level="project" />
+    <orderEntry type="library" name="winccoa-java-1.0-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: at.rocworks.oa4j:winccoa-java:1.0-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: com.googlecode.json-simple:json-simple:1.1.1" level="project" />
     <orderEntry type="library" name="Maven: junit:junit:4.10" level="project" />

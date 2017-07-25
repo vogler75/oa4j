@@ -14,6 +14,7 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.paho.client.mqttv3.persist.MqttDefaultFilePersistence;
 
 import org.json.simple.JSONObject;
+import org.json.simple.JSONValue;
 import org.json.simple.parser.JSONParser;
 
 /**
@@ -274,6 +275,96 @@ public class Main {
                 if (reconnect) {
                     attachAddresses();
                 }
+            }
+        }
+    }
+
+    public static class JTransTextVarJson extends JTransTextVar {
+        private static final int SIZE=4096;
+
+        public JTransTextVarJson(String name, int type) {
+            super(name, type, SIZE);
+        }
+
+        @Override
+        protected byte[] toPeriph_(String val) { return toPeriph(val); }
+        public static byte[] toPeriph(String val) {
+            JSONObject json = new JSONObject();
+            json.put("Value", val);
+            return json.toJSONString().getBytes();
+        }
+
+        @Override
+        protected String toVal_(byte[] data) { return toVal(data); }
+        public static String toVal(byte[] data) throws IllegalArgumentException {
+            JSONObject json = (JSONObject)JSONValue.parse(new String(data));
+            Object val = json.get("Value");
+            if ( val instanceof String )
+                return (String)val;
+            else {
+                throw new IllegalArgumentException("unhandled value type " + val.getClass().getName());
+            }
+        }
+    }
+
+    public static class JTransFloatVarJson extends JTransFloatVar {
+
+        private static final int SIZE=1024;
+
+        public JTransFloatVarJson(String name, int type) {
+            super(name, type, SIZE);
+        }
+
+        @Override
+        protected byte[] toPeriph_(Double val) { return toPeriph(val); }
+        public static byte[] toPeriph(Double val) {
+            JSONObject json = new JSONObject();
+            json.put("Value", val);
+            return json.toJSONString().getBytes();
+        }
+
+        @Override
+        protected Double toVal_(byte[] data) { return toVal(data); }
+        public static Double toVal(byte[] data) throws IllegalArgumentException {
+            JSONObject json = (JSONObject) JSONValue.parse(new String(data));
+            Object val = json.get("Value");
+            if (val == null) {
+                throw new IllegalArgumentException("no key \"Value\" in json object!");
+            } else if (val instanceof Double) {
+                return (Double)val;
+            } else if (val instanceof Long) { // if there is no dot in the string
+                return ((Long)val).doubleValue();
+            }
+            else {
+                throw new IllegalArgumentException("unhandled value type " + val.getClass().getName());
+            }
+        }
+    }
+
+    public static class JTransIntegerVarJson extends JTransIntegerVar {
+        private static final int SIZE=1024;
+
+        public JTransIntegerVarJson(String name, int type) {
+            super(name, type, SIZE);
+        }
+
+        @Override
+        protected byte[] toPeriph_(Integer val) { return toPeriph(val); }
+        public static byte[] toPeriph(Integer val) {
+            JSONObject json = new JSONObject();
+            json.put("Value", val);
+            return json.toJSONString().getBytes();
+        }
+
+        @Override
+        protected Integer toVal_(byte[] data) { return toVal(data); }
+        public static Integer toVal(byte[] data) throws IllegalArgumentException {
+            JSONObject json = (JSONObject)JSONValue.parse(new String(data));
+            Object val = json.get("Value");
+            if ( val instanceof Long )
+                return ((Long)val).intValue();
+            else {
+                throw new IllegalArgumentException("unhandled value type " + val.getClass().getName());
             }
         }
     }

@@ -11,7 +11,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="winccoa-java-0.1" level="project" />
+    <orderEntry type="library" name="winccoa-java-1.0-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: at.rocworks.oa4j:winccoa-java:1.0-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: org.apache.kafka:kafka-clients:0.10.0.1" level="project" />
     <orderEntry type="library" name="Maven: net.jpountz.lz4:lz4:1.3.0" level="project" />
