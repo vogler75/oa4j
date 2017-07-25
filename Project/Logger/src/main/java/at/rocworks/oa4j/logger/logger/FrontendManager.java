@@ -32,10 +32,23 @@ public class FrontendManager extends JManager {
     public void start(IDataCollector collector, DataWellFilter archives, int bulksize) {
         this.collector=collector;    
         this.archives=archives;
-        this.well=new DataWellAPI(bulksize);     
+        this.well=new DataWellAPI(bulksize);
         start();
+        well.setActive(isActive());
     }
-    
+
+    @Override
+    protected void becameActive() {
+        well.setActive(true);
+        super.becameActive();
+    }
+
+    @Override
+    protected void becamePassive() {
+        well.setActive(false);
+        super.becamePassive();
+    }
+
     @Override
     public void start() {
         super.start();

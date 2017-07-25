@@ -8,12 +8,7 @@ package at.rocworks.oa4j.logger.logger;
 import at.rocworks.oa4j.base.JClient;
 import at.rocworks.oa4j.base.JDpHLGroup;
 import at.rocworks.oa4j.base.JDpVCItem;
-import at.rocworks.oa4j.var.Bit64Var;
-import at.rocworks.oa4j.var.DpIdentifierVar;
-import at.rocworks.oa4j.var.DynVar;
-import at.rocworks.oa4j.var.IntegerVar;
-import at.rocworks.oa4j.var.TimeVar;
-import at.rocworks.oa4j.var.Variable;
+import at.rocworks.oa4j.var.*;
 
 import at.rocworks.oa4j.logger.base.IDataCollector;
 import at.rocworks.oa4j.logger.data.lists.DataList;
@@ -31,11 +26,17 @@ import java.util.logging.Level;
  */
 public class DataWellAPI {
     private final int bulksize;
-    private DataList bulk;    
+    private DataList bulk;
+    private volatile boolean isActive=false;
 
     public DataWellAPI(int bulksize) {
         this.bulksize=bulksize;
         this.bulk=(bulksize>0) ? new DataList(bulksize) : null;                
+    }
+
+    public void setActive(boolean active) {
+        JDebug.out.info("setActive: "+active);
+        isActive=active;
     }
     
     public void queryConnect(String query, IDataCollector collector, IDatapointFilter filter) {
@@ -44,7 +45,7 @@ public class DataWellAPI {
         int ret = JClient.dpQueryConnectSingle(sql)
                 .action((JDpHLGroup hotlink) -> {
 //                    JDebug.out.info(hotlink.toString());
-                    if (hotlink.getNumberOfItems() > 1) {
+                    if (isActive && hotlink.getNumberOfItems() > 1) {
                         JDpVCItem item = hotlink.getItem(1);
                         DynVar res = (DynVar) item.getVariable();
                         for (int i = 1; i < res.size(); i++) {
@@ -60,7 +61,12 @@ public class DataWellAPI {
                             Variable value = val.get(1);
                             if ( value == null ) // 17.07.2016: a new created datapoint element is NULL (3.13)
                                 continue;                                                                                   
-                            
+
+                            if (val.get(2).isA()!=VariableType.TimeVar) {
+                                JDebug.out.warning("no time in result! "+val.formatValue());
+                                continue;
+                            }
+
                             TimeVar stime = (TimeVar) val.get(2);
 
                             Bit64Var status = (Bit64Var) val.get(3);
@@ -134,56 +140,58 @@ public class DataWellAPI {
                 .add(":_alert_hdl.._value") // 28
                 .add(":_alert_hdl.._visible") // 29
                 .action((JDpHLGroup hotlink) -> {
-                    JDebug.out.fine("--- ALERT BEG ---");
-                    ArrayList<JDpVCItem> items = hotlink.getItems();
-                    
-                    // JDebug Begin
-                    items.forEach((JDpVCItem vc) -> {
-                        Variable var = vc.getVariable();
-                        JDebug.out.log(Level.FINE, "{0}: {1} [{2}]", new Object[]{vc.getDpName(), var.formatValue(), var.isA()});
-                    });
-                    // JDebug End
+                    if (isActive) {
+                        JDebug.out.fine("--- ALERT BEG ---");
+                        ArrayList<JDpVCItem> items = hotlink.getItems();
 
-                    AlertItemAPI alert = new AlertItemAPI(
-                            new Dp(items.get(0).getDpName()), 
-                            items.get(0).getVariable().getTimeVar(), 
-                            items.get(1).getVariable().getLangTextVar(), 
-                            items.get(2).getVariable().getIntegerVar(), 
-                            items.get(3).getVariable().getTimeVar(), 
-                            items.get(4).getVariable().getIntegerVar(), 
-                            items.get(5).getVariable().getUIntegerVar(),
-                            items.get(6).getVariable().getBitVar(),
-                            items.get(7).getVariable().getDynVar(),
-                            items.get(8).getVariable().getTextVar(),
-                            items.get(9).getVariable().getTextVar(),
-                            items.get(10).getVariable().getTextVar(),
-                            items.get(11).getVariable().getBitVar(),
-                            items.get(12).getVariable().getTimeVar(),
-                            items.get(13).getVariable().getIntegerVar(),
-                            items.get(14).getVariable().getDpIdentifierVar(),
-                            items.get(15).getVariable().getTextVar(),
-                            items.get(16).getVariable().getIntegerVar(),
-                            items.get(17).getVariable().getLangTextVar(),
-                            items.get(18).getVariable().getBitVar(),
-                            items.get(19).getVariable().getTimeVar(),
-                            items.get(20).getVariable().getIntegerVar(),
-                            items.get(21).getVariable().getBitVar(),
-                            items.get(22).getVariable().getTextVar(),
-                            items.get(23).getVariable().getTimeVar(),
-                            items.get(24).getVariable().getIntegerVar(),
-                            items.get(25).getVariable().getCharVar(),
-                            items.get(26).getVariable().getBitVar(),
-                            items.get(27).getVariable().getLangTextVar(),
-                            items.get(28).getVariable(),
-                            items.get(29).getVariable().getBitVar()                            
-                    );
-                    
-                    DataList list = new DataList(1);
-                    list.addItem(alert);
-                    collector.collectData(list);
-                    
-                    //JDebug.out.info(hotlink.toString());
-                    JDebug.out.fine("--- ALERT END ---");
+                        // JDebug Begin
+                        items.forEach((JDpVCItem vc) -> {
+                            Variable var = vc.getVariable();
+                            JDebug.out.log(Level.FINE, "{0}: {1} [{2}]", new Object[]{vc.getDpName(), var.formatValue(), var.isA()});
+                        });
+                        // JDebug End
+
+                        AlertItemAPI alert = new AlertItemAPI(
+                                new Dp(items.get(0).getDpName()),
+                                items.get(0).getVariable().getTimeVar(),
+                                items.get(1).getVariable().getLangTextVar(),
+                                items.get(2).getVariable().getIntegerVar(),
+                                items.get(3).getVariable().getTimeVar(),
+                                items.get(4).getVariable().getIntegerVar(),
+                                items.get(5).getVariable().getUIntegerVar(),
+                                items.get(6).getVariable().getBitVar(),
+                                items.get(7).getVariable().getDynVar(),
+                                items.get(8).getVariable().getTextVar(),
+                                items.get(9).getVariable().getTextVar(),
+                                items.get(10).getVariable().getTextVar(),
+                                items.get(11).getVariable().getBitVar(),
+                                items.get(12).getVariable().getTimeVar(),
+                                items.get(13).getVariable().getIntegerVar(),
+                                items.get(14).getVariable().getDpIdentifierVar(),
+                                items.get(15).getVariable().getTextVar(),
+                                items.get(16).getVariable().getIntegerVar(),
+                                items.get(17).getVariable().getLangTextVar(),
+                                items.get(18).getVariable().getBitVar(),
+                                items.get(19).getVariable().getTimeVar(),
+                                items.get(20).getVariable().getIntegerVar(),
+                                items.get(21).getVariable().getBitVar(),
+                                items.get(22).getVariable().getTextVar(),
+                                items.get(23).getVariable().getTimeVar(),
+                                items.get(24).getVariable().getIntegerVar(),
+                                items.get(25).getVariable().getCharVar(),
+                                items.get(26).getVariable().getBitVar(),
+                                items.get(27).getVariable().getLangTextVar(),
+                                items.get(28).getVariable(),
+                                items.get(29).getVariable().getBitVar()
+                        );
+
+                        DataList list = new DataList(1);
+                        list.addItem(alert);
+                        collector.collectData(list);
+
+                        //JDebug.out.info(hotlink.toString());
+                        JDebug.out.fine("--- ALERT END ---");
+                    }
                 })
                 .connect().getRetCode();
         JDebug.out.log(Level.INFO, "WinCC OA Alert Connect: ret={0}", ret);
