@@ -22,7 +22,7 @@
    cd C:\Tools\oa4j\Project\Drivers\Mqtt
    copy make.sh make.bat
    make.bat
-   cp –r bin lib %PROJ_HOME%
+   cp -r bin lib %PROJ_HOME%
    cp -r config panels scripts dplist %PROJ_HOME%   
 
 *) Download oa4j binaries http://rocworks.at/oa4j/ or compile it (oa4j/Native)     

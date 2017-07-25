@@ -1,2 +1,2 @@
 [javadrv]
-classPath="bin;bin/WCCOAjava.jar;bin/kafka-clients-0.10.0.1.jar;bin/lz4-1.3.0.jar;bin/slf4j-api-1.7.21.jar;bin/snappy-java-1.1.2.6.jar"
+classPath="bin;lib/winccoa-java-1.0-SNAPSHOT.jar;lib/kafka-clients-0.10.0.1.jar;lib/lz4-1.3.0.jar;lib/slf4j-api-1.7.21.jar;lib/snappy-java-1.1.2.6.jar"

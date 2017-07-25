@@ -1,2 +1,2 @@
 [javadrv]
-classPath="bin;bin/winccoa-java-0.1.jar;bin/caj-1.1.15.jar;bin/jca-2.3.6.jar"
+classPath="bin;lib/winccoa-java-1.0-SNAPSHOT.jar;lib/caj-1.1.15.jar;lib/jca-2.3.6.jar"
