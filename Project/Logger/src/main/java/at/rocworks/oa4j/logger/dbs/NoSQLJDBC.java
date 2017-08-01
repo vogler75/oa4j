@@ -10,10 +10,6 @@ import at.rocworks.oa4j.base.JDebug;
 import at.rocworks.oa4j.logger.data.Metrics;
 import at.rocworks.oa4j.var.Bit32Var;
 import at.rocworks.oa4j.var.Bit64Var;
-import at.rocworks.oa4j.var.DynVar;
-import at.rocworks.oa4j.var.TimeVar;
-import at.rocworks.oa4j.var.Variable;
-import at.rocworks.oa4j.var.VariableType;
 
 import at.rocworks.oa4j.logger.base.INoSQLInterface;
 import at.rocworks.oa4j.logger.base.NoSQLServer;
@@ -101,9 +97,7 @@ public abstract class NoSQLJDBC extends NoSQLServer {
             initStorage(dataSourceQuery, this.settings.getThreads()*this.settings.getThreads());
         } catch (ClassNotFoundException ex) {
             JDebug.StackTrace(Level.SEVERE, ex);
-        }            
-        
-
+        }
     }    
 
     abstract protected void afterInsert(Connection conn) throws SQLException;

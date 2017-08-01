@@ -34,12 +34,24 @@
     </build>
 
      <repositories>
-       <repository>
+        <repository>
          <id>snapshots-repo</id>
          <url>https://oss.sonatype.org/content/repositories/snapshots</url>
          <releases><enabled>false</enabled></releases>
          <snapshots><enabled>true</enabled></snapshots>
-       </repository>
+        </repository>
+
+        <!-- CrateDB -->
+        <!--
+        <repository>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <id>central</id>
+            <name>bintray</name>
+            <url>http://dl.bintray.com/crate/crate</url>
+        </repository>
+        -->
      </repositories>	
 	
     <dependencies>
@@ -89,6 +101,21 @@
             <version>2.7</version>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+            <version>2.8.9</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.8.9</version>
+        </dependency>
+
+
         <!-- Apache Kafka -->
         <dependency>
             <groupId>org.apache.kafka</groupId>
@@ -107,7 +134,7 @@
         <dependency>
             <groupId>org.elasticsearch.client</groupId>
             <artifactId>transport</artifactId>
-            <version>5.5.0</version>
+            <version>5.5.1</version>
         </dependency>
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
@@ -124,6 +151,7 @@
             <artifactId>disruptor</artifactId>
             <version>3.3.6</version>
         </dependency>
+
 
         <!-- Apache HBase -->
         <dependency>
@@ -161,11 +189,23 @@
         </dependency>
 
         <!-- MySQL -->
+        <!--
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <version>5.1.38</version>
         </dependency>
+        -->
+
+        <!-- CcrateDB -->
+        <!--
+        <dependency>
+            <groupId>io.crate</groupId>
+            <artifactId>crate-jdbc</artifactId>
+            <version>2.1.7</version>
+        </dependency>
+        -->
+
 
         <!-- Microsoft SQL Server -->
         <!--

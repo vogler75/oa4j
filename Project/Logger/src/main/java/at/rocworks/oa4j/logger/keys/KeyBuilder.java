@@ -16,15 +16,17 @@ public abstract class KeyBuilder {
     public abstract String getStoreOfDp(Dp dp);
     
     public Dp getDpOfTag(String tag) {
-        return new Dp(tag.replace('/', ':'));
+        return new Dp(tag);
+        //return new Dp(tag.replace('/', ':'));
     } 
 
     public String getTagOfDp(Dp dp) {
-        return dp.getFQN().replace(':','/');
+        return dp.getFQN();
+        //return dp.getFQN().replace(':','/');
     }
 
     public String getTagOfDp(Dp dp, String config) {
-        return dp.getSystem()+"/"+dp.getDp()+"."+dp.getElement() + "/" + config;
+        return dp.getSystem()+":"+dp.getDp()+"."+dp.getElement() + ":" + config;
     }      
     
     public static KeyBuilder getKeyBuilder(String fmt) {

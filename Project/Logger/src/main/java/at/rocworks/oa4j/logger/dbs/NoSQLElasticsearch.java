@@ -87,44 +87,44 @@ GET /_aliases
 GET /_template/scada-event-template
 PUT /_template/scada-event-template
 {
-  "template": "scada-event-*", 
-  "order":    1, 
+  "template": "scada-event-*",
+  "order":    1,
   "settings": {
-    "settings":{ "refresh_interval" : "5s" },   
-    "number_of_shards":   3, 
-    "number_of_replicas": 0    
+    "settings":{ "refresh_interval" : "5s" },
+    "number_of_shards":   1,
+    "number_of_replicas": 0
   },
   "mappings": {
-    "_default_": { 
+    "_default_": {
       "_all": {
         "enabled": true
       }
     },
     "event" : {
             "properties" : {
-                "tag" : {"type" : "string"},
+                "tag" : {"type" : "text"},
                 "@timestamp" : {"type" : "date"},
-                "type" : {"type" : "string","index":  "not_analyzed" },
-                "sys" : {"type" : "string", "index" : "not_analyzed"},                
-                "dp" : {"type" : "string", "index" : "not_analyzed"},
-                "el" : {"type" : "string", "index" : "not_analyzed"},
-                "dpel" : {"type" : "string", "index" : "not_analyzed"},
+                "type" : {"type" : "text","index":  false},
+                "sys" : {"type" : "text", "index" : false},
+                "dp" : {"type" : "text", "index" : false},
+                "el" : {"type" : "text", "index" : false},
+                "dpel" : {"type" : "text", "index" : false},
                 "value": {
                     "properties": {
                         "number" : {"type" : "double"},
-                        "text" : {"type" : "string"},
+                        "text" : {"type" : "text"},
                         "time" : {"type" : "date"},
                         "bool" : {"type" : "boolean"}
                     }
                 },
-                "status" : {"type" : "string"},
+                "status" : {"type" : "text"},
                 "manager" : {"type" : "integer"},
                 "user" : {"type" : "integer"}
              }
         }
   },
   "aliases": {
-    "scada-events": {} 
+    "scada-events": {}
   }
 }
 
@@ -135,7 +135,7 @@ PUT /_template/scada-alert-template
     "order":    1, 
     "settings": {
         "settings":{ "refresh_interval" : "5s" },   
-        "number_of_shards":   3, 
+        "number_of_shards":   1,
         "number_of_replicas": 0          
     },
     "mappings": {
@@ -146,17 +146,17 @@ PUT /_template/scada-alert-template
       },
       "alert": {
           "properties" : {
-              "tag" : {"type" : "string"},
+              "tag" : {"type" : "text"},
               "@timestamp" : {"type" : "date"},
-              "type" : {"type" : "string","index":  "not_analyzed" },
-                "sys" : {"type" : "string", "index" : "not_analyzed"},                
-                "dp" : {"type" : "string", "index" : "not_analyzed"},
-                "el" : {"type" : "string", "index" : "not_analyzed"},
-                "dpel" : {"type" : "string", "index" : "not_analyzed"},              
+              "type" : {"type" : "text","index":  false},
+                "sys" : {"type" : "text", "index" : false},
+                "dp" : {"type" : "text", "index" : false},
+                "el" : {"type" : "text", "index" : false},
+                "dpel" : {"type" : "text", "index" : false},
               "value": {
                    "properties": {
                        "number" : {"type" : "double"},
-                       "text" : {"type" : "string"},
+                       "text" : {"type" : "text"},
                        "time" : {"type" : "date"},
                        "bool" : {"type" : "boolean"}      
                    }
@@ -265,13 +265,6 @@ public class NoSQLElasticsearch extends NoSQLServer {
         
         JDebug.out.info("elastic transport client...");
         
-//        Client client = NodeBuilder.nodeBuilder()
-//                .settings(elastic)
-//                .client(true)
-//                .data(false)
-//                .node()
-//                .client();
-        
         TransportClient client = new PreBuiltTransportClient(elastic);
         Arrays.asList(this.hosts.split(",")).forEach((String node)-> {
             try {
@@ -287,10 +280,10 @@ public class NoSQLElasticsearch extends NoSQLServer {
         if ( !client.admin().indices().prepareExists(this.eventIndex).execute().actionGet().isExists() ) {
             JDebug.out.log(Level.SEVERE, "event index {0} does not exist!", this.eventIndex);
         }
-        
+
         if( !client.admin().indices().prepareExists(this.alertIndex).execute().actionGet().isExists() ) {
             JDebug.out.log(Level.SEVERE, "alert index {0} does not exist!", this.alertIndex);
-        }                        
+        }
         
         this.client = client;     
         JDebug.out.info("elastic init storage...done");
@@ -302,17 +295,13 @@ public class NoSQLElasticsearch extends NoSQLServer {
     }           
     
     private String getKey(EventItem event) {
-        return event.getDp().getSysDpEl()+"/"+event.getTimeNS();
+        return event.getDp().getSysDpEl()+"@"+event.getTimeNS();
     }
     
     private String getKey(AlertItem alert) {
-        return alert.getDp().getSysDpEl()+"/"+alert.getDp().getDetail()+"/"+alert.getTimeNS();
+        return alert.getDp().getSysDpEl()+":"+alert.getDp().getDetail()+"@"+alert.getTimeNS();
     }    
-       
-    
-    private long getId(Dp dp, long ms) {        
-        return ((long)dp.hashCode())*1000000000000000L+ms; // max. date: Fri Sep 27 33658 02:46:39 GMT+0100
-    }    
+
     
     @Override
     public int storeData(DataList list) {
@@ -356,14 +345,14 @@ public class NoSQLElasticsearch extends NoSQLServer {
             event=(EventItem)item;            
             try {                
                 obj = jsonBuilder().startObject()
-                        .field("type", "event")
-                        .field("id", getId(event.getDp(), event.getTimeMS())) 
-                        .field("tag", getTagOfDp(event.getDp()))
+                        //.field("type", "event")
                         .field("@timestamp", new Date(event.getTimeMS()))
-                        .field("sys", event.getDp().getSystem())
-                        .field("dp", event.getDp().getDp())
-                        .field("el", event.getDp().getElement())
-                        .field("dpel", event.getDp().getDpEl());
+                        .field("tag", event.getDp().getDpEl());
+                        //.field("tag", getTagOfDp(event.getDp()))
+                        //.field("sys", event.getDp().getSystem())
+                        //.field("dp", event.getDp().getDp())
+                        //.field("el", event.getDp().getElement())
+                        //.field("dpel", event.getDp().getDpEl());
 
                 // value
                 value = event.getValue();                
@@ -460,7 +449,6 @@ public class NoSQLElasticsearch extends NoSQLServer {
             try {
                 obj = jsonBuilder().startObject()
                         .field("type", "alert")
-                        .field("id", getId(alert.getDp(), alert.getTimeMS()))
                         .field("tag", getTagOfDp(alert.getDp()))
                         .field("@timestamp", new Date(alert.getTimeMS()))
                         .field("sys", alert.getDp().getSystem())

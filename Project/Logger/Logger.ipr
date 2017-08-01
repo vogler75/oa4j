@@ -179,15 +179,22 @@
     <mapping directory="$PROJECT_DIR$/../.." vcs="Git" />
   </component>
   <component name="libraryTable">
+    <library name="crate-jdbc-2.1.7">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/lib/crate-jdbc-2.1.7.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
     <library name="Maven: at.rocworks.oa4j:winccoa-java:1.0-SNAPSHOT">
       <CLASSES>
-        <root url="jar://$MAVEN_REPOSITORY$/at/rocworks/oa4j/winccoa-java/1.0-SNAPSHOT/winccoa-java-1.0-SNAPSHOT.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/at/rocworks/oa4j/winccoa-java/1.0-SNAPSHOT/winccoa-java-1.0-20170725.063802-7.jar!/" />
       </CLASSES>
       <JAVADOC>
-        <root url="jar://$MAVEN_REPOSITORY$/at/rocworks/oa4j/winccoa-java/1.0-SNAPSHOT/winccoa-java-1.0-SNAPSHOT-javadoc.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/at/rocworks/oa4j/winccoa-java/1.0-SNAPSHOT/winccoa-java-1.0-20170725.063802-7-javadoc.jar!/" />
       </JAVADOC>
       <SOURCES>
-        <root url="jar://$MAVEN_REPOSITORY$/at/rocworks/oa4j/winccoa-java/1.0-SNAPSHOT/winccoa-java-1.0-SNAPSHOT-sources.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/at/rocworks/oa4j/winccoa-java/1.0-SNAPSHOT/winccoa-java-1.0-20170725.063802-7-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: cglib:cglib-nodep:3.1">
@@ -223,17 +230,6 @@
         <root url="jar://$MAVEN_REPOSITORY$/com/carrotsearch/hppc/0.7.1/hppc-0.7.1-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Maven: com.datastax.cassandra:cassandra-driver-core:3.1.2">
-      <CLASSES>
-        <root url="jar://$MAVEN_REPOSITORY$/com/datastax/cassandra/cassandra-driver-core/3.1.2/cassandra-driver-core-3.1.2.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$MAVEN_REPOSITORY$/com/datastax/cassandra/cassandra-driver-core/3.1.2/cassandra-driver-core-3.1.2-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$MAVEN_REPOSITORY$/com/datastax/cassandra/cassandra-driver-core/3.1.2/cassandra-driver-core-3.1.2-sources.jar!/" />
-      </SOURCES>
-    </library>
     <library name="Maven: com.espertech:esper:5.4.0">
       <CLASSES>
         <root url="jar://$MAVEN_REPOSITORY$/com/espertech/esper/5.4.0/esper-5.4.0.jar!/" />
@@ -245,15 +241,37 @@
         <root url="jar://$MAVEN_REPOSITORY$/com/espertech/esper/5.4.0/esper-5.4.0-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Maven: com.fasterxml.jackson.core:jackson-core:2.8.6">
+    <library name="Maven: com.fasterxml.jackson.core:jackson-annotations:2.8.0">
       <CLASSES>
-        <root url="jar://$MAVEN_REPOSITORY$/com/fasterxml/jackson/core/jackson-core/2.8.6/jackson-core-2.8.6.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/com/fasterxml/jackson/core/jackson-annotations/2.8.0/jackson-annotations-2.8.0.jar!/" />
       </CLASSES>
       <JAVADOC>
-        <root url="jar://$MAVEN_REPOSITORY$/com/fasterxml/jackson/core/jackson-core/2.8.6/jackson-core-2.8.6-javadoc.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/com/fasterxml/jackson/core/jackson-annotations/2.8.0/jackson-annotations-2.8.0-javadoc.jar!/" />
       </JAVADOC>
       <SOURCES>
-        <root url="jar://$MAVEN_REPOSITORY$/com/fasterxml/jackson/core/jackson-core/2.8.6/jackson-core-2.8.6-sources.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/com/fasterxml/jackson/core/jackson-annotations/2.8.0/jackson-annotations-2.8.0-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: com.fasterxml.jackson.core:jackson-core:2.8.9">
+      <CLASSES>
+        <root url="jar://$MAVEN_REPOSITORY$/com/fasterxml/jackson/core/jackson-core/2.8.9/jackson-core-2.8.9.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$MAVEN_REPOSITORY$/com/fasterxml/jackson/core/jackson-core/2.8.9/jackson-core-2.8.9-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$MAVEN_REPOSITORY$/com/fasterxml/jackson/core/jackson-core/2.8.9/jackson-core-2.8.9-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: com.fasterxml.jackson.core:jackson-databind:2.8.9">
+      <CLASSES>
+        <root url="jar://$MAVEN_REPOSITORY$/com/fasterxml/jackson/core/jackson-databind/2.8.9/jackson-databind-2.8.9.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$MAVEN_REPOSITORY$/com/fasterxml/jackson/core/jackson-databind/2.8.9/jackson-databind-2.8.9-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$MAVEN_REPOSITORY$/com/fasterxml/jackson/core/jackson-databind/2.8.9/jackson-databind-2.8.9-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: com.fasterxml.jackson.dataformat:jackson-dataformat-cbor:2.8.6">
@@ -287,72 +305,6 @@
       </JAVADOC>
       <SOURCES>
         <root url="jar://$MAVEN_REPOSITORY$/com/fasterxml/jackson/dataformat/jackson-dataformat-yaml/2.8.6/jackson-dataformat-yaml-2.8.6-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: com.github.jnr:jffi:1.2.10">
-      <CLASSES>
-        <root url="jar://$MAVEN_REPOSITORY$/com/github/jnr/jffi/1.2.10/jffi-1.2.10.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$MAVEN_REPOSITORY$/com/github/jnr/jffi/1.2.10/jffi-1.2.10-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$MAVEN_REPOSITORY$/com/github/jnr/jffi/1.2.10/jffi-1.2.10-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: com.github.jnr:jffi:native:1.2.10">
-      <CLASSES>
-        <root url="jar://$MAVEN_REPOSITORY$/com/github/jnr/jffi/1.2.10/jffi-1.2.10-native.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$MAVEN_REPOSITORY$/com/github/jnr/jffi/1.2.10/jffi-1.2.10-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$MAVEN_REPOSITORY$/com/github/jnr/jffi/1.2.10/jffi-1.2.10-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: com.github.jnr:jnr-constants:0.9.0">
-      <CLASSES>
-        <root url="jar://$MAVEN_REPOSITORY$/com/github/jnr/jnr-constants/0.9.0/jnr-constants-0.9.0.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$MAVEN_REPOSITORY$/com/github/jnr/jnr-constants/0.9.0/jnr-constants-0.9.0-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$MAVEN_REPOSITORY$/com/github/jnr/jnr-constants/0.9.0/jnr-constants-0.9.0-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: com.github.jnr:jnr-ffi:2.0.7">
-      <CLASSES>
-        <root url="jar://$MAVEN_REPOSITORY$/com/github/jnr/jnr-ffi/2.0.7/jnr-ffi-2.0.7.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$MAVEN_REPOSITORY$/com/github/jnr/jnr-ffi/2.0.7/jnr-ffi-2.0.7-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$MAVEN_REPOSITORY$/com/github/jnr/jnr-ffi/2.0.7/jnr-ffi-2.0.7-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: com.github.jnr:jnr-posix:3.0.27">
-      <CLASSES>
-        <root url="jar://$MAVEN_REPOSITORY$/com/github/jnr/jnr-posix/3.0.27/jnr-posix-3.0.27.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$MAVEN_REPOSITORY$/com/github/jnr/jnr-posix/3.0.27/jnr-posix-3.0.27-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$MAVEN_REPOSITORY$/com/github/jnr/jnr-posix/3.0.27/jnr-posix-3.0.27-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: com.github.jnr:jnr-x86asm:1.0.2">
-      <CLASSES>
-        <root url="jar://$MAVEN_REPOSITORY$/com/github/jnr/jnr-x86asm/1.0.2/jnr-x86asm-1.0.2.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$MAVEN_REPOSITORY$/com/github/jnr/jnr-x86asm/1.0.2/jnr-x86asm-1.0.2-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$MAVEN_REPOSITORY$/com/github/jnr/jnr-x86asm/1.0.2/jnr-x86asm-1.0.2-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: com.github.spullara.mustache.java:compiler:0.9.3">
@@ -399,15 +351,15 @@
         <root url="jar://$MAVEN_REPOSITORY$/com/google/code/gson/gson/2.7/gson-2.7-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Maven: com.google.guava:guava:16.0.1">
+    <library name="Maven: com.google.guava:guava:12.0.1">
       <CLASSES>
-        <root url="jar://$MAVEN_REPOSITORY$/com/google/guava/guava/16.0.1/guava-16.0.1.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/com/google/guava/guava/12.0.1/guava-12.0.1.jar!/" />
       </CLASSES>
       <JAVADOC>
-        <root url="jar://$MAVEN_REPOSITORY$/com/google/guava/guava/16.0.1/guava-16.0.1-javadoc.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/com/google/guava/guava/12.0.1/guava-12.0.1-javadoc.jar!/" />
       </JAVADOC>
       <SOURCES>
-        <root url="jar://$MAVEN_REPOSITORY$/com/google/guava/guava/16.0.1/guava-16.0.1-sources.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/com/google/guava/guava/12.0.1/guava-12.0.1-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: com.google.protobuf:protobuf-java:2.6.1">
@@ -641,17 +593,6 @@
         <root url="jar://$MAVEN_REPOSITORY$/commons-net/commons-net/3.1/commons-net-3.1-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Maven: io.dropwizard.metrics:metrics-core:3.1.2">
-      <CLASSES>
-        <root url="jar://$MAVEN_REPOSITORY$/io/dropwizard/metrics/metrics-core/3.1.2/metrics-core-3.1.2.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$MAVEN_REPOSITORY$/io/dropwizard/metrics/metrics-core/3.1.2/metrics-core-3.1.2-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$MAVEN_REPOSITORY$/io/dropwizard/metrics/metrics-core/3.1.2/metrics-core-3.1.2-sources.jar!/" />
-      </SOURCES>
-    </library>
     <library name="Maven: io.netty:netty-all:4.0.23.Final">
       <CLASSES>
         <root url="jar://$MAVEN_REPOSITORY$/io/netty/netty-all/4.0.23.Final/netty-all-4.0.23.Final.jar!/" />
@@ -663,15 +604,15 @@
         <root url="jar://$MAVEN_REPOSITORY$/io/netty/netty-all/4.0.23.Final/netty-all-4.0.23.Final-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Maven: io.netty:netty-buffer:4.0.37.Final">
+    <library name="Maven: io.netty:netty-buffer:4.1.11.Final">
       <CLASSES>
-        <root url="jar://$MAVEN_REPOSITORY$/io/netty/netty-buffer/4.0.37.Final/netty-buffer-4.0.37.Final.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/io/netty/netty-buffer/4.1.11.Final/netty-buffer-4.1.11.Final.jar!/" />
       </CLASSES>
       <JAVADOC>
-        <root url="jar://$MAVEN_REPOSITORY$/io/netty/netty-buffer/4.0.37.Final/netty-buffer-4.0.37.Final-javadoc.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/io/netty/netty-buffer/4.1.11.Final/netty-buffer-4.1.11.Final-javadoc.jar!/" />
       </JAVADOC>
       <SOURCES>
-        <root url="jar://$MAVEN_REPOSITORY$/io/netty/netty-buffer/4.0.37.Final/netty-buffer-4.0.37.Final-sources.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/io/netty/netty-buffer/4.1.11.Final/netty-buffer-4.1.11.Final-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: io.netty:netty-codec-http:4.1.11.Final">
@@ -685,15 +626,15 @@
         <root url="jar://$MAVEN_REPOSITORY$/io/netty/netty-codec-http/4.1.11.Final/netty-codec-http-4.1.11.Final-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Maven: io.netty:netty-codec:4.0.37.Final">
+    <library name="Maven: io.netty:netty-codec:4.1.11.Final">
       <CLASSES>
-        <root url="jar://$MAVEN_REPOSITORY$/io/netty/netty-codec/4.0.37.Final/netty-codec-4.0.37.Final.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/io/netty/netty-codec/4.1.11.Final/netty-codec-4.1.11.Final.jar!/" />
       </CLASSES>
       <JAVADOC>
-        <root url="jar://$MAVEN_REPOSITORY$/io/netty/netty-codec/4.0.37.Final/netty-codec-4.0.37.Final-javadoc.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/io/netty/netty-codec/4.1.11.Final/netty-codec-4.1.11.Final-javadoc.jar!/" />
       </JAVADOC>
       <SOURCES>
-        <root url="jar://$MAVEN_REPOSITORY$/io/netty/netty-codec/4.0.37.Final/netty-codec-4.0.37.Final-sources.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/io/netty/netty-codec/4.1.11.Final/netty-codec-4.1.11.Final-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: io.netty:netty-common:4.1.11.Final">
@@ -707,15 +648,15 @@
         <root url="jar://$MAVEN_REPOSITORY$/io/netty/netty-common/4.1.11.Final/netty-common-4.1.11.Final-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Maven: io.netty:netty-handler:4.0.37.Final">
+    <library name="Maven: io.netty:netty-handler:4.1.11.Final">
       <CLASSES>
-        <root url="jar://$MAVEN_REPOSITORY$/io/netty/netty-handler/4.0.37.Final/netty-handler-4.0.37.Final.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/io/netty/netty-handler/4.1.11.Final/netty-handler-4.1.11.Final.jar!/" />
       </CLASSES>
       <JAVADOC>
-        <root url="jar://$MAVEN_REPOSITORY$/io/netty/netty-handler/4.0.37.Final/netty-handler-4.0.37.Final-javadoc.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/io/netty/netty-handler/4.1.11.Final/netty-handler-4.1.11.Final-javadoc.jar!/" />
       </JAVADOC>
       <SOURCES>
-        <root url="jar://$MAVEN_REPOSITORY$/io/netty/netty-handler/4.0.37.Final/netty-handler-4.0.37.Final-sources.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/io/netty/netty-handler/4.1.11.Final/netty-handler-4.1.11.Final-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: io.netty:netty-resolver:4.1.11.Final">
@@ -729,15 +670,15 @@
         <root url="jar://$MAVEN_REPOSITORY$/io/netty/netty-resolver/4.1.11.Final/netty-resolver-4.1.11.Final-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Maven: io.netty:netty-transport:4.0.37.Final">
+    <library name="Maven: io.netty:netty-transport:4.1.11.Final">
       <CLASSES>
-        <root url="jar://$MAVEN_REPOSITORY$/io/netty/netty-transport/4.0.37.Final/netty-transport-4.0.37.Final.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/io/netty/netty-transport/4.1.11.Final/netty-transport-4.1.11.Final.jar!/" />
       </CLASSES>
       <JAVADOC>
-        <root url="jar://$MAVEN_REPOSITORY$/io/netty/netty-transport/4.0.37.Final/netty-transport-4.0.37.Final-javadoc.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/io/netty/netty-transport/4.1.11.Final/netty-transport-4.1.11.Final-javadoc.jar!/" />
       </JAVADOC>
       <SOURCES>
-        <root url="jar://$MAVEN_REPOSITORY$/io/netty/netty-transport/4.0.37.Final/netty-transport-4.0.37.Final-sources.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/io/netty/netty-transport/4.1.11.Final/netty-transport-4.1.11.Final-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: io.netty:netty:3.7.0.Final">
@@ -837,17 +778,6 @@
       </JAVADOC>
       <SOURCES>
         <root url="jar://$MAVEN_REPOSITORY$/log4j/log4j/1.2.17/log4j-1.2.17-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: mysql:mysql-connector-java:5.1.38">
-      <CLASSES>
-        <root url="jar://$MAVEN_REPOSITORY$/mysql/mysql-connector-java/5.1.38/mysql-connector-java-5.1.38.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$MAVEN_REPOSITORY$/mysql/mysql-connector-java/5.1.38/mysql-connector-java-5.1.38-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$MAVEN_REPOSITORY$/mysql/mysql-connector-java/5.1.38/mysql-connector-java-5.1.38-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: net.jpountz.lz4:lz4:1.2.0">
@@ -1411,103 +1341,103 @@
         <root url="jar://$MAVEN_REPOSITORY$/org/codehaus/jackson/jackson-mapper-asl/1.9.13/jackson-mapper-asl-1.9.13-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Maven: org.elasticsearch.client:rest:5.5.0">
+    <library name="Maven: org.elasticsearch.client:rest:5.5.1">
       <CLASSES>
-        <root url="jar://$MAVEN_REPOSITORY$/org/elasticsearch/client/rest/5.5.0/rest-5.5.0.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/org/elasticsearch/client/rest/5.5.1/rest-5.5.1.jar!/" />
       </CLASSES>
       <JAVADOC>
-        <root url="jar://$MAVEN_REPOSITORY$/org/elasticsearch/client/rest/5.5.0/rest-5.5.0-javadoc.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/org/elasticsearch/client/rest/5.5.1/rest-5.5.1-javadoc.jar!/" />
       </JAVADOC>
       <SOURCES>
-        <root url="jar://$MAVEN_REPOSITORY$/org/elasticsearch/client/rest/5.5.0/rest-5.5.0-sources.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/org/elasticsearch/client/rest/5.5.1/rest-5.5.1-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Maven: org.elasticsearch.client:transport:5.5.0">
+    <library name="Maven: org.elasticsearch.client:transport:5.5.1">
       <CLASSES>
-        <root url="jar://$MAVEN_REPOSITORY$/org/elasticsearch/client/transport/5.5.0/transport-5.5.0.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/org/elasticsearch/client/transport/5.5.1/transport-5.5.1.jar!/" />
       </CLASSES>
       <JAVADOC>
-        <root url="jar://$MAVEN_REPOSITORY$/org/elasticsearch/client/transport/5.5.0/transport-5.5.0-javadoc.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/org/elasticsearch/client/transport/5.5.1/transport-5.5.1-javadoc.jar!/" />
       </JAVADOC>
       <SOURCES>
-        <root url="jar://$MAVEN_REPOSITORY$/org/elasticsearch/client/transport/5.5.0/transport-5.5.0-sources.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/org/elasticsearch/client/transport/5.5.1/transport-5.5.1-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Maven: org.elasticsearch.plugin:lang-mustache-client:5.5.0">
+    <library name="Maven: org.elasticsearch.plugin:lang-mustache-client:5.5.1">
       <CLASSES>
-        <root url="jar://$MAVEN_REPOSITORY$/org/elasticsearch/plugin/lang-mustache-client/5.5.0/lang-mustache-client-5.5.0.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/org/elasticsearch/plugin/lang-mustache-client/5.5.1/lang-mustache-client-5.5.1.jar!/" />
       </CLASSES>
       <JAVADOC>
-        <root url="jar://$MAVEN_REPOSITORY$/org/elasticsearch/plugin/lang-mustache-client/5.5.0/lang-mustache-client-5.5.0-javadoc.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/org/elasticsearch/plugin/lang-mustache-client/5.5.1/lang-mustache-client-5.5.1-javadoc.jar!/" />
       </JAVADOC>
       <SOURCES>
-        <root url="jar://$MAVEN_REPOSITORY$/org/elasticsearch/plugin/lang-mustache-client/5.5.0/lang-mustache-client-5.5.0-sources.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/org/elasticsearch/plugin/lang-mustache-client/5.5.1/lang-mustache-client-5.5.1-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Maven: org.elasticsearch.plugin:parent-join-client:5.5.0">
+    <library name="Maven: org.elasticsearch.plugin:parent-join-client:5.5.1">
       <CLASSES>
-        <root url="jar://$MAVEN_REPOSITORY$/org/elasticsearch/plugin/parent-join-client/5.5.0/parent-join-client-5.5.0.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/org/elasticsearch/plugin/parent-join-client/5.5.1/parent-join-client-5.5.1.jar!/" />
       </CLASSES>
       <JAVADOC>
-        <root url="jar://$MAVEN_REPOSITORY$/org/elasticsearch/plugin/parent-join-client/5.5.0/parent-join-client-5.5.0-javadoc.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/org/elasticsearch/plugin/parent-join-client/5.5.1/parent-join-client-5.5.1-javadoc.jar!/" />
       </JAVADOC>
       <SOURCES>
-        <root url="jar://$MAVEN_REPOSITORY$/org/elasticsearch/plugin/parent-join-client/5.5.0/parent-join-client-5.5.0-sources.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/org/elasticsearch/plugin/parent-join-client/5.5.1/parent-join-client-5.5.1-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Maven: org.elasticsearch.plugin:percolator-client:5.5.0">
+    <library name="Maven: org.elasticsearch.plugin:percolator-client:5.5.1">
       <CLASSES>
-        <root url="jar://$MAVEN_REPOSITORY$/org/elasticsearch/plugin/percolator-client/5.5.0/percolator-client-5.5.0.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/org/elasticsearch/plugin/percolator-client/5.5.1/percolator-client-5.5.1.jar!/" />
       </CLASSES>
       <JAVADOC>
-        <root url="jar://$MAVEN_REPOSITORY$/org/elasticsearch/plugin/percolator-client/5.5.0/percolator-client-5.5.0-javadoc.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/org/elasticsearch/plugin/percolator-client/5.5.1/percolator-client-5.5.1-javadoc.jar!/" />
       </JAVADOC>
       <SOURCES>
-        <root url="jar://$MAVEN_REPOSITORY$/org/elasticsearch/plugin/percolator-client/5.5.0/percolator-client-5.5.0-sources.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/org/elasticsearch/plugin/percolator-client/5.5.1/percolator-client-5.5.1-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Maven: org.elasticsearch.plugin:reindex-client:5.5.0">
+    <library name="Maven: org.elasticsearch.plugin:reindex-client:5.5.1">
       <CLASSES>
-        <root url="jar://$MAVEN_REPOSITORY$/org/elasticsearch/plugin/reindex-client/5.5.0/reindex-client-5.5.0.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/org/elasticsearch/plugin/reindex-client/5.5.1/reindex-client-5.5.1.jar!/" />
       </CLASSES>
       <JAVADOC>
-        <root url="jar://$MAVEN_REPOSITORY$/org/elasticsearch/plugin/reindex-client/5.5.0/reindex-client-5.5.0-javadoc.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/org/elasticsearch/plugin/reindex-client/5.5.1/reindex-client-5.5.1-javadoc.jar!/" />
       </JAVADOC>
       <SOURCES>
-        <root url="jar://$MAVEN_REPOSITORY$/org/elasticsearch/plugin/reindex-client/5.5.0/reindex-client-5.5.0-sources.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/org/elasticsearch/plugin/reindex-client/5.5.1/reindex-client-5.5.1-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Maven: org.elasticsearch.plugin:transport-netty3-client:5.5.0">
+    <library name="Maven: org.elasticsearch.plugin:transport-netty3-client:5.5.1">
       <CLASSES>
-        <root url="jar://$MAVEN_REPOSITORY$/org/elasticsearch/plugin/transport-netty3-client/5.5.0/transport-netty3-client-5.5.0.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/org/elasticsearch/plugin/transport-netty3-client/5.5.1/transport-netty3-client-5.5.1.jar!/" />
       </CLASSES>
       <JAVADOC>
-        <root url="jar://$MAVEN_REPOSITORY$/org/elasticsearch/plugin/transport-netty3-client/5.5.0/transport-netty3-client-5.5.0-javadoc.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/org/elasticsearch/plugin/transport-netty3-client/5.5.1/transport-netty3-client-5.5.1-javadoc.jar!/" />
       </JAVADOC>
       <SOURCES>
-        <root url="jar://$MAVEN_REPOSITORY$/org/elasticsearch/plugin/transport-netty3-client/5.5.0/transport-netty3-client-5.5.0-sources.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/org/elasticsearch/plugin/transport-netty3-client/5.5.1/transport-netty3-client-5.5.1-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Maven: org.elasticsearch.plugin:transport-netty4-client:5.5.0">
+    <library name="Maven: org.elasticsearch.plugin:transport-netty4-client:5.5.1">
       <CLASSES>
-        <root url="jar://$MAVEN_REPOSITORY$/org/elasticsearch/plugin/transport-netty4-client/5.5.0/transport-netty4-client-5.5.0.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/org/elasticsearch/plugin/transport-netty4-client/5.5.1/transport-netty4-client-5.5.1.jar!/" />
       </CLASSES>
       <JAVADOC>
-        <root url="jar://$MAVEN_REPOSITORY$/org/elasticsearch/plugin/transport-netty4-client/5.5.0/transport-netty4-client-5.5.0-javadoc.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/org/elasticsearch/plugin/transport-netty4-client/5.5.1/transport-netty4-client-5.5.1-javadoc.jar!/" />
       </JAVADOC>
       <SOURCES>
-        <root url="jar://$MAVEN_REPOSITORY$/org/elasticsearch/plugin/transport-netty4-client/5.5.0/transport-netty4-client-5.5.0-sources.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/org/elasticsearch/plugin/transport-netty4-client/5.5.1/transport-netty4-client-5.5.1-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Maven: org.elasticsearch:elasticsearch:5.5.0">
+    <library name="Maven: org.elasticsearch:elasticsearch:5.5.1">
       <CLASSES>
-        <root url="jar://$MAVEN_REPOSITORY$/org/elasticsearch/elasticsearch/5.5.0/elasticsearch-5.5.0.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/org/elasticsearch/elasticsearch/5.5.1/elasticsearch-5.5.1.jar!/" />
       </CLASSES>
       <JAVADOC>
-        <root url="jar://$MAVEN_REPOSITORY$/org/elasticsearch/elasticsearch/5.5.0/elasticsearch-5.5.0-javadoc.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/org/elasticsearch/elasticsearch/5.5.1/elasticsearch-5.5.1-javadoc.jar!/" />
       </JAVADOC>
       <SOURCES>
-        <root url="jar://$MAVEN_REPOSITORY$/org/elasticsearch/elasticsearch/5.5.0/elasticsearch-5.5.0-sources.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/org/elasticsearch/elasticsearch/5.5.1/elasticsearch-5.5.1-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: org.elasticsearch:jna:4.4.0">
@@ -1607,61 +1537,6 @@
       </JAVADOC>
       <SOURCES>
         <root url="jar://$MAVEN_REPOSITORY$/org/mortbay/jetty/jetty-util/6.1.26/jetty-util-6.1.26-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: org.ow2.asm:asm-analysis:5.0.3">
-      <CLASSES>
-        <root url="jar://$MAVEN_REPOSITORY$/org/ow2/asm/asm-analysis/5.0.3/asm-analysis-5.0.3.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$MAVEN_REPOSITORY$/org/ow2/asm/asm-analysis/5.0.3/asm-analysis-5.0.3-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$MAVEN_REPOSITORY$/org/ow2/asm/asm-analysis/5.0.3/asm-analysis-5.0.3-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: org.ow2.asm:asm-commons:5.0.3">
-      <CLASSES>
-        <root url="jar://$MAVEN_REPOSITORY$/org/ow2/asm/asm-commons/5.0.3/asm-commons-5.0.3.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$MAVEN_REPOSITORY$/org/ow2/asm/asm-commons/5.0.3/asm-commons-5.0.3-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$MAVEN_REPOSITORY$/org/ow2/asm/asm-commons/5.0.3/asm-commons-5.0.3-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: org.ow2.asm:asm-tree:5.0.3">
-      <CLASSES>
-        <root url="jar://$MAVEN_REPOSITORY$/org/ow2/asm/asm-tree/5.0.3/asm-tree-5.0.3.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$MAVEN_REPOSITORY$/org/ow2/asm/asm-tree/5.0.3/asm-tree-5.0.3-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$MAVEN_REPOSITORY$/org/ow2/asm/asm-tree/5.0.3/asm-tree-5.0.3-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: org.ow2.asm:asm-util:5.0.3">
-      <CLASSES>
-        <root url="jar://$MAVEN_REPOSITORY$/org/ow2/asm/asm-util/5.0.3/asm-util-5.0.3.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$MAVEN_REPOSITORY$/org/ow2/asm/asm-util/5.0.3/asm-util-5.0.3-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$MAVEN_REPOSITORY$/org/ow2/asm/asm-util/5.0.3/asm-util-5.0.3-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: org.ow2.asm:asm:5.0.3">
-      <CLASSES>
-        <root url="jar://$MAVEN_REPOSITORY$/org/ow2/asm/asm/5.0.3/asm-5.0.3.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$MAVEN_REPOSITORY$/org/ow2/asm/asm/5.0.3/asm-5.0.3-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$MAVEN_REPOSITORY$/org/ow2/asm/asm/5.0.3/asm-5.0.3-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: org.scala-lang.modules:scala-parser-combinators_2.11:1.0.4">

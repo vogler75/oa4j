@@ -2,6 +2,7 @@ package at.rocworks.oa4j.logger.dbs;
 
 import at.rocworks.oa4j.base.JDebug;
 
+import at.rocworks.oa4j.logger.keys.KeyBuilderDpEl;
 import at.rocworks.oa4j.var.Bit32Var;
 import at.rocworks.oa4j.var.Bit64Var;
 import at.rocworks.oa4j.var.DynVar;
@@ -82,6 +83,7 @@ public class NoSQLInfluxDB extends NoSQLServer {
         int i, k, ret;
         DataItem item;
         EventItem event;
+        String col="value";
         StringBuffer data = new StringBuffer();
         k = 0;
         for (i = 0; i < events.size() && (item = events.getItem(i)) != null; i++) {
@@ -97,31 +99,38 @@ public class NoSQLInfluxDB extends NoSQLServer {
                     case FloatVar:
                         value = String.format(Locale.ENGLISH, "%f", event.getValue().getDouble());
                         tag = ",type=float"; // add a tag
+                        if (!(key instanceof KeyBuilderDpEl)) col = "value";
                         break;
                     case IntegerVar:
                     case UIntegerVar:
                         value = event.getValue().getLong().toString() + "i";
                         tag = ",type=integer"; // add a tag
+                        if (!(key instanceof KeyBuilderDpEl)) col = "value_integer";
                         break;
                     case TimeVar:
                         value = event.getValue().getTimeMS().toString();
                         tag = ",type=time"; // add a tag
+                        col = "value_time";
                         break;
                     case BitVar:
                         value = event.getValue().getBoolean() ? "1" : "0";
                         tag = ",type=bool"; // add a tag
+                        if (!(key instanceof KeyBuilderDpEl)) col = "value_bool";
                         break;
                     case Bit32Var:
                         value = event.getValue().getLong().toString() + "i";
                         tag = ",type=bit32"; // add a tag
+                        if (!(key instanceof KeyBuilderDpEl)) col = "value_bit32";
                         break;
                     case Bit64Var:
                         value = event.getValue().getLong().toString() + "i";
                         tag = ",type=bit64"; // add a tag
+                        if (!(key instanceof KeyBuilderDpEl)) col = "value_bit64";
                         break;                        
                     case TextVar:
                         value = String.format("\"%s\"", URLEncoder.encode(event.getValue().getString(), "UTF-8"));
-                        tag = ",type=text"; // add a tag   
+                        tag = ",type=text"; // add a tag
+                        if (!(key instanceof KeyBuilderDpEl)) col = "value_text";
                         break;
                     case Unknown:
                         JDebug.out.log(Level.WARNING, "unknown value type {0}", event.getValue().getVariableType());
@@ -146,7 +155,7 @@ public class NoSQLInfluxDB extends NoSQLServer {
                     .append(",dp=").append(event.getDp().getDp())
                     .append(",el=").append(Variable.nvl(event.getDp().getElement(), "."))
                     .append(tag)
-                    .append(" value=").append(value);
+                    .append(" "+col+"=").append(value);
             // status, manager, user
             if (event.hasAttributes()) {
                 data.append(",status=").append(event.getStatus()).append("i");
@@ -163,6 +172,7 @@ public class NoSQLInfluxDB extends NoSQLServer {
             try {
                 Date t1 = new Date();
                 StringBuffer result = new StringBuffer();
+                //System.out.println(data);
                 int httpRet = HttpUtil.httpPost(this.url + "/write?db=" + this.db, data, result);
                 if (httpRet >= 200 && httpRet <= 299) { // Successful					
                     ret = INoSQLInterface.OK;
