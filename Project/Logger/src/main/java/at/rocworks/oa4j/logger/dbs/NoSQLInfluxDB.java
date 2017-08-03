@@ -110,7 +110,7 @@ public class NoSQLInfluxDB extends NoSQLServer {
                     case TimeVar:
                         value = event.getValue().getTimeMS().toString();
                         tag = ",type=time"; // add a tag
-                        col = "value_time";
+                        if (!(key instanceof KeyBuilderDpEl)) col = "value_time";
                         break;
                     case BitVar:
                         value = event.getValue().getBoolean() ? "1" : "0";

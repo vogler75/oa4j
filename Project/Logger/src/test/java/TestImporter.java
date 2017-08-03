@@ -6,7 +6,9 @@ import at.rocworks.oa4j.logger.dbs.NoSQLCrateDB;
 import at.rocworks.oa4j.logger.dbs.NoSQLElasticsearch;
 import at.rocworks.oa4j.logger.dbs.NoSQLInfluxDB;
 import at.rocworks.oa4j.logger.dbs.NoSQLMongoDB;
+import at.rocworks.oa4j.logger.keys.KeyBuilder;
 import at.rocworks.oa4j.logger.keys.KeyBuilderDp;
+import at.rocworks.oa4j.logger.keys.KeyBuilderFixed;
 import at.rocworks.oa4j.var.*;
 
 import java.io.BufferedReader;
@@ -26,7 +28,9 @@ public class TestImporter {
         TestImporter imp = new TestImporter();
         System.out.println(imp.settings.getThreads());
 
-        Files.walk(Paths.get("/Volumes/shared/export/backup"))
+        //String dir = "/Volumes/shared/export/backup";
+        String dir = "S:/export/backup";
+        Files.walk(Paths.get(dir))
                 .filter(Files::isRegularFile)
                 .filter((file) -> file.toString().endsWith(".out"))
                 .forEach((file) -> imp.importFile(file.toString()));
@@ -36,15 +40,17 @@ public class TestImporter {
 
     Properties props = new Properties();
     NoSQLSettings settings = new NoSQLSettings(props, "Importer");
-    KeyBuilderDp keybuilder = new KeyBuilderDp();
+
+    KeyBuilder keybuilder = new KeyBuilderFixed("EVENT");
+    //KeyBuilder keybuilder = new KeyBuilderDp();
 
     ExecutorService executor = Executors.newFixedThreadPool(4);
-    final int BLOCKSIZE=8192;
+    final int BLOCKSIZE=10000;
 
-    //NoSQLServer db = new NoSQLInfluxDB(settings, keybuilder, "http://ubuntu1:8086", "scada");
+    NoSQLServer db = new NoSQLInfluxDB(settings, keybuilder, "http://ubuntu1:8086", "test");
     //NoSQLServer db = new NoSQLCrateDB(settings, "jdbc:crate://ubuntu1:5432/", "", "", "EVENT");
     //NoSQLServer db = new NoSQLElasticsearch(settings, "/Users/vogler", "elasticsearch", "ubuntu1", "scada", false);
-    NoSQLServer db = new NoSQLMongoDB(settings, "mongodb://ubuntu1:27017/", "scada", false);
+    //NoSQLServer db = new NoSQLMongoDB(settings, "mongodb://ubuntu1:27017/", "scada", false);
 
     public void importFile(String file) {
         int count=0;
