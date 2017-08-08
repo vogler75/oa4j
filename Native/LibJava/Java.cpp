@@ -263,6 +263,7 @@ jobject Java::convertToJava(JNIEnv *env, VariablePtr varptr)
 	case DYNLONG_VAR:
 	case DYNULONG_VAR:
 	case DYNDPIDENTIFIER_VAR:
+	case DYNLANGTEXT_VAR:    
 	{
 		// gettimeofday(&tp, NULL); long int ms1 = tp.tv_usec; 
 		jclass clsDynVar = env->FindClass(DynVarClassName);
@@ -293,6 +294,7 @@ jobject Java::convertToJava(JNIEnv *env, VariablePtr varptr)
 			case DYNLONG_VAR: jvar = convertToJava(env, (LongVar*)var); break;
 			case DYNULONG_VAR: jvar = convertToJava(env, (ULongVar*)var); break;
 			case DYNDPIDENTIFIER_VAR: jvar = convertToJava(env, (DpIdentifierVar*)var); break;
+			case DYNLANGTEXT_VAR: jvar = convertToJava(env, (LangTextVar*)var); break;
 			default: jvar = NULL;
 			}
 			jm = env->GetMethodID(clsDynVar, "add", "(Lat/rocworks/oa4j/var/Variable;)V");
