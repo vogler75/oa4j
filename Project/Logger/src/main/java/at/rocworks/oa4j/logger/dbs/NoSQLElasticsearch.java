@@ -102,7 +102,8 @@ PUT /_template/scada-event-template
     },
     "event" : {
             "properties" : {
-                "tag" : {"type" : "text", "analyzer" : "simple"},
+                "tag" : {"type" : "text", "analyzer" : "keyword"},
+                "name" : {"type" : "text", "analyzer" : "simple"},
                 "@timestamp" : {"type" : "date"},
                 "type" : {"type" : "text","index":  false},
                 "sys" : {"type" : "text", "index" : false},
@@ -145,7 +146,8 @@ PUT /_template/scada-alert-template
       },
       "alert": {
           "properties" : {
-              "tag" : {"type" : "text", "analyzer" : "simple"},
+              "tag" : {"type" : "text", "analyzer" : "keyword"},
+              "name" : {"type" : "text", "analyzer" : "simple"},
               "@timestamp" : {"type" : "date"},
               "type" : {"type" : "text","index":  false},
                 "sys" : {"type" : "text", "index" : false},
@@ -346,7 +348,8 @@ public class NoSQLElasticsearch extends NoSQLServer {
                 obj = jsonBuilder().startObject()
                         //.field("type", "event")
                         .field("@timestamp", new Date(event.getTimeMS()))
-                        .field("tag", event.getDp().getDpEl());
+                        .field("tag", event.getDp().getDpEl())
+                        .field("name", event.getDp().getDpEl());
                         //.field("tag", getTagOfDp(event.getDp()))
                         //.field("sys", event.getDp().getSystem())
                         //.field("dp", event.getDp().getDp())
@@ -449,7 +452,8 @@ public class NoSQLElasticsearch extends NoSQLServer {
                 obj = jsonBuilder().startObject()
                         //.field("type", "alert")
                         .field("@timestamp", new Date(alert.getTimeMS()))
-                        .field("tag", alert.getDp().getDpEl());
+                        .field("tag", alert.getDp().getDpEl())
+                        .field("name", alert.getDp().getDpEl());
                         //.field("tag", getTagOfDp(alert.getDp()))
                         //.field("sys", alert.getDp().getSystem())
                         //.field("dp", alert.getDp().getDp())
