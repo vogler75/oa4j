@@ -102,7 +102,7 @@ PUT /_template/scada-event-template
     },
     "event" : {
             "properties" : {
-                "tag" : {"type" : "text"},
+                "tag" : {"type" : "text", "analyzer" : "simple"},
                 "@timestamp" : {"type" : "date"},
                 "type" : {"type" : "text","index":  false},
                 "sys" : {"type" : "text", "index" : false},
@@ -134,7 +134,6 @@ PUT /_template/scada-alert-template
     "template": "scada-alert-*", 
     "order":    1, 
     "settings": {
-        "settings":{ "refresh_interval" : "5s" },   
         "number_of_shards":   1,
         "number_of_replicas": 0          
     },
@@ -146,7 +145,7 @@ PUT /_template/scada-alert-template
       },
       "alert": {
           "properties" : {
-              "tag" : {"type" : "text"},
+              "tag" : {"type" : "text", "analyzer" : "simple"},
               "@timestamp" : {"type" : "date"},
               "type" : {"type" : "text","index":  false},
                 "sys" : {"type" : "text", "index" : false},
@@ -448,13 +447,14 @@ public class NoSQLElasticsearch extends NoSQLServer {
             alert=(AlertItem)item;            
             try {
                 obj = jsonBuilder().startObject()
-                        .field("type", "alert")
-                        .field("tag", getTagOfDp(alert.getDp()))
+                        //.field("type", "alert")
                         .field("@timestamp", new Date(alert.getTimeMS()))
-                        .field("sys", alert.getDp().getSystem())
-                        .field("dp", alert.getDp().getDp())
-                        .field("el", alert.getDp().getElement())
-                        .field("dpel", alert.getDp().getDpEl());
+                        .field("tag", alert.getDp().getDpEl());
+                        //.field("tag", getTagOfDp(alert.getDp()))
+                        //.field("sys", alert.getDp().getSystem())
+                        //.field("dp", alert.getDp().getDp())
+                        //.field("el", alert.getDp().getElement())
+                        //.field("dpel", alert.getDp().getDpEl());
 
                 // value
                 value = alert.getValue();
