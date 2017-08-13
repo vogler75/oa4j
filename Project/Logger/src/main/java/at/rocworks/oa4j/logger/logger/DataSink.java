@@ -136,8 +136,14 @@ public class DataSink /*implements IDataCollector*/ {
                             break;
                         }
                 }
-            } catch (ClassNotFoundException | NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+            } catch (ClassNotFoundException | NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException ex) {
                 JDebug.StackTrace(Level.SEVERE, ex);
+            } catch (InvocationTargetException ex) {
+                try {
+                    throw ex.getTargetException();
+                } catch (Throwable throwable) {
+                    JDebug.StackTrace(Level.SEVERE, ex);
+                }
             }
         }
         return true;
