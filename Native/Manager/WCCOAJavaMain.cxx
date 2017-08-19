@@ -52,7 +52,7 @@ int main(int argc, char *argv[])
 
 	// java.class.path
 	{		
-		CharString *s = new CharString(CharString("-Djava.class.path=bin") + CLASS_PATH_SEPARATOR + CharString("bin/winccoa-java.jar"));
+		CharString *s = new CharString(CharString("-Djava.class.path=bin") + CLASS_PATH_SEPARATOR + CharString("bin/winccoa-java-1.0-SNAPSHOT.jar"));
 		iClassPathSet = ++idx;
 		options[iClassPathSet].optionString = (char*)s->c_str();
 		std::cout << "default: " << options[idx].optionString << std::endl;
