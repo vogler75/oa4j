@@ -12,9 +12,9 @@
 class JDpIdentifierClass {
 private:
 	JNIEnv *env;
-	jclass cls = 0;
-	jmethodID midInit = 0;
-	jmethodID midSetName = 0;
+	jclass cls;
+	jmethodID midInit;
+	jmethodID midSetName;
 
 public:
 	JDpIdentifierClass(JNIEnv *env);
@@ -28,23 +28,23 @@ public:
 class JVariableClass {
 private:
 	JNIEnv *env;
-	jclass cls = 0;
-	jclass clsDynVar = 0;
-	jmethodID midNewBitVar = 0;
-	jmethodID midNewBit32Var = 0;
-	jmethodID midNewBit64Var = 0;
-	jmethodID midNewFloatVar = 0;
-	jmethodID midNewLongVar = 0;
-	jmethodID midNewIntegerVar = 0;
-	jmethodID midNewUIntegerVar = 0;
-	jmethodID midNewCharVar = 0;
-	jmethodID midNewTextVar = 0;
-	jmethodID midNewLangTextVar = 0;
-	jmethodID midSetLangTextVar = 0;
-	jmethodID midNewTimeVar = 0;
-	jmethodID midNewDynVar = 0;
-	jmethodID midNewDynVarSized = 0;
-	jmethodID midAddDynVar = 0;
+	jclass cls;
+	jclass clsDynVar;
+	jmethodID midNewBitVar;
+	jmethodID midNewBit32Var;
+	jmethodID midNewBit64Var;
+	jmethodID midNewFloatVar;
+	jmethodID midNewLongVar;
+	jmethodID midNewIntegerVar;
+	jmethodID midNewUIntegerVar;
+	jmethodID midNewCharVar;
+	jmethodID midNewTextVar;
+	jmethodID midNewLangTextVar;
+	jmethodID midSetLangTextVar;
+	jmethodID midNewTimeVar;
+	jmethodID midNewDynVar;
+	jmethodID midNewDynVarSized;
+	jmethodID midAddDynVar;
 
 public:
 

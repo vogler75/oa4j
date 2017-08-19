@@ -132,10 +132,14 @@ jobject Java::convertToJava(JNIEnv *env, const DpIdentifier &dpid, JDpIdentifier
 {
 	jobject objDpId;
 	jstring jstr;
+	bool cdpidTmp=false;
 
 	if (DEBUG) std::cout << "convertToJava::DpIdentifier " << dpid << std::endl;
 
-	if (!cdpid) cdpid = &JDpIdentifierClass(env);
+	if (!cdpid) { 
+		cdpid = new JDpIdentifierClass(env);
+		cdpidTmp = true;
+	}
 
 	// create dpid object
 	objDpId = env->NewObject(cdpid->Class(), cdpid->Init());
@@ -153,17 +157,21 @@ jobject Java::convertToJava(JNIEnv *env, const DpIdentifier &dpid, JDpIdentifier
 		env->DeleteLocalRef(jstr);
 	}
 
+	if (cdpidTmp) delete cdpid;
+
 	return objDpId;
 }
 
 jobject Java::convertToJava(JNIEnv *env, VariablePtr varptr, JDpIdentifierClass *cdpid, JVariableClass *cvar)
 {
 	TimeVar t1;
-
-	//jmethodID jm;
 	jobject res;
+	bool cvarTmp=false;
 
-	if (!cvar) cvar = &JVariableClass(env);	
+	if (!cvar) {
+		cvar = new JVariableClass(env);	
+		cvarTmp = true;
+	}
 
 	jclass clsVariable = cvar->Class();
 
@@ -376,6 +384,8 @@ jobject Java::convertToJava(JNIEnv *env, VariablePtr varptr, JDpIdentifierClass 
 	{
 		std::cout << "convertToJava " << varptr->getTypeName(varptr->isA()) << "...done in " << d << std::endl;
 	}
+
+	if (cvarTmp) delete cvar;
 
 	return res;
 }
