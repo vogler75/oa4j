@@ -322,8 +322,18 @@ public class JManager extends Manager implements Runnable {
             return 0;
         } else 
             return -1;
-    }           
-    
+    }
+
+    @Override
+    public int callbackAnswerError(int id, int code, String text) {
+        JHotLinkWaitForAnswer hdl;
+        hdl = hotlinkList.get(id);
+        if (hdl != null) {
+            hdl.answerError(code, text);
+        }
+        return 0;
+    }
+
     @Override
     public int callbackHotlink(int id, int idx, DpIdentifierVar dpid, Variable var) {
         //JDebug.out.log(Level.INFO, "java got hotlink id={0} idx={1} dpid={2} var={3}", new Object[]{id, idx, dpid, var});

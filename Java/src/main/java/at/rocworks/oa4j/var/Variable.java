@@ -212,7 +212,8 @@ public abstract class Variable implements Serializable {
     public static Variable newBitVar(int value) {return new BitVar(value);}    
     public static Variable newCharVar(char value) {return new CharVar(value);}
     public static Variable newDpIdentifierVar(String value) {return new DpIdentifierVar(value);}                 
-    public static Variable newDynVar() {return new DynVar();}    
+    public static Variable newDynVar() {return new DynVar();}
+    public static Variable newDynVar(int size) { return new DynVar(size); }
     public static Variable newFloatVar(double value) { return new FloatVar(value);}
     public static Variable newFloatVar(float value) {return new FloatVar(value);}
     public static Variable newIntegerVar(int value) {return new IntegerVar(value);}

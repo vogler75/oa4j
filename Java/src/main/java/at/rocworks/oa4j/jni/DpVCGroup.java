@@ -20,8 +20,8 @@ public class DpVCGroup extends DpIdValueList {
     
     public DpVCGroup(long cptr) {
         super.setPointer(cptr);
-    }            
-    
+    }
+
     @Override
     public native String toDebug(int level);    
     

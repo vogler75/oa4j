@@ -26,13 +26,43 @@
 
 #include <Mutex.hxx>
 
+//---------------------------------------------------------------------------------------------------------
+JDpIdentifierClass::JDpIdentifierClass(JNIEnv *p_env)
+{
+	env = p_env;
+	cls = env->FindClass(Java::DpIdentifierClassName);
+	midInit = env->GetMethodID(cls, "<init>", "()V");
+	midSetName = env->GetMethodID(cls, "setName", "(Ljava/lang/String;)V");
+}
+
+JDpIdentifierClass::~JDpIdentifierClass()
+{
+	env->DeleteLocalRef(cls);
+}
+
+//---------------------------------------------------------------------------------------------------------
+JVariableClass::JVariableClass(JNIEnv *p_env)
+{
+	env = p_env;
+	cls = env->FindClass(Java::VariableClassName);
+	clsDynVar = env->FindClass(Java::DynVarClassName);
+}
+
+JVariableClass::~JVariableClass()
+{
+	env->DeleteLocalRef(cls);
+	env->DeleteLocalRef(clsDynVar);
+}
+
+
+//---------------------------------------------------------------------------------------------------------
 const char *Java::NAME = "java";
 const bool Java::DEBUG = false;
 
+const char *Java::DpIdentifierClassName = "at/rocworks/oa4j/var/DpIdentifierVar";
 const char *Java::VariableClassName = "at/rocworks/oa4j/var/Variable";
-const char *Java::DynVarClassName   = "at/rocworks/oa4j/var/DynVar";
-const char *Java::DpIdentifierClassName = "at/rocworks/oa4j/var/DpIdentifierVar"; 
-const char *Java::DpVCItemClassName     = "at/rocworks/oa4j/base/JDpVCItem";
+const char *Java::DynVarClassName = "at/rocworks/oa4j/var/DynVar";
+const char *Java::DpVCItemClassName = "at/rocworks/oa4j/base/JDpVCItem";
 
 Mutex Java::dpIdMutex;
 
@@ -98,20 +128,17 @@ void Java::copyJavaStringToString(JNIEnv *env, jstring s, char **d)
 //--------------------------------------------------------------------------------
 // Converts a DpIdentifier to a Java Object
 
-jobject Java::convertToJava(JNIEnv *env, const DpIdentifier &dpid)
+jobject Java::convertToJava(JNIEnv *env, const DpIdentifier &dpid, JDpIdentifierClass *cdpid)
 {
-	jclass clsDpId = NULL;
-	jobject objDpId = NULL;
-	jmethodID jm;
+	jobject objDpId;
 	jstring jstr;
 
 	if (DEBUG) std::cout << "convertToJava::DpIdentifier " << dpid << std::endl;
 
-	// create dpid object
-	clsDpId = env->FindClass(DpIdentifierClassName);
-	jm = env->GetMethodID(clsDpId, "<init>", "()V");
-	objDpId = env->NewObject(clsDpId, jm);
+	if (!cdpid) cdpid = &JDpIdentifierClass(env);
 
+	// create dpid object
+	objDpId = env->NewObject(cdpid->Class(), cdpid->Init());
 
 	CharString cstr;
 	dpid.convertToString(cstr);
@@ -121,32 +148,24 @@ jobject Java::convertToJava(JNIEnv *env, const DpIdentifier &dpid)
 	}
 	else {
 		// set value of dpid object
-		jm = env->GetMethodID(clsDpId, "setName", "(Ljava/lang/String;)V");
 		jstr = env->NewStringUTF(cstr);
-		env->CallVoidMethod(objDpId, jm, jstr);
+		env->CallVoidMethod(objDpId, cdpid->SetName(), jstr);
 		env->DeleteLocalRef(jstr);
-
 	}
-	env->DeleteLocalRef(clsDpId);
+
 	return objDpId;
 }
 
-jstring Java::convertToJava(JNIEnv *env, CharString *str)
+jobject Java::convertToJava(JNIEnv *env, VariablePtr varptr, JDpIdentifierClass *cdpid, JVariableClass *cvar)
 {
-	return env->NewStringUTF(str->c_str());
-}
+	TimeVar t1;
 
-jstring Java::convertToJava(JNIEnv *env, const CharString &str)
-{
-	return env->NewStringUTF(str.c_str());
-}
-
-jobject Java::convertToJava(JNIEnv *env, VariablePtr varptr)
-{
-	jmethodID jm;
+	//jmethodID jm;
 	jobject res;
 
-	jclass clsVariable = env->FindClass(VariableClassName);
+	if (!cvar) cvar = &JVariableClass(env);	
+
+	jclass clsVariable = cvar->Class();
 
 	// create Variable object	
 	if (DEBUG) std::cout << "convertToJava " << varptr->getTypeName(varptr->isA()) << std::endl;
@@ -159,73 +178,73 @@ jobject Java::convertToJava(JNIEnv *env, VariablePtr varptr)
 		//jobject jValue = convertToJava(env, value);
 		//res = env->CallStaticObjectMethod(clsVariable, jm, jValue);
 
-		res = convertToJava(env, value);
+		res = convertToJava(env, value, cdpid);
 		break;
 	}
 	case BIT_VAR: {
-		jm = env->GetStaticMethodID(clsVariable, "newBitVar", "(Z)Lat/rocworks/oa4j/var/Variable;");
+		//jm = env->GetStaticMethodID(clsVariable, "newBitVar", "(Z)Lat/rocworks/oa4j/var/Variable;");
 		bool value = ((BitVar*)varptr)->getValue();
-		res = env->CallStaticObjectMethod(clsVariable, jm, value);
+		res = env->CallStaticObjectMethod(clsVariable, cvar->newBitVar(), value);
 		break;
 	}
 	case BIT32_VAR: {
-		jm = env->GetStaticMethodID(clsVariable, "newBit32Var", "(J)Lat/rocworks/oa4j/var/Variable;");
+		//jm = env->GetStaticMethodID(clsVariable, "newBit32Var", "(J)Lat/rocworks/oa4j/var/Variable;");
 		PVSSulong value = ((Bit32Var*)varptr)->getValue();
-		res = env->CallStaticObjectMethod(clsVariable, jm, value);
+		res = env->CallStaticObjectMethod(clsVariable, cvar->newBit32Var(), value);
 		break;
 	}
 	case BIT64_VAR: {
-		jm = env->GetStaticMethodID(clsVariable, "newBit64Var", "(J)Lat/rocworks/oa4j/var/Variable;");
+		//jm = env->GetStaticMethodID(clsVariable, "newBit64Var", "(J)Lat/rocworks/oa4j/var/Variable;");
 		PVSSulonglong value = ((Bit64Var*)varptr)->getValue();
-		res = env->CallStaticObjectMethod(clsVariable, jm, value);
+		res = env->CallStaticObjectMethod(clsVariable, cvar->newBit64Var(), value);
 		break;
 	}
 	case FLOAT_VAR: {
-		jm = env->GetStaticMethodID(clsVariable, "newFloatVar", "(D)Lat/rocworks/oa4j/var/Variable;");
+		//jm = env->GetStaticMethodID(clsVariable, "newFloatVar", "(D)Lat/rocworks/oa4j/var/Variable;");
 		double value = ((FloatVar*)varptr)->getValue();
-		res = env->CallStaticObjectMethod(clsVariable, jm, value);
+		res = env->CallStaticObjectMethod(clsVariable, cvar->newFloatVar(), value);
 		break;
 	}
-	case LONG_VAR: {
-		jm = env->GetStaticMethodID(clsVariable, "newIntegerVar", "(J)Lat/rocworks/oa4j/var/Variable;");
+	case LONG_VAR: case ULONG_VAR: {
+		//jm = env->GetStaticMethodID(clsVariable, "newLongVar", "(J)Lat/rocworks/oa4j/var/Variable;");
 		PVSSlonglong value = ((LongVar*)varptr)->getValue();
 		jlong jValue = value;
-		res = env->CallStaticObjectMethod(clsVariable, jm, jValue);
+		res = env->CallStaticObjectMethod(clsVariable, cvar->newLongVar(), jValue);
 		break;
 	}
 	case INTEGER_VAR: {
-		jm = env->GetStaticMethodID(clsVariable, "newIntegerVar", "(I)Lat/rocworks/oa4j/var/Variable;");
+		//jm = env->GetStaticMethodID(clsVariable, "newIntegerVar", "(I)Lat/rocworks/oa4j/var/Variable;");
 		int value = ((IntegerVar*)varptr)->getValue();
-		res = env->CallStaticObjectMethod(clsVariable, jm, value);
+		res = env->CallStaticObjectMethod(clsVariable, cvar->newIntegerVar(), value);
 		break;
 	}
 	case UINTEGER_VAR: {
-		jm = env->GetStaticMethodID(clsVariable, "newUIntegerVar", "(I)Lat/rocworks/oa4j/var/Variable;");
+		//jm = env->GetStaticMethodID(clsVariable, "newUIntegerVar", "(I)Lat/rocworks/oa4j/var/Variable;");
 		unsigned int value = ((UIntegerVar*)varptr)->getValue();
-		res = env->CallStaticObjectMethod(clsVariable, jm, value);
+		res = env->CallStaticObjectMethod(clsVariable, cvar->newUIntegerVar(), value);
 		break;
 	}
 	case CHAR_VAR: {
-		jm = env->GetStaticMethodID(clsVariable, "newCharVar", "(C)Lat/rocworks/oa4j/var/Variable;");
+		//jm = env->GetStaticMethodID(clsVariable, "newCharVar", "(C)Lat/rocworks/oa4j/var/Variable;");
 		PVSSuchar value = ((CharVar*)varptr)->getValue();
-		res = env->CallStaticObjectMethod(clsVariable, jm, (jchar)value);
+		res = env->CallStaticObjectMethod(clsVariable, cvar->newCharVar(), (jchar)value);
 		break;
 	}
 	case TEXT_VAR: {
-		jm = env->GetStaticMethodID(clsVariable, "newTextVar", "(Ljava/lang/String;)Lat/rocworks/oa4j/var/Variable;");
+		//jm = env->GetStaticMethodID(clsVariable, "newTextVar", "(Ljava/lang/String;)Lat/rocworks/oa4j/var/Variable;");
 		const char *value = ((TextVar*)varptr)->getValue();
 		jstring jstr = env->NewStringUTF(value);
-		jobject jobj = env->CallStaticObjectMethod(clsVariable, jm, jstr);
+		jobject jobj = env->CallStaticObjectMethod(clsVariable, cvar->newTextVar(), jstr);
 		env->DeleteLocalRef(jstr);
 		res = jobj;
 		break;
 	}
 	case LANGTEXT_VAR: {
-		jm = env->GetStaticMethodID(clsVariable, "newLangTextVar", "()Lat/rocworks/oa4j/var/Variable;");
-		jobject jobj = env->CallStaticObjectMethod(clsVariable, jm);
+		//jm = env->GetStaticMethodID(clsVariable, "newLangTextVar", "()Lat/rocworks/oa4j/var/Variable;");		
+		jobject jobj = env->CallStaticObjectMethod(clsVariable, cvar->newLangTextVar());
 
 		jclass cls = env->GetObjectClass(jobj);
-		jm = env->GetMethodID(cls, "setValue", "(ILjava/lang/String;)V");
+		jmethodID jm = env->GetMethodID(cls, "setValue", "(ILjava/lang/String;)V");
 		
 		LangText value = ((LangTextVar*)varptr)->getValue();
 		int count = value.getNoOfLanguages();
@@ -243,11 +262,11 @@ jobject Java::convertToJava(JNIEnv *env, VariablePtr varptr)
 		break;
 	}
 	case TIME_VAR: {
-		jm = env->GetStaticMethodID(clsVariable, "newTimeVar", "(J)Lat/rocworks/oa4j/var/Variable;");
+		//jm = env->GetStaticMethodID(clsVariable, "newTimeVar", "(J)Lat/rocworks/oa4j/var/Variable;");
 		PVSSTime value = ((TimeVar*)varptr)->getValue();
 		jlong ms = (jlong)(value.getDouble() * 1000);
 		//std::cout << "TIME_VAR=" << ms << std::endl;
-		jobject jobj = env->CallStaticObjectMethod(clsVariable, jm, ms);
+		jobject jobj = env->CallStaticObjectMethod(clsVariable, cvar->newTimeVar(), ms);
 		res = jobj;
 		break;
 	}
@@ -266,9 +285,13 @@ jobject Java::convertToJava(JNIEnv *env, VariablePtr varptr)
 	case DYNLANGTEXT_VAR:    
 	{
 		// gettimeofday(&tp, NULL); long int ms1 = tp.tv_usec; 
-		jclass clsDynVar = env->FindClass(DynVarClassName);
-		jm = env->GetStaticMethodID(clsVariable, "newDynVar", "()Lat/rocworks/oa4j/var/Variable;");
-		jobject jdyn = env->CallStaticObjectMethod(clsVariable, jm);
+		//jclass clsDynVar = env->FindClass(DynVarClassName);
+		//jm = env->GetStaticMethodID(clsVariable, "newDynVar", "()Lat/rocworks/oa4j/var/Variable;");
+		//jclass clsDynVar = cvar->ClassDynVar();		
+
+		int size = ((DynVar*)varptr)->getArrayLength();
+
+		jobject jdyn = env->CallStaticObjectMethod(clsVariable, cvar->newDynVarSized(), size);
 		jobject jvar;
 		// gettimeofday(&tp, NULL); long int ms2 = tp.tv_usec;
 
@@ -280,39 +303,41 @@ jobject Java::convertToJava(JNIEnv *env, VariablePtr varptr)
 			switch (varptr->isA()) {
 			case DYNANYTYPE_VAR: {
 				Variable *ptr = ((AnyTypeVar*)var)->getVar(); // 17.07.2016: a new created datapoint element is NULL
-				jvar = ptr ? convertToJava(env, ((AnyTypeVar*)var)->getVar()) : NULL;
+				jvar = ptr ? convertToJava(env, ((AnyTypeVar*)var)->getVar(), cdpid, cvar) : NULL;
 				break;
 			}
-			case DYNTEXT_VAR: jvar = convertToJava(env, (TextVar*)var); break;
-			case DYNTIME_VAR: jvar = convertToJava(env, (TimeVar*)var); break;
-			case DYNFLOAT_VAR: jvar = convertToJava(env, (FloatVar*)var); break;
-			case DYNBIT_VAR: jvar = convertToJava(env, (BitVar*)var); break;
-			case DYNBIT32_VAR: jvar = convertToJava(env, (Bit32Var*)var); break;
-			case DYNBIT64_VAR: jvar = convertToJava(env, (Bit64Var*)var); break;
-			case DYNINTEGER_VAR: jvar = convertToJava(env, (TimeVar*)var); break;
-			case DYNUINTEGER_VAR: jvar = convertToJava(env, (UIntegerVar*)var); break;
-			case DYNLONG_VAR: jvar = convertToJava(env, (LongVar*)var); break;
-			case DYNULONG_VAR: jvar = convertToJava(env, (ULongVar*)var); break;
-			case DYNDPIDENTIFIER_VAR: jvar = convertToJava(env, (DpIdentifierVar*)var); break;
-			case DYNLANGTEXT_VAR: jvar = convertToJava(env, (LangTextVar*)var); break;
+			case DYNTEXT_VAR: jvar = convertToJava(env, (TextVar*)var, cdpid, cvar); break;
+			case DYNTIME_VAR: jvar = convertToJava(env, (TimeVar*)var, cdpid, cvar); break;
+			case DYNFLOAT_VAR: jvar = convertToJava(env, (FloatVar*)var, cdpid, cvar); break;
+			case DYNBIT_VAR: jvar = convertToJava(env, (BitVar*)var, cdpid, cvar); break;
+			case DYNBIT32_VAR: jvar = convertToJava(env, (Bit32Var*)var, cdpid, cvar); break;
+			case DYNBIT64_VAR: jvar = convertToJava(env, (Bit64Var*)var, cdpid, cvar); break;
+			case DYNINTEGER_VAR: jvar = convertToJava(env, (TimeVar*)var, cdpid, cvar); break;
+			case DYNUINTEGER_VAR: jvar = convertToJava(env, (UIntegerVar*)var, cdpid, cvar); break;
+			case DYNLONG_VAR: jvar = convertToJava(env, (LongVar*)var, cdpid, cvar); break;
+			case DYNULONG_VAR: jvar = convertToJava(env, (ULongVar*)var, cdpid, cvar); break;
+			case DYNDPIDENTIFIER_VAR: jvar = convertToJava(env, (DpIdentifierVar*)var, cdpid, cvar); break;
+			case DYNLANGTEXT_VAR: jvar = convertToJava(env, (LangTextVar*)var, cdpid, cvar); break;
 			default: jvar = NULL;
 			}
-			jm = env->GetMethodID(clsDynVar, "add", "(Lat/rocworks/oa4j/var/Variable;)V");
-			env->CallVoidMethod(jdyn, jm, jvar);
+			//jm = env->GetMethodID(clsDynVar, "add", "(Lat/rocworks/oa4j/var/Variable;)V");
+			env->CallVoidMethod(jdyn, cvar->addDynVar(), jvar);
 			if ( jvar != NULL ) env->DeleteLocalRef(jvar);
 		}
 
 		//gettimeofday(&tp, NULL); long int ms3 = tp.tv_usec;
 		//std::cout << "convertToJava " << varptr->getTypeName(varptr->isA()) << "...done: " << i<< ": " << (ms2-ms1) << "/" << (ms3-ms2) << std::endl;
 
-		env->DeleteLocalRef(clsDynVar);
+		//env->DeleteLocalRef(clsDynVar);
 		res = jdyn;
 		break;
 	}
 	case DYNDYNANYTYPE_VAR: {
-		jclass clsDynVar = env->FindClass(DynVarClassName);
-		jm = env->GetStaticMethodID(clsVariable, "newDynVar", "()Lat/rocworks/oa4j/var/Variable;");
-		jobject jydyn = env->CallStaticObjectMethod(clsVariable, jm);
+		//jclass clsDynVar = env->FindClass(DynVarClassName);
+		//jm = env->GetStaticMethodID(clsVariable, "newDynVar", "()Lat/rocworks/oa4j/var/Variable;");
+		//jclass clsDynVar = cvar->ClassDynVar();
+		int size = ((DynVar*)varptr)->getArrayLength();
+		jobject jydyn = env->CallStaticObjectMethod(clsVariable, cvar->newDynVarSized(), size);
 		jobject jxdyn;
 		int y = 0;
 		for (Variable *yvar = ((DynVar*)varptr)->getFirstVar(); yvar; yvar = ((DynVar*)varptr)->getNextVar())
@@ -327,11 +352,11 @@ jobject Java::convertToJava(JNIEnv *env, VariablePtr varptr)
 				continue;
 			}
 
-			jxdyn = convertToJava(env, yvar);
-			jm = env->GetMethodID(clsDynVar, "add", "(Lat/rocworks/oa4j/var/Variable;)V");
-			env->CallVoidMethod(jydyn, jm, jxdyn);
+			jxdyn = convertToJava(env, yvar, cdpid, cvar);
+			//jm = env->GetMethodID(clsDynVar, "add", "(Lat/rocworks/oa4j/var/Variable;)V");
+			env->CallVoidMethod(jydyn, cvar->addDynVar(), jxdyn);
 		}
-		env->DeleteLocalRef(clsDynVar);
+		//env->DeleteLocalRef(clsDynVar);
 		res = jydyn;
 		break;
 	}
@@ -342,11 +367,27 @@ jobject Java::convertToJava(JNIEnv *env, VariablePtr varptr)
 		break;
 	}
 
-
 	if (DEBUG) std::cout << "convertToJava " << varptr->getTypeName(varptr->isA()) << "...done" << std::endl;
 
-	env->DeleteLocalRef(clsVariable);
+	TimeVar t2;
+
+	PVSSdouble d = t2.getDouble() - t1.getDouble();
+	if (d > 0.1)
+	{
+		std::cout << "convertToJava " << varptr->getTypeName(varptr->isA()) << "...done in " << d << std::endl;
+	}
+
 	return res;
+}
+
+jstring Java::convertToJava(JNIEnv *env, CharString *str)
+{
+	return env->NewStringUTF(str->c_str());
+}
+
+jstring Java::convertToJava(JNIEnv *env, const CharString &str)
+{
+	return env->NewStringUTF(str.c_str());
 }
 
 VariablePtr Java::convertJVariable(JNIEnv *env, jobject jVariable)

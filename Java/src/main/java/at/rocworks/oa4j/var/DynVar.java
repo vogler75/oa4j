@@ -5,9 +5,12 @@
  */
 package at.rocworks.oa4j.var;
 
+import at.rocworks.oa4j.jni.Malloc;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -15,7 +18,7 @@ import java.util.List;
  * @author vogler
  */
 public class DynVar extends Variable implements Serializable, Iterable<Variable> {
-    private final ArrayList<Variable> value = new ArrayList<>();
+    private final List<Variable> value;
     private VariableType type = VariableType.Unknown;
 
     public int getElementsTypeAsNr() {
@@ -23,19 +26,30 @@ public class DynVar extends Variable implements Serializable, Iterable<Variable>
     }
 
     public DynVar(Variable... vars) {
+        value = new ArrayList<Variable>();
         for(Variable var: vars) {
             add(var);
         }
     }
 
     public DynVar(Object... vars) {
+        value = new ArrayList<Variable>();
         for(Object var: vars) {
             add(Variable.newVariable(var));
         }
     }
 
     public DynVar(Iterator<Variable> iterator) {
+        value = new ArrayList<Variable>();
         iterator.forEachRemaining((var)->add(var));
+    }
+
+    public DynVar() {
+        value = new ArrayList<Variable>();
+    }
+
+    public DynVar(int size) {
+        value = new ArrayList<Variable>(size);
     }
 
     public void add(Object value) {

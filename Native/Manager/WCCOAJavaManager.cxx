@@ -75,8 +75,6 @@ void WCCOAJavaManager::startupManager(int &argc, char *argv[], JNIEnv *env, jobj
 void WCCOAJavaManager::javaInitialize(JNIEnv *env, jobject obj){
 	// javap -s
 
-	//std::cout << "javaInitialize" << std::endl;
-
 	//----------------------------------------------------------------------------
 	javaManagerClass = env->FindClass(ManagerClassName);
 	if (javaManagerClass == nil) {
@@ -116,7 +114,14 @@ void WCCOAJavaManager::javaInitialize(JNIEnv *env, jobject obj){
 	midJavaAnswerI = env->GetMethodID(javaManagerClass, "callbackAnswer", "(II)I");
 	if (midJavaAnswerI == nil) {
 		ErrHdl::error(ErrClass::PRIO_SEVERE, ErrClass::ERR_IMPL, ErrClass::UNEXPECTEDSTATE,
-			ManagerName, "javaInitialize", CharString("mid for callbackHotlinkI not found"));
+			ManagerName, "javaInitialize", CharString("mid for callbackAnswerI not found"));
+		return;
+	}
+
+	midJavaAnswerErr = env->GetMethodID(javaManagerClass, "callbackAnswerError", "(IILjava/lang/String;)I");
+	if (midJavaAnswerErr == nil) {
+		ErrHdl::error(ErrClass::PRIO_SEVERE, ErrClass::ERR_IMPL, ErrClass::UNEXPECTEDSTATE,
+			ManagerName, "javaInitialize", CharString("mid for callbackAnswerErr not found"));
 		return;
 	}
 
@@ -266,32 +271,39 @@ void  WCCOAJavaManager::reduSwitchConnectionStateLogic(const ManagerIdentifier &
 
 void WCCOAJavaManager::handleHotLink(jint jHdl, const DpMsgAnswer &answer)
 {
-	g_env->CallIntMethod(g_obj, midJavaAnswerI, jHdl, -1); // START
-	//std::cout << "answer" << std::endl;
-	for (AnswerGroup *group = answer.getFirstGroup(); group; group = answer.getNextGroup())
-	{
-		//std::cout << "handleHotLink=" << group->getNrOfItems() << std::endl;
+	JDpIdentifierClass cdpid(g_env);
+	JVariableClass cvar(g_env);
 
+	g_env->CallIntMethod(g_obj, midJavaAnswerI, jHdl, -1); // START
+	for (AnswerGroup *group = answer.getFirstGroup(); group; group = answer.getNextGroup())
+	{		
+		ErrClass *err = group->getErrorPtr();
+		if (err != 0) {
+			jstring jErrText = (jstring)Java::convertToJava(g_env, err->getErrorText());
+			g_env->CallIntMethod(g_obj, midJavaAnswerErr, jHdl, err->getErrorId(), jErrText);
+			g_env->DeleteLocalRef(jErrText);
+			//std::cout << "handleHotLink error=" << err->getErrorId() <<"::" << err->getErrorText() << std::endl;
+		}
 		int i = -1;
 		for (AnswerItem *item = group->getFirstItem(); item; item = group->getNextItem())
 		{
 			if (item->getType() == AnswerItem::EVENT)
 			{
 				if (item != NULL) {
-					jobject objDpId = Java::convertToJava(g_env, item->getDpIdentifier());
-					jobject objVar = Java::convertToJava(g_env, item->getValuePtr());
+					jobject objDpId = Java::convertToJava(g_env, item->getDpIdentifier(), &cdpid);
+					jobject objVar = Java::convertToJava(g_env, item->getValuePtr(), &cdpid, &cvar);
 
 					// create Variable object	
 					if (objDpId != NULL && objVar != NULL)
 					{
-						if (DEBUG) std::cout << "handleHotlink " << objDpId << "/" << objVar << std::endl;
+						if (DEBUG) std::cout << "handleHotlink " << item->getDpIdentifier() << "/" << objVar << std::endl;
 						g_env->CallIntMethod(g_obj, midJavaAnswer, jHdl, ++i, objDpId, objVar);
 					}
 
 					if (objDpId != NULL) g_env->DeleteLocalRef(objDpId);
 					if (objVar != NULL) g_env->DeleteLocalRef(objVar);
 				}
-			}
+			} 
 		}
 	}
 	g_env->CallIntMethod(g_obj, midJavaAnswerI, jHdl, -2); // END
@@ -299,9 +311,11 @@ void WCCOAJavaManager::handleHotLink(jint jHdl, const DpMsgAnswer &answer)
 
 //--------------------------------------------------------------------------------
 
-
 void WCCOAJavaManager::handleHotLink(jint jHdl, const DpHLGroup &group)
 {
+	JDpIdentifierClass cdpid(g_env);
+	JVariableClass cvar(g_env);
+
 	int i = -1;
 	g_env->CallIntMethod(g_obj, midJavaHotlinkI, jHdl, -1); // START
 	for (DpVCItem *item = group.getFirstItem(); item; item = group.getNextItem())
@@ -310,8 +324,8 @@ void WCCOAJavaManager::handleHotLink(jint jHdl, const DpHLGroup &group)
 			DpIdentifier dpid = item->getDpIdentifier();
 			VariablePtr var = item->getValuePtr();
 
-			jobject objDpId = Java::convertToJava(g_env, dpid);
-			jobject objVar = Java::convertToJava(g_env, var);
+			jobject objDpId = Java::convertToJava(g_env, dpid, &cdpid);
+			jobject objVar = Java::convertToJava(g_env, var, &cdpid, &cvar);
 
 			//std::cerr << "Receiving HotLink " << item->getDpIdentifier().toString() << std::endl;
 			//std::cerr << "Receiving HotLink " << item->getValuePtr()->formatValue() << std::endl;			
@@ -348,10 +362,12 @@ jint WCCOAJavaManager::javaProcessHotLinkGroup(JNIEnv *env, jobject obj, jint jH
 
 //--------------------------------------------------------------------------------
 
-
 void WCCOAJavaManager::handleHotLink(jint jHdl, const AlertAttrList &group)
 {
 	//std::cerr << "Receiving Alert HotLink " << group.getATime().toString() << " items=" << group.getNumberOfItems() << std::endl;
+
+	JDpIdentifierClass cdpid(g_env);
+	JVariableClass cvar(g_env);
 
 	int i = -1;
 	g_env->CallIntMethod(g_obj, midJavaHotlinkI, jHdl, -1); // START
@@ -362,8 +378,8 @@ void WCCOAJavaManager::handleHotLink(jint jHdl, const AlertAttrList &group)
 			DpIdentifier dpid = item->getDpIdentifier();
 			VariablePtr var = item->getValuePtr();
 
-			jobject objDpId = Java::convertToJava(g_env, dpid);
-			jobject objVar = Java::convertToJava(g_env, var);
+			jobject objDpId = Java::convertToJava(g_env, dpid, &cdpid);
+			jobject objVar = Java::convertToJava(g_env, var, &cdpid, &cvar);
 
 			//std::cerr << "  dpId " << item->getDpIdentifier().toString() << " value " << item->getValuePtr()->formatValue() << std::endl;			
 

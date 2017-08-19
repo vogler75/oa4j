@@ -5,6 +5,7 @@
  */
 package at.rocworks.oa4j.base;
 
+import java.util.Date;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.logging.Level;
 
@@ -25,7 +26,16 @@ public abstract class JHotLinkWaitForAnswer implements Runnable {
     private JDpMsgAnswer answer;
     
     protected IAnswer cbAnswer;
-    protected IHotLink cbHotlink;            
+    protected IHotLink cbHotlink;
+
+    private Date initTimestamp;
+    private Date doneTimestamp;
+    public Date getInitTimestamp() {
+        return initTimestamp;
+    }
+    public Date getDoneTimestamp() {
+        return doneTimestamp;
+    }
     
     protected final JSemaphore gotAnswer = new JSemaphore(false);
     
@@ -144,7 +154,13 @@ public abstract class JHotLinkWaitForAnswer implements Runnable {
     }
 
     protected synchronized void answerInit() {
+        initTimestamp = new Date();
         message = new JDpMsgAnswer(); 
+    }
+
+    protected synchronized void answerError(int errCode, String errText) {
+        if (message!=null)
+            message.setError(errCode, errText);
     }
     
     protected synchronized void hotlinkInit() {
@@ -156,6 +172,7 @@ public abstract class JHotLinkWaitForAnswer implements Runnable {
     }
     
     protected synchronized void callbackDone() {
+        doneTimestamp = new Date();
         if (async) {
             callbackDoneAsync();
         } else {

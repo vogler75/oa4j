@@ -63,12 +63,13 @@ public abstract class Manager {
     // callbacks from API   
     public abstract boolean doReceiveSysMsg(long cPtrSysMsg);    
     public abstract boolean doReceiveDpMsg(long cPtrDpMsg);
-    
+
     public int callbackAnswer(int id, int idx) {    
         return callbackAnswer(id, idx, null, null);
     }
-    abstract public int callbackAnswer(int id, int idx, DpIdentifierVar dpid, Variable var);    
-    
+    abstract public int callbackAnswer(int id, int idx, DpIdentifierVar dpid, Variable var);
+    abstract public int callbackAnswerError(int id, int code, String text);
+
     public int callbackHotlink(int id, int idx) {
         return callbackHotlink(id, idx, null, null);
     }

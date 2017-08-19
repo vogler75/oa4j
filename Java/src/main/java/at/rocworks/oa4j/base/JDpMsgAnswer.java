@@ -11,13 +11,12 @@ package at.rocworks.oa4j.base;
  */
 public class JDpMsgAnswer extends JDpVCGroup {
     private int retCode = 0;
-    
+
     public int getRetCode() {
         return this.retCode;
     }
-    
-    protected void setRetCode(int errorCode) {
-        this.retCode=errorCode;
-    }
 
+    protected void setRetCode(int retCode) {
+        this.retCode=retCode;
+    }
 }

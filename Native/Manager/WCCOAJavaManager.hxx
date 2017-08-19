@@ -86,6 +86,7 @@ private:
 
 	jmethodID midJavaAnswer;
 	jmethodID midJavaAnswerI;
+	jmethodID midJavaAnswerErr;
 	jmethodID midJavaHotlink;
 	jmethodID midJavaHotlinkI;
 	jmethodID midJavaHotlinkGroup;

@@ -44,30 +44,46 @@ public class ApiTestDpQueryConnect {
     Date t1 = new Date();
     Date t2 = new Date();
     
-    
-    public void run() throws InterruptedException {        
-        JDebug.out.info("dpQueryConnect...");
-        JDpQueryConnect conn = JClient.dpQueryConnectSingle("SELECT '_online.._value','_online.._stime' FROM 'Epics_*.Input'")
-                .action((JDpMsgAnswer answer)->{
-//                    JDebug.out.info("--- ANSWER BEG ---");
-//                    JDebug.out.info(answer.toString());
-//                    JDebug.out.info("--- ANSWER END ---");
-                    
-                })
-                .action((JDpHLGroup hotlink)->{                
-                    //printHotlink(hotlink);
-                    printStatistics(hotlink);
-                })
-                .connect();
-        
+    public void run() throws InterruptedException {
+        JDpQueryConnect conn = doDpQueryConnect();
         JDebug.out.info("sleep...");
-        Thread.sleep(1000*10);
+        Thread.sleep(1000*60*60*24);
         JDebug.out.info("done");
         conn.disconnect();
         JDebug.out.info("end");
         Thread.sleep(1000*10);        
-    }              
-    
+    }
+
+    private JDpQueryConnect doDpQueryConnect() {
+        JDebug.out.info("dpQueryConnect...");
+        JDpQueryConnect conn = JClient.dpQueryConnectSingle("SELECT '_online.._value','_online.._stime' FROM 'Test_*.**'");
+        conn.action((JDpMsgAnswer answer)->{
+                try {
+                    JDebug.out.info("--- ANSWER BEG --- ");
+                    Date tt1 = conn.getInitTimestamp();
+                    Date tt2 = conn.getDoneTimestamp();
+                    Double t = (tt2.getTime() - tt1.getTime()) / 1000.0;
+                    JDebug.out.info("t= " + t);
+                    if (answer.size() > 1) {
+                        int count = answer.getItem(1).getVariable().getDynVar().size();
+                        JDebug.out.info("v/s=" + count / t);
+                        JDebug.out.info("err=" + answer.getErrorCode() + ": " + answer.getErrorText());
+                        JDebug.out.info("items=" + count);
+                        //JDebug.out.info(answer.toString());
+                    }
+                    JDebug.out.info("--- ANSWER END ---");
+                } catch (Exception ex) {
+                    JDebug.StackTrace(Level.SEVERE, ex);
+                }
+                })
+                .action((JDpHLGroup hotlink)->{
+                    //printHotlink(hotlink);
+                    printStatistics(hotlink);
+                })
+                .connect();
+        return conn;
+    }
+
     private void printStatistics(JDpHLGroup hotlink) {
         if ( hotlink.getNumberOfItems() > 0 ) {
             JDpVCItem data = hotlink.getItem(1);            
