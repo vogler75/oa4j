@@ -46,6 +46,21 @@ JVariableClass::JVariableClass(JNIEnv *p_env)
 	env = p_env;
 	cls = env->FindClass(Java::VariableClassName);
 	clsDynVar = env->FindClass(Java::DynVarClassName);
+	midNewBitVar = 0;
+	midNewBit32Var = 0;
+	midNewBit64Var = 0;
+	midNewFloatVar = 0;
+	midNewLongVar = 0;
+	midNewIntegerVar = 0;
+	midNewUIntegerVar = 0;
+	midNewCharVar = 0;
+	midNewTextVar = 0;
+	midNewLangTextVar = 0;
+	midSetLangTextVar = 0;
+	midNewTimeVar = 0;
+	midNewDynVar = 0;
+	midNewDynVarSized = 0;
+	midAddDynVar = 0;
 }
 
 JVariableClass::~JVariableClass()
