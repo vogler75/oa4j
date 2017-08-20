@@ -397,8 +397,8 @@ jobject Java::convertToJava(JNIEnv *env, VariablePtr varptr, JDpIdentifierClass 
 	PVSSdouble d = t2.getDouble() - t1.getDouble();
 	if (d > 1) // Seconds
 	{
-		std::string msg = CharString("convert to java took long time [") + (Variable::getTypeName(varptr->isA())) + CharString("] ")+CharString((long)(d*1000))+CharString(" ms");
-		ErrHdl::error(ErrClass::PRIO_WARNING, ErrClass::ERR_IMPL, ErrClass::UNEXPECTEDSTATE, NAME, "convertToJava", msg.c_str());
+		ErrHdl::error(ErrClass::PRIO_WARNING, ErrClass::ERR_IMPL, ErrClass::UNEXPECTEDSTATE, NAME, "convertToJava", 
+		CharString("convert to java took long time [") + (Variable::getTypeName(varptr->isA())) + CharString("] ")+CharString((long)(d*1000))+CharString(" ms"));
 	}
 
 	if (cvarTmp) delete cvar;
