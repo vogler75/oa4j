@@ -59,7 +59,7 @@ public class ApiTestDpQueryConnect {
         JDpQueryConnect conn = JClient.dpQueryConnectSingle("SELECT '_online.._value','_online.._stime' FROM 'Test_*.**'");
         conn.action((JDpMsgAnswer answer)->{
                 try {
-                    JDebug.out.info("--- ANSWER BEG --- ");
+                    JDebug.out.info("--- ANSWER BEG --- "+answer.getErrorText());
                     Date tt1 = conn.getInitTimestamp();
                     Date tt2 = conn.getDoneTimestamp();
                     Double t = (tt2.getTime() - tt1.getTime()) / 1000.0;
