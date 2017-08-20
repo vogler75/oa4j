@@ -395,9 +395,10 @@ jobject Java::convertToJava(JNIEnv *env, VariablePtr varptr, JDpIdentifierClass 
 	TimeVar t2;
 
 	PVSSdouble d = t2.getDouble() - t1.getDouble();
-	if (d > 0.1)
+	if (d > 1) // Seconds
 	{
-		std::cout << "convertToJava " << varptr->getTypeName(varptr->isA()) << "...done in " << d << std::endl;
+		std::string msg = CharString("convert to java took long time [") + (Variable::getTypeName(varptr->isA())) + CharString("] ")+CharString((long)(d*1000))+CharString(" ms");
+		ErrHdl::error(ErrClass::PRIO_WARNING, ErrClass::ERR_IMPL, ErrClass::UNEXPECTEDSTATE, NAME, "convertToJava", msg.c_str());
 	}
 
 	if (cvarTmp) delete cvar;

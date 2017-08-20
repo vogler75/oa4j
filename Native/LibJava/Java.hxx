@@ -53,46 +53,46 @@ public:
 
 	jclass Class() { return cls; }
 	jclass ClassDynVar() { return clsDynVar; }
-	jmethodID newBitVar() { 
+	inline jmethodID newBitVar() { 
 		return midNewBitVar ? midNewBitVar : (midNewBitVar=env->GetStaticMethodID(cls, "newBitVar", "(Z)Lat/rocworks/oa4j/var/Variable;")); 
 	}
-	jmethodID newBit32Var() {
+	inline jmethodID newBit32Var() {
 		return midNewBit32Var ? midNewBit32Var : (midNewBit32Var = env->GetStaticMethodID(cls, "newBit32Var", "(J)Lat/rocworks/oa4j/var/Variable;"));
 	}
-	jmethodID newBit64Var() {
+	inline jmethodID newBit64Var() {
 		return midNewBit64Var ? midNewBit64Var : (midNewBit64Var = env->GetStaticMethodID(cls, "newBit64Var", "(J)Lat/rocworks/oa4j/var/Variable;"));
 	}
-	jmethodID newFloatVar() {
+	inline jmethodID newFloatVar() {
 		return midNewFloatVar ? midNewFloatVar : (midNewFloatVar = env->GetStaticMethodID(cls, "newFloatVar", "(D)Lat/rocworks/oa4j/var/Variable;"));
 	}
-	jmethodID newLongVar() {
+	inline jmethodID newLongVar() {
 		return midNewLongVar ? midNewLongVar : (midNewLongVar = env->GetStaticMethodID(cls, "newLongVar", "(J)Lat/rocworks/oa4j/var/Variable;"));
 	}
-	jmethodID newIntegerVar() {
+	inline jmethodID newIntegerVar() {
 		return midNewIntegerVar ? midNewIntegerVar : (midNewIntegerVar = env->GetStaticMethodID(cls, "newIntegerVar", "(I)Lat/rocworks/oa4j/var/Variable;"));
 	}
-	jmethodID newUIntegerVar() {
+	inline jmethodID newUIntegerVar() {
 		return midNewUIntegerVar ? midNewUIntegerVar : (midNewUIntegerVar = env->GetStaticMethodID(cls, "newUIntegerVar", "(I)Lat/rocworks/oa4j/var/Variable;"));
 	}
-	jmethodID newCharVar() {
+	inline jmethodID newCharVar() {
 		return midNewCharVar ? midNewCharVar : (midNewCharVar = env->GetStaticMethodID(cls, "newCharVar", "(C)Lat/rocworks/oa4j/var/Variable;"));
 	}
-	jmethodID newTextVar() {
+	inline jmethodID newTextVar() {
 		return midNewTextVar ? midNewTextVar : (midNewTextVar = env->GetStaticMethodID(cls, "newTextVar", "(Ljava/lang/String;)Lat/rocworks/oa4j/var/Variable;"));
 	}
-	jmethodID newLangTextVar() {
+	inline jmethodID newLangTextVar() {
 		return midNewLangTextVar ? midNewLangTextVar : (midNewLangTextVar = env->GetStaticMethodID(cls, "newLangTextVar", "()Lat/rocworks/oa4j/var/Variable;"));
 	}
-	jmethodID newTimeVar() {
+	inline jmethodID newTimeVar() {
 		return midNewTimeVar ? midNewTimeVar : (midNewTimeVar = env->GetStaticMethodID(cls, "newTimeVar", "(J)Lat/rocworks/oa4j/var/Variable;"));
 	}
-	jmethodID newDynVar() {
+	inline jmethodID newDynVar() {
 		return midNewDynVar ? midNewDynVar : (midNewDynVar = env->GetStaticMethodID(cls, "newDynVar", "()Lat/rocworks/oa4j/var/Variable;"));
 	}
-	jmethodID newDynVarSized() {
+	inline jmethodID newDynVarSized() {
 		return midNewDynVarSized ? midNewDynVarSized : (midNewDynVarSized = env->GetStaticMethodID(cls, "newDynVar", "(I)Lat/rocworks/oa4j/var/Variable;"));
 	}
-	jmethodID addDynVar() {
+	inline jmethodID addDynVar() {
 		return midAddDynVar ? midAddDynVar : (midAddDynVar = env->GetMethodID(clsDynVar, "add", "(Lat/rocworks/oa4j/var/Variable;)V"));
 	}
 };
