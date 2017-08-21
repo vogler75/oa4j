@@ -6,7 +6,7 @@
 #libraryPath = "<project-dir>/bin" 
 
 # java class path (-Djava.class.path), defaults to project/bin directory
-classPath = "bin;bin/winccoa-java.jar"
+classPath = "bin;lib/winccoa-java-1.0-SNAPSHOT.jar"
 
 # if you have long class paths you can use a file
 #configFile = "config.java"
