@@ -24,13 +24,13 @@ public class NoSQLCrateDB extends NoSQLJDBC {
         );
          */
     public static NoSQLServer createServer(NoSQLSettings srvcfg, String srvprefix) {
-        String url = srvcfg.getStringProperty(srvprefix, "url", "jdbc:mysql://localhost/pvss");
-        String usr = srvcfg.getStringProperty(srvprefix, "username", "pvssrdb");
-        String pwd = srvcfg.getStringProperty(srvprefix, "password", "manager");
+        String url = srvcfg.getStringProperty(srvprefix, "url", "jdbc:crate://localhost:5432/");
+        String usr = srvcfg.getStringProperty(srvprefix, "username", "crate");
+        String pwd = srvcfg.getStringProperty(srvprefix, "password", "");
         String grp = srvcfg.getStringProperty(srvprefix, "archive", "EVENT");
         JDebug.out.log(Level.CONFIG, "{0}.type: {1}\n{2}\nurl: {3}",
-                new Object[]{srvprefix, NoSQLMySQL.class.getName(), srvcfg, url});
-        return new NoSQLMySQL(srvcfg, url, usr, pwd, grp);
+                new Object[]{srvprefix, NoSQLCrateDB.class.getName(), srvcfg, url});
+        return new NoSQLCrateDB(srvcfg, url, usr, pwd, grp);
     }
 
     public NoSQLCrateDB(NoSQLSettings settings, String url, String username, String password, String archive) {
