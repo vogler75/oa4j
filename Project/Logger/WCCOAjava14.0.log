@@ -1,0 +1,39 @@
+2017.08.31 17:02:57.192 at.rocworks.oa4j.base.JManager.init                          INFO   : Manager API enabled
+2017.08.31 17:02:57.250 at.rocworks.oa4j.base.JManager.run                           INFO   : api manager loop waiting.
+2017.08.31 17:02:57.250 at.rocworks.oa4j.base.JManager.run                           INFO   : api manager loop started.
+2017.08.31 17:02:57.252 at.rocworks.oa4j.logger.logger.DataSink.createGroups         INFO   : logging groups...
+2017.08.31 17:02:57.266 at.rocworks.oa4j.logger.logger.DataSink.createGroup          INFO   : loading group kafka run=true servers=1 name=kafka
+2017.08.31 17:02:57.269 at.rocworks.oa4j.logger.logger.DataSink.createGroup          CONFIG : section at.rocworks.oa4j.logger.dbs.NoSQLKafka...
+2017.08.31 17:02:57.272 at.rocworks.oa4j.logger.dbs.NoSQLKafka.createServer          CONFIG : kafka.server.0.type: at.rocworks.oa4j.logger.dbs.NoSQLKafka 
+threads: 1
+blocksize: 1000
+flushinterval: 1000
+maxmemblocks: 10
+buffertodisk: 1
+bufferpath: data/backend
+bufferclass: at.rocworks.oa4j.logger.queues.BufferQueueBerkeleyDB
+distribution: PINNED
+redundancy: false
+broker: localhost:9092 topic: scada futures: 0
+2017.08.31 17:02:57.274 at.rocworks.oa4j.logger.dbs.NoSQLKafka.<init>                INFO   : kafka init storage...localhost:9092 topic=scada
+2017.08.31 17:02:57.556 at.rocworks.oa4j.logger.dbs.NoSQLKafka.<init>                INFO   : kafka init storage...done
+2017.08.31 17:02:57.556 at.rocworks.oa4j.logger.logger.DataSink.createGroups         CONFIG : primary=kafka
+2017.08.31 17:02:57.557 at.rocworks.oa4j.logger.base.NoSQLLogger.startNoSQLGroups    INFO   : start kafka
+2017.08.31 17:02:57.557 at.rocworks.oa4j.logger.base.NoSQLGroup.startNoSQLServers    INFO   : start kafka.server.0
+2017.08.31 17:02:57.559 at.rocworks.oa4j.logger.queues.BufferQueueBerkeleyDB.<init>  CONFIG : buffer to disk path: /home/vogler/Project/test1//data/backend/kafka.server.0.T0
+2017.08.31 17:02:57.661 at.rocworks.oa4j.base.JDebug.StackTrace                      SEVERE : java.lang.reflect.InvocationTargetException:
+  sun.reflect.NativeConstructorAccessorImpl.newInstance0:-2
+  sun.reflect.NativeConstructorAccessorImpl.newInstance:62
+  sun.reflect.DelegatingConstructorAccessorImpl.newInstance:45
+  java.lang.reflect.Constructor.newInstance:423
+  at.rocworks.oa4j.logger.base.NoSQLServer.startThreads:54
+  at.rocworks.oa4j.logger.base.NoSQLGroup.startNoSQLServers:37
+  at.rocworks.oa4j.logger.base.NoSQLLogger.startNoSQLGroups:142
+  at.rocworks.oa4j.logger.logger.DataSink.start:39
+  at.rocworks.oa4j.logger.logger.Backend.start:51
+  at.rocworks.oa4j.logger.logger.Backend.main:27
+
+2017.08.31 17:02:57.663 at.rocworks.oa4j.logger.base.NoSQLServer.startThreads        INFO   : start 0 kafka.server.0
+2017.08.31 17:02:57.740 at.rocworks.oa4j.logger.logger.Backend.start                 INFO   : ZeroMQ...sub/tcp://localhost:5558/1
+2017.08.31 17:02:57.768 at.rocworks.oa4j.logger.logger.DataWellZeroMQ.connectByZeroMQ INFO   : connectByZeroMQ subscribe to tcp://localhost:5558
+2017.08.31 17:03:07.855 at.rocworks.oa4j.logger.logger.Backend.showStats             INFO   : {"NoSQLLogger":{"vsec":2.0},"kafka":{"S0":{"T0":{"T0":{"qlen":0.0}},"S0":{"qlen":0.0,"vsec":1.0,"recs":10.0,"msec":141.0}}}}

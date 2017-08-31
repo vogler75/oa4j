@@ -87,46 +87,20 @@ public class NoSQLKafka extends NoSQLServer {
         DataItem item;
         EventItem event;  
         
-//        List<Future> futures = new LinkedList<>();
-//        try {        
-            for (int i = 0; i <= events.getHighWaterMark()&& (item = events.getItem(i)) != null; i++) {           
-                if ( !(item instanceof EventItem) ) continue;
-                event=(EventItem)item;
+        for (int i = 0; i <= events.getHighWaterMark()&& (item = events.getItem(i)) != null; i++) {           
+            if ( !(item instanceof EventItem) ) continue;
+            event=(EventItem)item;
                 
-                producer.send(
-                        new ProducerRecord(
-                                topic.isEmpty() ? event.getDp().getDp() : topic,
-                                event.getDp().getFQN(), 
-                                event.toJSONObject().toJSONString()));
-                
-//                futures.add(
-//                        producer.send(
-//                                new ProducerRecord(
-//                                        topic.isEmpty() ? event.getDp().getDp() : topic,
-//                                        event.getDp().getFQN(), event.toJSONObject().toJSONString()))
-//                );                                  
-                
-                // future insert - wait until all futures are complete
-//                if ( this.maxFutures>0 && futures.size()>this.maxFutures ) {
-//                    while ( futures.size() > this.maxFutures/2 ) {
-//                        futures.get(0).get();
-//                        futures.remove(0);
-//                    }                    
-//                }
-            }
-            
-//            while (futures.size()>0) {
-//                futures.get(0).get();
-//                futures.remove(0);
-//            }            
-            
-//        } catch (InterruptedException | ExecutionException ex) {
-//            Logger.getLogger(NoSQLKafka.class.getName()).log(Level.SEVERE, null, ex);
-//        }
         
-
-        //producer.send(bulk); // This publishes message on given topic                    
-        
+            //JDebug.out.info(event.toJSONObject().toJSONString());
+            producer.send(
+                   new ProducerRecord(
+                            topic.isEmpty() ? event.getDp().getDp() : topic,
+                            event.getDp().getFQN(), 
+                            event.toJSONObject().toJSONString()));
+        }
+            
+        //producer.flush(); 
         Date t2 = new Date();
         addServerStats(events.getHighWaterMark(), t2.getTime()-t1.getTime());               
         
