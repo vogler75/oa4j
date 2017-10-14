@@ -1,9 +1,9 @@
 
 include $(API_ROOT)/ComDrv.mk
 
-INCLUDE = $(COMDRV_INCL) -I. -I$(JDK_HOME)/include -I$(JDK_HOME)/include/linux
+INCLUDE = $(COMDRV_INCL) -I. -I$(JAVA_HOME)/include -I$(JAVA_HOME)/include/linux
 
-LIBS = $(COMDRV_LIBS) $(LINKLIB) $(JDK_HOME)/jre/lib/$(ARCH)/server/libjvm.so
+LIBS = $(COMDRV_LIBS) $(LINKLIB) $(JAVA_HOME)/jre/lib/$(ARCH)/server/libjvm.so
 
 OBJS = $(COMDRV_OBJS)
 

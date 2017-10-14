@@ -1,9 +1,9 @@
 
 include $(API_ROOT)/Manager.mk
 
-INCLUDE = $(MANAGER_INCL) -I. -I$(JDK_HOME)/include -I$(JDK_HOME)/include/linux
+INCLUDE = $(MANAGER_INCL) -I. -I$(JAVA_HOME)/include -I$(JAVA_HOME)/include/linux
 
-LIBS = $(MANAGER_LIBS) $(LINKLIB) $(JDK_HOME)/jre/lib/$(ARCH)/server/libjvm.so
+LIBS = $(MANAGER_LIBS) $(LINKLIB) $(JAVA_HOME)/jre/lib/$(ARCH)/server/libjvm.so
 
 OBJS = $(MANAGER_OBJS)
 
