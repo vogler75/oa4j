@@ -1,1 +1,1 @@
-mvn -B package dependency:copy-dependencies dependency:build-classpath -Dmdep.outputFile=classpath.txt -Dmdep.prefix="lib" -Dmaven.test.skip=true
+mvn -B -q package dependency:copy-dependencies dependency:build-classpath -Dmdep.outputFile=classpath.txt -Dmdep.prefix="lib" -Dmaven.test.skip=true
