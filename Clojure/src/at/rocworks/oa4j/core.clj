@@ -25,7 +25,7 @@
 
 ; test clojure style
 (defn callback [dpIdValueList]
-  (let [v (reduce #(+ %1 %2) (map #(.getValueObject %) (seq dpIdValueList)))];
+  (let [v (reduce #(+ %1 %2) (map #(.getValueObject %) dpIdValueList))];
     (dpSet :ExampleDP_Trend1. v)))
 
 (def manager (new JManager))
