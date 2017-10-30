@@ -41,18 +41,16 @@ int main(int argc, char *argv[])
 	}
 
 	// java.library.path
-	/*
 	{
-		CharString *s = new CharString("-Djava.library.path=" + WCCOAJavaResources::getProjBinDir());
+		CharString *s = new CharString("-Djava.library.path=" + WCCOAJavaResources::getProjBinDir() + CLASS_PATH_SEPARATOR + WCCOAJavaResources::getBinDir());
 		iLibPathSet = ++idx;
 		options[iLibPathSet].optionString = (char*)s->c_str();		
 		std::cout << "default: " << options[idx].optionString << std::endl;
 	}
-	*/
 
 	// java.class.path
 	{		
-		CharString *s = new CharString(CharString("-Djava.class.path=bin") + CLASS_PATH_SEPARATOR + CharString("bin/winccoa-java-1.0-SNAPSHOT.jar"));
+		CharString *s = new CharString(CharString("-Djava.class.path=bin") /*+ CLASS_PATH_SEPARATOR + CharString("bin/winccoa-java.jar")*/);
 		iClassPathSet = ++idx;
 		options[iClassPathSet].optionString = (char*)s->c_str();
 		std::cout << "default: " << options[idx].optionString << std::endl;

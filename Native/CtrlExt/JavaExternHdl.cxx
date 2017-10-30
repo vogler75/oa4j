@@ -17,6 +17,12 @@
 #include <DynVar.hxx>
 #include <UIntegerVar.hxx>
 
+#ifdef WIN32 
+#define CLASS_PATH_SEPARATOR ";"
+#else
+#define CLASS_PATH_SEPARATOR ":"
+#endif
+
 const bool JavaExternHdl::DEBUG = false;
 
 const char *JavaExternHdl::ManagerName = "JavaCtrlExt";
@@ -239,20 +245,16 @@ const Variable* JavaExternHdl::startVM(ExecuteParamRec &param)
 		}
 
 		// java.library.path
-		/*
 		{
-			CharString *s = new CharString("-Djava.library.path=" + JavaResources::getProjBinDir());
+	                CharString *s = new CharString("-Djava.library.path=" + JavaResources::getProjBinDir() + CLASS_PATH_SEPARATOR + JavaResources::getBinDir());
 			iLibPathSet = ++idx;
 			options[iLibPathSet].optionString = (char*)s->c_str();
 			std::cout << "default: " << options[idx].optionString << std::endl;
 		}
-		*/
 
 		// java.class.path
 		{
-			CharString *s = WIN32
-				? new CharString("-Djava.class.path=./bin;./bin/winccoa-java.jar")
-				: new CharString("-Djava.class.path=./bin:./bin/winccoa-java.jar");
+	                CharString *s = new CharString(CharString("-Djava.class.path=bin") /*+ CLASS_PATH_SEPARATOR + CharString("bin/winccoa-java.jar")*/);
 			iLibPathSet = ++idx;
 			options[iLibPathSet].optionString = (char*)s->c_str();
 			std::cout << "default: " << options[idx].optionString << std::endl;
