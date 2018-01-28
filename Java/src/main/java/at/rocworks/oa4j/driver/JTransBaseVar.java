@@ -1,8 +1,20 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+    OA4J - WinCC Open Architecture for Java
+    Copyright (C) 2017 Andreas Vogler
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as
+    published by the Free Software Foundation, either version 3 of the
+    License, or (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*/
 package at.rocworks.oa4j.driver;
 
 import at.rocworks.oa4j.jni.Transformation;
@@ -20,21 +32,15 @@ public abstract class JTransBaseVar extends Transformation {
         super(name, type);
         this.varType = varType;
         this.itemSize = itemSize;
-        //JDebug.out.log(Level.INFO, "JTransformationBaseVar: name={0} type={1} var={2} size={3}", new Object[]{name, type, varType, itemSize});
-        //JDebug.sleep(100);
     }       
 
     @Override
     public int itemSize() {
-        //JDebug.out.log(Level.INFO, "itemSize");
-        //JDebug.sleep(100);
         return itemSize;
     }        
 
     @Override
     public int getVariableTypeAsInt() {
-//        JDebug.out.log(Level.INFO, "getVariableTypeAsInt");
-//        JDebug.sleep(100);
         return varType.value;
     }    
     

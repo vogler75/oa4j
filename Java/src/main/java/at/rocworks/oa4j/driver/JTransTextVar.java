@@ -1,8 +1,20 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+    OA4J - WinCC Open Architecture for Java
+    Copyright (C) 2017 Andreas Vogler
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as
+    published by the Free Software Foundation, either version 3 of the
+    License, or (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*/
 package at.rocworks.oa4j.driver;
 
 import at.rocworks.oa4j.var.VariableType;
@@ -32,21 +44,19 @@ public class JTransTextVar extends JTransBaseVar {
         val = "";
     }    
 
-    protected byte[] toPeriph_(String val) { return toPeriph(val); }
-    public static byte[] toPeriph(String val) {
+    protected byte[] toPeriph(String val) { return toPeriphStatic(val); }
+    public static byte[] toPeriphStatic(String val) {
         return val.getBytes(StandardCharsets.UTF_8);        
     }
     
-    protected String toVal_(byte[] data) { return toVal(data); }
-    public static String toVal(byte[] data) {
+    protected String toVal(byte[] data) { return toValStatic(data); }
+    public static String toValStatic(byte[] data) {
        return new String(data, StandardCharsets.UTF_8); 
     }    
     
     @Override
     public byte[] toPeriph(int blen, Variable var, int subix) {
         try {
-//            JDebug.out.log(Level.INFO, "toPeriph: dlen={0} var={1} subindex={2}", new Object[]{blen, var.formatValue(), subix});
-//            JDebug.sleep(100);
             String text=null;
             if ( var.getTextVar()!=null ) {
                 text = var.getTextVar().getValue();
@@ -68,7 +78,7 @@ public class JTransTextVar extends JTransBaseVar {
                 return null;
             } else {                
                 val = text;
-                return toPeriph_(val);              
+                return toPeriph(val);
             }
         } catch ( Exception ex) {
             JDebug.StackTrace(Level.SEVERE, ex);
@@ -78,19 +88,18 @@ public class JTransTextVar extends JTransBaseVar {
     
     @Override
     public Variable toVar(byte[] data, int dlen, int subix) {
-       try {
+        try {
             //JDebug.out.log(Level.INFO, "toVar: data={0} dlen={1} subindex={2}", new Object[]{data, dlen, subix});
-            if ( data.length > itemSize() ) {
+            if (data.length > itemSize()) {
                 JDebug.out.log(Level.WARNING, "toVar: data size is to big {0}/{1}!", new Object[]{data.length, itemSize()});
                 return null;
             } else {
-                var.setValue(toVal_(data));       
+                var.setValue(toVal(data));
                 return var;
             }
-        } catch ( Exception ex) {
+        } catch (Exception ex) {
             JDebug.StackTrace(Level.SEVERE, ex);
             return null;
-        }        
+        }
     }
-    
 }

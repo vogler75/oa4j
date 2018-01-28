@@ -30,7 +30,11 @@ public abstract class Transformation {
        
     public abstract int itemSize();            
     public abstract int getVariableTypeAsInt();
-    public abstract byte[] toPeriph(int blen, Variable var, int subix);    
+
+    // Conversion from PVSS to Hardware
+    public abstract byte[] toPeriph(int blen, Variable var, int subix);
+
+    // Conversion from Hardware to PVSS
     public abstract Variable toVar(byte[] data, int dlen, int subix);
     
     public abstract void delete();
