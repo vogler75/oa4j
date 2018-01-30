@@ -433,3 +433,52 @@ JNIEXPORT jint JNICALL Java_at_rocworks_oa4j_jni_Manager_apiIsActiveConnection
 			return 0;
 	}
 }
+
+//------------------------------------------------------------------------------------------------
+
+/*
+* Class:     at_rocworks_oa4j_jni_Manager
+* Method:    checkPassword
+* Signature: (Ljava/lang/String;Ljava/lang/String;)I
+*/
+JNIEXPORT jint JNICALL Java_at_rocworks_oa4j_jni_Manager_checkPassword
+(JNIEnv *env, jobject obj, jstring jusername, jstring jpassword)
+{
+	if (!WCCOAJavaManager::thisManager->isUserTableInitialized())
+		WCCOAJavaManager::thisManager->initUserTable();
+
+	CharString *username = Java::convertJString(env, jusername);
+	CharString *password = Java::convertJString(env, jpassword);
+	PVSSuserIdType userid = WCCOAJavaManager::thisManager->getUserId(username->c_str());
+	int ret = -99; // 
+	if (userid != 65535) {
+		ret = WCCOAJavaManager::thisManager->checkPassword(userid, password->c_str()) ? 0 /*ok */ : -2 /* wrong password*/;
+	}
+	else {
+		ret = -1; // invalid user
+	}
+	return ret;
+}
+
+/*
+* Class:     at_rocworks_oa4j_jni_Manager
+* Method:    setUserId
+* Signature: (Ljava/lang/String;Ljava/lang/String;)Z
+*/
+JNIEXPORT jboolean JNICALL Java_at_rocworks_oa4j_jni_Manager_setUserId
+(JNIEnv *env, jobject obj, jstring jusername, jstring jpassword)
+{
+	if (!WCCOAJavaManager::thisManager->isUserTableInitialized())
+		WCCOAJavaManager::thisManager->initUserTable();
+
+	CharString *username = Java::convertJString(env, jusername);
+	CharString *password = Java::convertJString(env, jpassword);
+	PVSSuserIdType userid = WCCOAJavaManager::thisManager->getUserId(username->c_str());
+	//std::cout << "setUserId: " << userid << std::endl;
+	bool ret = false;
+	if (userid != 65535) {
+		ret = WCCOAJavaManager::thisManager->setUserId(userid, password->c_str());
+		ret = (ret && WCCOAJavaManager::thisManager->getUserId() == userid);
+	}		
+	return ret;	
+}

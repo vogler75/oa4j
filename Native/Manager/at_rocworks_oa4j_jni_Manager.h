@@ -193,6 +193,38 @@ JNIEXPORT jobject JNICALL Java_at_rocworks_oa4j_jni_Manager_apiDpGetComment
 
 /*
  * Class:     at_rocworks_oa4j_jni_Manager
+ * Method:    checkPassword
+ * Signature: (Ljava/lang/String;Ljava/lang/String;)I
+ */
+JNIEXPORT jint JNICALL Java_at_rocworks_oa4j_jni_Manager_checkPassword
+  (JNIEnv *, jobject, jstring, jstring);
+
+/*
+ * Class:     at_rocworks_oa4j_jni_Manager
+ * Method:    setUserId
+ * Signature: (Ljava/lang/String;Ljava/lang/String;)Z
+ */
+JNIEXPORT jboolean JNICALL Java_at_rocworks_oa4j_jni_Manager_setUserId
+  (JNIEnv *, jobject, jstring, jstring);
+
+/*
+ * Class:     at_rocworks_oa4j_jni_Manager
+ * Method:    apiDoReceiveSysMsg
+ * Signature: (J)V
+ */
+JNIEXPORT void JNICALL Java_at_rocworks_oa4j_jni_Manager_apiDoReceiveSysMsg
+  (JNIEnv *, jobject, jlong);
+
+/*
+ * Class:     at_rocworks_oa4j_jni_Manager
+ * Method:    apiDoReceiveDpMsg
+ * Signature: (J)V
+ */
+JNIEXPORT void JNICALL Java_at_rocworks_oa4j_jni_Manager_apiDoReceiveDpMsg
+  (JNIEnv *, jobject, jlong);
+
+/*
+ * Class:     at_rocworks_oa4j_jni_Manager
  * Method:    apiSendArchivedDPs
  * Signature: (Lat/rocworks/oa4j/var/DynVar;Z)I
  */

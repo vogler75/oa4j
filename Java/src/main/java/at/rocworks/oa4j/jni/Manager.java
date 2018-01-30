@@ -51,6 +51,24 @@ public abstract class Manager {
     public native String[] apiGetIdSetOfType(String pattern, String type);    
     
     public native LangTextVar apiDpGetComment(DpIdentifierVar dp);
+
+    /**
+     * Verfiy password. Check if the given passwd is valid for the requested user id
+     * @param username
+     * @param password
+     * @return 0...Ok, -1...invalid user, -2...wrong password
+     */
+    public native int checkPassword(String username, String password);
+
+    /**
+     * A new user id is set when (id matches passwd) or
+     * (currentId is ROOT_USER and newUserId exists) or
+     * (newUserId is DEFAULT_USER).
+     * @param username
+     * @param password
+     * @return true if user was set
+     */
+    public native boolean setUserId(String username, String password);
     
     public native void apiDoReceiveSysMsg(long cPtrSysMsg);
     public native void apiDoReceiveDpMsg(long cPtrDpMsg);
