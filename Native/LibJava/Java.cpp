@@ -1,3 +1,20 @@
+/*
+OA4J - WinCC Open Architecture for Java
+Copyright (C) 2017 Andreas Vogler
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*/
 #include <../LibJava/Java.hxx>
 #include <Manager.hxx>
 #include <Mutex.hxx>
@@ -287,7 +304,8 @@ jobject Java::convertToJava(JNIEnv *env, VariablePtr varptr, JDpIdentifierClass 
 	case TIME_VAR: {
 		//jm = env->GetStaticMethodID(clsVariable, "newTimeVar", "(J)Lat/rocworks/oa4j/var/Variable;");
 		PVSSTime value = ((TimeVar*)varptr)->getValue();
-		jlong ms = (jlong)(value.getDouble() * 1000);
+		//jlong ms = (jlong)(value.getDouble() * 1000);
+		jlong ms = value.getSeconds() * 1000 + value.getMilli();
 		//std::cout << "TIME_VAR=" << ms << std::endl;
 		jobject jobj = env->CallStaticObjectMethod(clsVariable, cvar->newTimeVar(), ms);
 		res = jobj;

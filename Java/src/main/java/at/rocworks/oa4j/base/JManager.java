@@ -1,8 +1,20 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+    OA4J - WinCC Open Architecture for Java
+    Copyright (C) 2017 Andreas Vogler
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as
+    published by the Free Software Foundation, either version 3 of the
+    License, or (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*/
 package at.rocworks.oa4j.base;
 
 import at.rocworks.oa4j.jni.Manager;
@@ -298,7 +310,7 @@ public class JManager extends Manager implements Runnable {
     }
     
     @Override
-    public int callbackAnswer(int id, int idx, DpIdentifierVar dpid, Variable var) {
+    public int callbackAnswer(int id, int idx, DpIdentifierVar dpid, Variable var, long time) {
         //JDebug.out.log(Level.INFO, "java got answer id={0} idx={1} dpid={2} var={3}", new Object[]{id, idx, dpid, var});
         JHotLinkWaitForAnswer hdl;
         hdl = hotlinkList.get(id);
@@ -306,19 +318,17 @@ public class JManager extends Manager implements Runnable {
         //JDebug.out.log(Level.INFO, "java found answer id={0} idx={1} dpid={2} var={3} hdl={4}", new Object[]{id, idx, dpid, var, hdl});
 
         if (hdl != null) {                      
-            //threadPool.execute(ForkJoinTask.adapt(()->{
-                switch (idx) {
-                    case -1:
-                        hdl.answerInit();
-                        break;
-                    case -2:
-                        hdl.callbackDone();
-                        break;
-                    default:
-                        hdl.callbackItem(new JDpVCItem(dpid, var)); 
-                        break;
-                }                
-            //}));
+            switch (idx) {
+                case -1:
+                    hdl.answerInit();
+                    break;
+                case -2:
+                    hdl.callbackDone();
+                    break;
+                default:
+                    hdl.callbackItem(new JDpVCItem(dpid, var, time));
+                    break;
+            }
             return 0;
         } else 
             return -1;
@@ -343,20 +353,17 @@ public class JManager extends Manager implements Runnable {
         //JDebug.out.log(Level.INFO, "java found hotlink id={0} idx={1} dpid={2} var={3} hdl={4}", new Object[]{id, idx, dpid, var, hdl});
 
         if (hdl != null) {
-            //threadPool.execute(ForkJoinTask.adapt(()->{
-                switch (idx) {
-                    case -1:
-                        hdl.hotlinkInit();
-                        break;
-                    case -2:
-                        hdl.callbackDone();
-                        //threadPool.execute(()-> { hdl.callbackDone(); });
-                        break;
-                    default:
-                        hdl.callbackItem(new JDpVCItem(dpid, var));
-                        break;
-                }
-            //}));
+            switch (idx) {
+                case -1:
+                    hdl.hotlinkInit();
+                    break;
+                case -2:
+                    hdl.callbackDone();
+                    break;
+                default:
+                    hdl.callbackItem(new JDpVCItem(dpid, var, 0));
+                    break;
+            }
             return 0;
         } else {
             return -1;
@@ -436,9 +443,7 @@ public class JManager extends Manager implements Runnable {
     
     @Override
     public int callbackHotlinkGroup(int id, long ptrDpHlGroup) {
-        //threadPool.execute(()->{ // didn't work
-            apiProcessHotlinkGroup(id, ptrDpHlGroup);
-        //});
+        apiProcessHotlinkGroup(id, ptrDpHlGroup);
         return 0;
     }
     

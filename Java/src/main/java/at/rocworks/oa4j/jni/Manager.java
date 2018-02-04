@@ -1,8 +1,20 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+    OA4J - WinCC Open Architecture for Java
+    Copyright (C) 2017 Andreas Vogler
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as
+    published by the Free Software Foundation, either version 3 of the
+    License, or (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*/
 package at.rocworks.oa4j.jni;
 
 import at.rocworks.oa4j.base.JDpVCItem;
@@ -83,9 +95,9 @@ public abstract class Manager {
     public abstract boolean doReceiveDpMsg(long cPtrDpMsg);
 
     public int callbackAnswer(int id, int idx) {    
-        return callbackAnswer(id, idx, null, null);
+        return callbackAnswer(id, idx, null, null, 0);
     }
-    abstract public int callbackAnswer(int id, int idx, DpIdentifierVar dpid, Variable var);
+    abstract public int callbackAnswer(int id, int idx, DpIdentifierVar dpid, Variable var, long time);
     abstract public int callbackAnswerError(int id, int code, String text);
 
     public int callbackHotlink(int id, int idx) {

@@ -1,3 +1,20 @@
+/*
+OA4J - WinCC Open Architecture for Java
+Copyright (C) 2017 Andreas Vogler
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*/
 #include <../LibJava/Java.hxx>
 
 #include <WCCOAJavaManager.hxx>
@@ -104,7 +121,7 @@ void WCCOAJavaManager::javaInitialize(JNIEnv *env, jobject obj){
 		return;
 	}
 
-	midJavaAnswer = env->GetMethodID(javaManagerClass, "callbackAnswer", "(IILat/rocworks/oa4j/var/DpIdentifierVar;Lat/rocworks/oa4j/var/Variable;)I");
+	midJavaAnswer = env->GetMethodID(javaManagerClass, "callbackAnswer", "(IILat/rocworks/oa4j/var/DpIdentifierVar;Lat/rocworks/oa4j/var/Variable;J)I");
 	if (midJavaAnswer == nil) {
 		ErrHdl::error(ErrClass::PRIO_SEVERE, ErrClass::ERR_IMPL, ErrClass::UNEXPECTEDSTATE,
 			ManagerName, "javaInitialize", CharString("mid for callbackAnswer not found"));
@@ -126,14 +143,14 @@ void WCCOAJavaManager::javaInitialize(JNIEnv *env, jobject obj){
 	}
 
 	midDoReceiveSysMsg = env->GetMethodID(javaManagerClass, "doReceiveSysMsg", "(J)Z");
-	if (midJavaAnswerI == nil) {
+	if (midDoReceiveSysMsg == nil) {
 		ErrHdl::error(ErrClass::PRIO_SEVERE, ErrClass::ERR_IMPL, ErrClass::UNEXPECTEDSTATE,
 			ManagerName, "javaInitialize", CharString("mid for doReceiveSysMsg not found"));
 		return;
 	}
 
 	midDoReceiveDpMsg = env->GetMethodID(javaManagerClass, "doReceiveDpMsg", "(J)Z");
-	if (midJavaAnswerI == nil) {
+	if (midDoReceiveDpMsg == nil) {
 		ErrHdl::error(ErrClass::PRIO_SEVERE, ErrClass::ERR_IMPL, ErrClass::UNEXPECTEDSTATE,
 			ManagerName, "javaInitialize", CharString("mid for doReceiveDpMsg not found"));
 		return;
@@ -292,12 +309,13 @@ void WCCOAJavaManager::handleHotLink(jint jHdl, const DpMsgAnswer &answer)
 				if (item != NULL) {
 					jobject objDpId = Java::convertToJava(g_env, item->getDpIdentifier(), &cdpid);
 					jobject objVar = Java::convertToJava(g_env, item->getValuePtr(), &cdpid, &cvar);
+					jlong objTim = item->getTime().getSeconds()*1000 + item->getTime().getMilli();
 
 					// create Variable object	
 					if (objDpId != NULL && objVar != NULL)
 					{
 						if (DEBUG) std::cout << "handleHotlink " << item->getDpIdentifier() << "/" << objVar << std::endl;
-						g_env->CallIntMethod(g_obj, midJavaAnswer, jHdl, ++i, objDpId, objVar);
+						g_env->CallIntMethod(g_obj, midJavaAnswer, jHdl, ++i, objDpId, objVar, objTim);
 					}
 
 					if (objDpId != NULL) g_env->DeleteLocalRef(objDpId);

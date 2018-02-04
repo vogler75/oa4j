@@ -23,7 +23,7 @@ public class JDpIdValueList implements Iterable<JDpVCItem> {
     @Override
     public String toString() {
         StringBuilder s = new StringBuilder();
-        s.append("DpIdValueList: ").append(list.size()).append("\n");
+        s.append(this.getClass().getSimpleName()).append(":").append(list.size()).append("\n");
         list.forEach((JDpVCItem item)->s.append(item.toString()).append("\n"));
         return s.toString();
     }
