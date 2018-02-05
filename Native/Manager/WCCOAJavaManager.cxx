@@ -296,10 +296,10 @@ void WCCOAJavaManager::handleHotLink(jint jHdl, const DpMsgAnswer &answer)
 	{		
 		ErrClass *err = group->getErrorPtr();
 		if (err != 0) {
+			//std::cout << "handleHotLink error=" << err->getErrorId() << "::" << err->getErrorText() << std::endl;			
 			jstring jErrText = (jstring)Java::convertToJava(g_env, err->getErrorText());
 			g_env->CallIntMethod(g_obj, midJavaAnswerErr, jHdl, err->getErrorId(), jErrText);
-			g_env->DeleteLocalRef(jErrText);
-			//std::cout << "handleHotLink error=" << err->getErrorId() <<"::" << err->getErrorText() << std::endl;
+			g_env->DeleteLocalRef(jErrText);			
 		}
 		int i = -1;
 		for (AnswerItem *item = group->getFirstItem(); item; item = group->getNextItem())
@@ -312,7 +312,7 @@ void WCCOAJavaManager::handleHotLink(jint jHdl, const DpMsgAnswer &answer)
 					jlong objTim = item->getTime().getSeconds()*1000 + item->getTime().getMilli();
 
 					// create Variable object	
-					if (objDpId != NULL && objVar != NULL)
+					if (objDpId != NULL /*&& objVar != NULL => dont't check NULL: if a datapoint is deleted the value is null, it is ok to get this information*/)
 					{
 						if (DEBUG) std::cout << "handleHotlink " << item->getDpIdentifier() << "/" << objVar << std::endl;
 						g_env->CallIntMethod(g_obj, midJavaAnswer, jHdl, ++i, objDpId, objVar, objTim);
@@ -349,7 +349,7 @@ void WCCOAJavaManager::handleHotLink(jint jHdl, const DpHLGroup &group)
 			//std::cerr << "Receiving HotLink " << item->getValuePtr()->formatValue() << std::endl;			
 
 			// create Variable object	
-			if (objDpId != NULL && objVar != NULL)
+			if (objDpId != NULL /*&& objVar != NULL => dont't check NULL: if a datapoint is deleted the value is null, it is ok to get this information*/)
 			{
 				g_env->CallIntMethod(g_obj, midJavaHotlink, jHdl, ++i, objDpId, objVar);
 			}

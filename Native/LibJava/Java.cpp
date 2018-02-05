@@ -200,6 +200,10 @@ jobject Java::convertToJava(JNIEnv *env, VariablePtr varptr, JDpIdentifierClass 
 	jobject res;
 	bool cvarTmp=false;
 
+	if (varptr == NULL) { // can happen, for example if a datapoint is deleted we get a hotlink with NULL as value
+		return 0;
+	}
+
 	if (!cvar) {
 		cvar = new JVariableClass(env);	
 		cvarTmp = true;
