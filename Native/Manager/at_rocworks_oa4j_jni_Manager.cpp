@@ -461,19 +461,30 @@ JNIEXPORT jint JNICALL Java_at_rocworks_oa4j_jni_Manager_apiIsActiveConnection
 JNIEXPORT jint JNICALL Java_at_rocworks_oa4j_jni_Manager_checkPassword
 (JNIEnv *env, jobject obj, jstring jusername, jstring jpassword)
 {
+	int ret;
+
+	if (jusername == 0) return -1; // invalid user
+	if (jpassword == 0) return -2; // invalid password
+
 	if (!WCCOAJavaManager::thisManager->isUserTableInitialized())
 		WCCOAJavaManager::thisManager->initUserTable();
 
 	CharString *username = Java::convertJString(env, jusername);
 	CharString *password = Java::convertJString(env, jpassword);
 	PVSSuserIdType userid = WCCOAJavaManager::thisManager->getUserId(username->c_str());
-	int ret = -99; // 
-	if (userid != 65535) {
-		ret = WCCOAJavaManager::thisManager->checkPassword(userid, password->c_str()) ? 0 /*ok */ : -2 /* wrong password*/;
-	}
-	else {
+	if (userid == 65535) {
 		ret = -1; // invalid user
 	}
+	else {
+		if (!WCCOAJavaManager::thisManager->checkPassword(userid, password->c_str())) {
+			ret = -2; /* wrong password*/;
+		}			
+		else {
+			ret = 0; /*ok */			
+		}
+	}
+	delete username;
+	delete password;
 	return ret;
 }
 
@@ -485,17 +496,30 @@ JNIEXPORT jint JNICALL Java_at_rocworks_oa4j_jni_Manager_checkPassword
 JNIEXPORT jboolean JNICALL Java_at_rocworks_oa4j_jni_Manager_setUserId
 (JNIEnv *env, jobject obj, jstring jusername, jstring jpassword)
 {
+	if (jusername == 0) return false;
+
 	if (!WCCOAJavaManager::thisManager->isUserTableInitialized())
 		WCCOAJavaManager::thisManager->initUserTable();
 
 	CharString *username = Java::convertJString(env, jusername);
-	CharString *password = Java::convertJString(env, jpassword);
+
+	CharString *password;
+	const char * c_password = 0;
+	if (jpassword != 0) {		
+		password = Java::convertJString(env, jpassword);
+		c_password = password->c_str();
+	}
+
 	PVSSuserIdType userid = WCCOAJavaManager::thisManager->getUserId(username->c_str());
 	//std::cout << "setUserId: " << userid << std::endl;
 	bool ret = false;
 	if (userid != 65535) {
-		ret = WCCOAJavaManager::thisManager->setUserId(userid, password->c_str());
+		ret = WCCOAJavaManager::thisManager->setUserId(userid, c_password);
 		ret = (ret && WCCOAJavaManager::thisManager->getUserId() == userid);
-	}		
+	}
+
+	delete username;
+	if (jpassword != 0) 
+		delete password;
 	return ret;	
 }
