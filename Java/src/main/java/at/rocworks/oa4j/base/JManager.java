@@ -53,7 +53,7 @@ public class JManager extends Manager implements Runnable {
     protected volatile boolean loopBreak = false;
 
     private final ConcurrentHashMap<Integer, JHotLinkWaitForAnswer> hotlinkList = new ConcurrentHashMap<>();    
-    private final ConcurrentLinkedQueue<JHotLinkWaitForAnswer> hotlinkQueue = new ConcurrentLinkedQueue<>();
+    //private final ConcurrentLinkedQueue<Callable> hotlinkQueue = new ConcurrentLinkedQueue<>();
     private final ConcurrentLinkedQueue<Callable> taskQueue = new ConcurrentLinkedQueue<>();
     
     private int loopWaitUSec=10000;
@@ -79,7 +79,7 @@ public class JManager extends Manager implements Runnable {
     }
 
     public int getEnqueueSize() {
-        return hotlinkQueue.size();
+        return taskQueue.size();
     }
 
     public static JManager getInstance() {
@@ -252,16 +252,16 @@ public class JManager extends Manager implements Runnable {
     }    
     
     protected void enqueueHotlink(JHotLinkWaitForAnswer hl) {
-        if ( hotlinkQueue.size() >= MAX_ENQUEUE_SIZE_HIGH )  {
+        if ( taskQueue.size() >= MAX_ENQUEUE_SIZE_HIGH )  {
             maxEnqueueSizeReached++;
             if (maxEnqueueSizeReached % 100==1)
-                JDebug.out.log(Level.WARNING, "max enqueue size reached {0} discarding hotlink...", hotlinkQueue.size());
+                JDebug.out.log(Level.WARNING, "max enqueue size reached {0} discarding hotlink...", taskQueue.size());
         } else if ( maxEnqueueSizeReached == 0 ) {
-            hotlinkQueue.add(hl);
-        } else if ( hotlinkQueue.size() <= MAX_ENQUEUE_SIZE_LOW ) {
-            hotlinkQueue.add(hl);            
+            taskQueue.add(hl);
+        } else if ( taskQueue.size() <= MAX_ENQUEUE_SIZE_LOW ) {
+            taskQueue.add(hl);
             maxEnqueueSizeReached=0;        
-            JDebug.out.log(Level.WARNING, "enqueue below threshold size {0} processing hotlink...", hotlinkQueue.size());
+            JDebug.out.log(Level.WARNING, "enqueue below threshold size {0} processing hotlink...", taskQueue.size());
         }
     }   
     
@@ -278,12 +278,6 @@ public class JManager extends Manager implements Runnable {
         try {
             // Maximum of loop, otherwise it could happen that we are in this 
             // loop forever, if concurrently hotlink-requests are added...
-            JHotLinkWaitForAnswer hotlink;        
-            for ( k=0; k<=100 && (hotlink=hotlinkQueue.poll()) != null; k++ ) {
-                hotlink.call();
-            }
-
-            // pop tasks and execute it 
             Callable task;
             for ( k=0; k<=100 && (task=taskQueue.poll()) != null; k++ ) {
                 task.call();

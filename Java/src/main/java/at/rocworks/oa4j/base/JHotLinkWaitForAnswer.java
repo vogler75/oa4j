@@ -18,6 +18,7 @@
 package at.rocworks.oa4j.base;
 
 import java.util.Date;
+import java.util.concurrent.Callable;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.logging.Level;
 
@@ -25,7 +26,7 @@ import java.util.logging.Level;
  *
  * @author vogler
  */
-public abstract class JHotLinkWaitForAnswer implements Runnable {
+public abstract class JHotLinkWaitForAnswer implements Runnable, Callable<Integer> {
     protected long cptr = 0; // c++ pointer to callback function (needed for disconnect)
     protected long cid = 0; // e.g. queryId (needed for disconnect)
     
@@ -130,8 +131,9 @@ public abstract class JHotLinkWaitForAnswer implements Runnable {
         if (this.cbAnswer != null)
             this.cbAnswer.answer(answer);
     }    
-    
-    protected int call() {
+
+    @Override
+    public Integer call() {
         if ((retCode = execute()) != 0) { 
             answer = new JDpMsgAnswer();
             answer.setRetCode(retCode);
@@ -145,11 +147,9 @@ public abstract class JHotLinkWaitForAnswer implements Runnable {
     
     protected void deregister() {
         JManager.getInstance().deregister(this);
-        
         if ( async ) {
             thread.interrupt();
-            //msgWait.addOne(); // notifiy thread        
-        }        
+        }
     }
     
     public void waitForAnswer() {

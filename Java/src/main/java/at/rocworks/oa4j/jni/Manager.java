@@ -34,7 +34,9 @@ public abstract class Manager {
     public native String apiGetDataPath();
     public native String apiGetConfigValue(String key);
     
-    public int apiStartup(int manType, String[] argv) { return apiStartup(manType, argv, true, true); }
+    public int apiStartup(int manType, String[] argv) {
+        return apiStartup(manType, argv, true, true);
+    }
     public native int apiStartup(int manType, String[] argv, boolean connectToData, boolean connectToEvent);
     public native int apiShutdown();
     
@@ -78,7 +80,7 @@ public abstract class Manager {
      * (newUserId is DEFAULT_USER).
      * @param username
      * @param password
-     * @return true if user was set
+     * @return true if user has been set
      */
     public native boolean setUserId(String username, String password);
     
@@ -88,7 +90,9 @@ public abstract class Manager {
     public native int apiSendArchivedDPs(DynVar elements, boolean isAlert);
     
     private native void apiSetManagerState(int state);
-    public void apiSetManagerState(ManagerState state) { apiSetManagerState(state.value); }
+    public void apiSetManagerState(ManagerState state) {
+        apiSetManagerState(state.value);
+    }
        
     // callbacks from API   
     public abstract boolean doReceiveSysMsg(long cPtrSysMsg);    

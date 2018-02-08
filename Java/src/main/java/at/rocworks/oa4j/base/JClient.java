@@ -74,7 +74,6 @@ public class JClient {
     }
 
     // dpSet
-    
     public static JDpSet dpSet() {
         return (new JDpSet());
     }
@@ -83,36 +82,26 @@ public class JClient {
         return (new JDpSet()).add(dp, Variable.newVariable(var)).send();
     }
 
-    //public static JDpSet dpSet(List<Pair<String, Object>> vals) {
-    //    JDpSet dpSet = new JDpSet();
-    //    vals.forEach((val)->dpSet.add(val.getKey(), Variable.newVariable(val.getValue())));
-    //    return dpSet.send();
-    //}
-
     public static int dpSetWait(String dp, Object var) {
         return dpSet(dp, var).await().getRetCode();
     }
 
     // dpConnect
-            
     public static JDpConnect dpConnect() {
         return (new JDpConnect());
     }
     
     // alertConnect
-            
     public static JAlertConnect alertConnect() {
         return (new JAlertConnect());
     }    
     
     // dpQuery
-    
     public static JDpQuery dpQuery(String query) {
         return (new JDpQuery(query).send());
     }
 
     // dpQueryConnect
-    
     public static JDpQueryConnect dpQueryConnectSingle(String query) {
         return (new JDpQueryConnectSingle(query));
     }
@@ -122,7 +111,6 @@ public class JClient {
     }
 
     // dpNames
-    
     public static String[] dpNames(String pattern) {
         return (String[])JManager.getInstance().executeTask(()->{
             return JManager.getInstance().apiGetIdSet(pattern);
@@ -135,11 +123,36 @@ public class JClient {
         });
     }    
     
-    // dpComment   
-    
+    // dpComment
     public static LangTextVar dpGetComment(DpIdentifierVar dpid) {
         return (LangTextVar)JManager.getInstance().executeTask(()->{
             return JManager.getInstance().apiDpGetComment(dpid);
+        });
+    }
+
+    /**
+     * Verfiy password. Check if the given passwd is valid for the requested user id
+     * @param username
+     * @param password
+     * @return 0...Ok, -1...invalid user, -2...wrong password
+     */
+    public static int checkPassword(String username, String password) {
+        return (int)JManager.getInstance().executeTask(()->{
+            return JManager.getInstance().checkPassword(username, password);
+        });
+    }
+
+    /**
+     * A new user id is set when (id matches passwd) or
+     * (currentId is ROOT_USER and newUserId exists) or
+     * (newUserId is DEFAULT_USER).
+     * @param username
+     * @param password
+     * @return true if user has been set
+     */
+    public static boolean setUserId(String username, String password) {
+        return (boolean)JManager.getInstance().executeTask(()->{
+            return JManager.getInstance().setUserId(username, password);
         });
     }
 }
