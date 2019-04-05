@@ -42,7 +42,7 @@ public class ApiTestDpConnect {
         // logs are printed to WCCOAjava<num>.0.log and WCCOAjava10.err         
         JManager m = new JManager();
         m.init(args).start();
-        new ApiTestDpConnect().run();        
+        new ApiTestDpConnect().run();
         m.stop();
     }
     
@@ -57,17 +57,17 @@ public class ApiTestDpConnect {
                     JDebug.out.info("--- ANSWER END ---");
                 })                
                 .action((JDpHLGroup hotlink)->{
-                    //JDebug.out.info("--- HOTLINK BEG ---");
-                    //JDebug.out.info(hotlink.toString());
-                    //JDebug.out.info("getItemVar(0): "+hotlink.getItemVar(0));
-                    //JDebug.out.info("getItemVar(1): "+hotlink.getItemVar(1));
-                    //JDebug.out.info("getItemVar(2): "+hotlink.getItemVar(2).toDouble(0.0));
-                    //JDebug.out.info("getItemVar(2).isNull: "+hotlink.getItemVar(2).isNull());
+                    JDebug.out.info("--- HOTLINK BEG ---");
+                    JDebug.out.info(hotlink.toString());
+                    JDebug.out.info("getItemVar(0): "+hotlink.getItemVar(0));
+                    JDebug.out.info("getItemVar(1): "+hotlink.getItemVar(1));
+                    JDebug.out.info("getItemVar(2): "+hotlink.getItemVar(2).toDouble(0.0));
+                    JDebug.out.info("getItemVar(2).isNull: "+hotlink.getItemVar(2).isNull());
                     val=hotlink.getItemVar(0).toInt();
                     Double v1 = hotlink.getItemVar(0).toDouble();
                     Double v2 = hotlink.getItemVar(1).toDouble();
                     JClient.dpSet("ExampleDP_Trend3.", v1+v2).send();
-                    //JDebug.out.info("--- HOTLINK END ---");
+                    JDebug.out.info("--- HOTLINK END ---");
                 })
                 .connect();
         

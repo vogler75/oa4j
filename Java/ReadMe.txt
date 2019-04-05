@@ -15,14 +15,14 @@
    https://maven.apache.org/download.cgi
    Copy content of zip to e.g. C:\Tools\apache-maven-3.5.0
    
-*) Build MQTT Driver
+*) Build Java Library
    set PATH=%PATH%;C:\Tools\apache-maven-3.5.0\bin
    set JAVA_HOME=C:\Program Files\Java\jdk1.8.0_131
    set PROJ_HOME=C:\WinCC_OA_Proj\<project>
    cd C:\Tools\oa4j\Project\Java
    copy make.sh make.bat
    make.bat
-   cp –r bin lib config %PROJ_HOME%
+   cp –r lib\* %PROJ_HOME%\bin
 
 *) Download oa4j binaries http://rocworks.at/oa4j/ or compile it (oa4j/Native)   
    Copy files to C:\Siemens\Automation\WinCC_OA\<version>\bin

@@ -47,6 +47,8 @@ int main(int argc, char *argv[])
 	int iLibPathSet = 0;
 	int iClassPathSet = 0;	
 
+  std::cout << "JVM... " << std::endl;
+
 	// defaults 
 
 	// user.dir
@@ -79,7 +81,7 @@ int main(int argc, char *argv[])
 	if (strlen(WCCOAJavaResources::getJvmOption().c_str()) > 0)
 	{
 		options[++idx].optionString = WCCOAJavaResources::getJvmOption();
-		std::cout << "config: " << options[idx].optionString << "'" << std::endl;
+		std::cout << "configs: " << options[idx].optionString << "'" << std::endl;
 	}
 
 	// user.dir
@@ -88,7 +90,7 @@ int main(int argc, char *argv[])
 		CharString *s = new CharString("-Duser.dir=" + WCCOAJavaResources::getJvmUserDir());
 		if (iUserDirSet == 0) iUserDirSet = ++idx;
 		options[iUserDirSet].optionString = *s; // (char*)s->c_str();
-		std::cout << "config: " << options[iUserDirSet].optionString << std::endl;
+		std::cout << "configs: " << options[iUserDirSet].optionString << std::endl;
 	}
 
 	// java.library.path
@@ -97,7 +99,7 @@ int main(int argc, char *argv[])
 		CharString *s = new CharString("-Djava.library.path=" + WCCOAJavaResources::getJvmLibraryPath());
 		if (iLibPathSet == 0) iLibPathSet = ++idx;
 		options[iLibPathSet].optionString = *s; // (char*)s->c_str();
-		std::cout << "config: " << options[iLibPathSet].optionString << std::endl;
+		std::cout << "configs: " << options[iLibPathSet].optionString << std::endl;
 	}
 
 	// java.class.path
@@ -106,7 +108,7 @@ int main(int argc, char *argv[])
 		CharString *s = new CharString("-Djava.class.path=" + WCCOAJavaResources::getJvmClassPath());
 		if (iClassPathSet == 0) iClassPathSet = ++idx;
 		options[iClassPathSet].optionString = *s; // (char*)s->c_str();
-		std::cout << "config: " << options[iClassPathSet].optionString << std::endl;
+		std::cout << "configs: " << options[iClassPathSet].optionString << std::endl;
 	}
 
 	// config file
@@ -176,7 +178,7 @@ int main(int argc, char *argv[])
 	//=============== Arguments ===========================================
 	int i;
 	jstring str;
-	jobjectArray jargv = env->NewObjectArray(argc + 6, env->FindClass("java/lang/String"), 0);
+	jobjectArray jargv = env->NewObjectArray(argc + 7, env->FindClass("java/lang/String"), 0);
 	int classIdx = -1;
 	const char *className = 0;
 	// pass arguments through
@@ -189,35 +191,43 @@ int main(int argc, char *argv[])
 		if (classIdx == i) className = argv[i];
 	}
 
-	// add project name to argument list
+	// [1] add project name to argument list
 	str = env->NewStringUTF("-proj");
 	env->SetObjectArrayElement(jargv, i, str);
 	i++;
 
+  // [2]
 	CharString projName = Resources::getProjectName();
 	str = env->NewStringUTF(projName);
 	env->SetObjectArrayElement(jargv, i, str);
 	i++;
 
-	// add project dir to argument list
+	// [3] add project dir to argument list
 	str = env->NewStringUTF("-path");
 	env->SetObjectArrayElement(jargv, i, str);
 	i++;
 
+  // [4]
 	CharString projDir = Resources::getProjDir();
 	str = env->NewStringUTF(projDir);
 	env->SetObjectArrayElement(jargv, i, str);
 	i++;
 
-	// add manager num to argument list
+	// [5] add manager num to argument list
 	str = env->NewStringUTF("-num");
 	env->SetObjectArrayElement(jargv, i, str);
 	i++;
 
+  // [6]
 	CharString manNum = Resources::getManNum();
 	str = env->NewStringUTF(manNum);
 	env->SetObjectArrayElement(jargv, i, str);
 	i++;
+
+  // [7] add -noinit to argument list
+  str = env->NewStringUTF("-noinit");
+  env->SetObjectArrayElement(jargv, i, str);
+  i++;
 
 	//=============== Call Main Method ==========================================
 	// check if classname was given

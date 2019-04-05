@@ -29,11 +29,11 @@ map<string, const char*> WCCOAJavaResources::m;
 
 // Wrapper to read config file
 void  WCCOAJavaResources::init(int &argc, char *argv[])
-{
+{      
+  //std::cout << "Init Resources..." << std::endl;
   begin(argc, argv);
   while ( readSection() || generalSection() )
     ;
-
   end(argc, argv);
 
   // Are we called with -helpdbg or -help ?
@@ -52,6 +52,7 @@ void  WCCOAJavaResources::init(int &argc, char *argv[])
   {
 	  WCCOAJavaResources::printHelpReport();	  
   }
+  //std::cout << "Init Resources...done." << std::endl;
 }
 
 
@@ -67,22 +68,22 @@ PVSSboolean  WCCOAJavaResources::readSection()
   getNextEntry();
 
   // Loop thru section
-  while ( (cfgState != CFG_SECT_START) &&  // Not next section
-          (cfgState != CFG_EOF) )          // End of config file
+  while ( (getCfgState() != CFG_SECT_START) &&  // Not next section
+          (getCfgState() != CFG_EOF) )          // End of config file
   {
-    if (!keyWord.icmp("jvmOption"))             // It matches
-		cfgStream >> jvmOption;                   // read the value
-	else if (!keyWord.icmp("userDir"))             // It matches
-		cfgStream >> jvmUserDir;                   // read the value
-	else if (!keyWord.icmp("classPath"))             // It matches
-		cfgStream >> jvmClassPath;                   // read the value
-	else if (!keyWord.icmp("libraryPath"))             // It matches
-		cfgStream >> jvmLibraryPath;                   // read the value
-	else if (!keyWord.icmp("configFile"))             // It matches
-		cfgStream >> jvmConfigFile;                   // read the value
+    if (!getKeyWord().icmp("jvmOption"))             // It matches
+		getCfgStream() >> jvmOption;                   // read the value
+	else if (!getKeyWord().icmp("userDir"))             // It matches
+		getCfgStream() >> jvmUserDir;                   // read the value
+	else if (!getKeyWord().icmp("classPath"))             // It matches
+		getCfgStream() >> jvmClassPath;                   // read the value
+	else if (!getKeyWord().icmp("libraryPath"))             // It matches
+		getCfgStream() >> jvmLibraryPath;                   // read the value
+	else if (!getKeyWord().icmp("configFile"))             // It matches
+		getCfgStream() >> jvmConfigFile;                   // read the value
 	else {
-		string *k = new string(keyWord);
-		CharString *v = new CharString(); cfgStream >> *v;
+		string *k = new string(getKeyWord());
+		CharString *v = new CharString(); getCfgStream() >> *v;
 		m.insert(pair<string, const char*>(*k, v->c_str()));
 	}
 
@@ -103,5 +104,5 @@ PVSSboolean  WCCOAJavaResources::readSection()
   }
 
   // So the loop will stop at the end of the file
-  return cfgState != CFG_EOF;
+  return getCfgState() != CFG_EOF;
 }

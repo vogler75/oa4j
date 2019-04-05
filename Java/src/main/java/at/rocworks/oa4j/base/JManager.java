@@ -38,11 +38,14 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 public class JManager extends Manager implements Runnable {
     public static final int DB_MAN = 3;        
     public static final int API_MAN = 7;
-    
+
     public static int MAX_ENQUEUE_SIZE_HIGH = 10000;
     public static int MAX_ENQUEUE_SIZE_LOW = 5000;
     public static int MAX_DEQUEUE_SIZE = 1000; // used in JHotLinkWaitForAnswer
-    
+
+    private boolean connectToData = true;
+    private boolean connectToEvent = true;
+
     private int maxEnqueueSizeReached=0;
     
     private static JManager instance = null; // Singleton
@@ -64,6 +67,8 @@ public class JManager extends Manager implements Runnable {
     
     private int manType=API_MAN;
     private int manNum=1;
+
+    private boolean initResources=true;
 
     private Map<String, String> initSysMsgData;
 
@@ -146,6 +151,10 @@ public class JManager extends Manager implements Runnable {
                 setManType(DB_MAN);
             }
 
+            // noInitFlag
+            if ( args[i].equals("-noinit") ) {
+                initResources=false;
+            }
         }        
         return init();
     }
@@ -166,7 +175,7 @@ public class JManager extends Manager implements Runnable {
         
         apiEnabled=false;        
         String errmsg="";        
-        try {   
+        try {
             System.loadLibrary("WCCOAjava");
             apiEnabled=true;
         } catch ( java.lang.UnsatisfiedLinkError ex ) {
@@ -202,12 +211,12 @@ public class JManager extends Manager implements Runnable {
     
     public void start(boolean connectToData, boolean connectToEvent) {   
         if ( apiEnabled ) {
-            apiStartup(manType, 
-                    new String[]{"WCCOAjava", "-proj", projName, "-num", Integer.toString(manNum)}, 
-                    connectToData, connectToEvent);
-            loopPaused.sendFalse();
-            apiConnected=true;
+            JDebug.out.log(Level.INFO, "api manager start...");
+            this.connectToData=connectToData;
+            this.connectToEvent=connectToEvent;
             new Thread(this).start();
+            loopPaused.awaitFalse();
+            JDebug.out.log(Level.INFO, "api manager started.");
         }
     }
     
@@ -222,13 +231,18 @@ public class JManager extends Manager implements Runnable {
 
     @Override
     public void run() {
+        apiStartup(manType,
+                new String[]{"WCCOAjava", "-proj", projName, "-num", Integer.toString(manNum)},
+                connectToData, connectToEvent, initResources);
+        loopPaused.sendFalse();
+        apiConnected=true;
         while (apiConnected) {
             JDebug.out.log(Level.INFO, "api manager loop waiting.");
             loopPaused.awaitFalse();
             JDebug.out.log(Level.INFO, "api manager loop started.");
             while ( !loopBreak ) {                
-                synchronized ( this ) {                                    
-                    apiDispatch(0, loopWaitUSec); 
+                synchronized ( this ) {
+                    apiDispatch(0, loopWaitUSec);
                     queueWorker();
                 }
             }

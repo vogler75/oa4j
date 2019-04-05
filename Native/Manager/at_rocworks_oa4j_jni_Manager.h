@@ -37,7 +37,7 @@ JNIEXPORT jstring JNICALL Java_at_rocworks_oa4j_jni_Manager_apiGetConfigValue
  * Signature: (I[Ljava/lang/String;ZZ)I
  */
 JNIEXPORT jint JNICALL Java_at_rocworks_oa4j_jni_Manager_apiStartup
-  (JNIEnv *, jobject, jint, jobjectArray, jboolean, jboolean);
+  (JNIEnv *, jobject, jint, jobjectArray, jboolean, jboolean, jboolean);
 
 /*
  * Class:     at_rocworks_oa4j_jni_Manager

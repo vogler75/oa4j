@@ -22,7 +22,7 @@
    cd C:\Tools\oa4j\Project\Java
    copy make.sh make.bat
    make.bat
-   cp –r bin lib %PROJ_HOME%
+   cp –r lib\* %PROJ_HOME%\bin
    cd C:\Tools\oa4j\Example
    cp -r config dplist msg panels %PROJ_HOME%   
 

@@ -309,7 +309,7 @@ jobject Java::convertToJava(JNIEnv *env, VariablePtr varptr, JDpIdentifierClass 
 		//jm = env->GetStaticMethodID(clsVariable, "newTimeVar", "(J)Lat/rocworks/oa4j/var/Variable;");
 		PVSSTime value = ((TimeVar*)varptr)->getValue();
 		//jlong ms = (jlong)(value.getDouble() * 1000);
-		jlong ms = value.getSeconds() * 1000 + value.getMilli();
+		jlong ms = value.getSeconds() * 1000 + value.getMilliseconds();
 		//std::cout << "TIME_VAR=" << ms << std::endl;
 		jobject jobj = env->CallStaticObjectMethod(clsVariable, cvar->newTimeVar(), ms);
 		res = jobj;

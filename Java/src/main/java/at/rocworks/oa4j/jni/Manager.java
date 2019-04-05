@@ -33,11 +33,11 @@ public abstract class Manager {
     public native String apiGetLogPath();
     public native String apiGetDataPath();
     public native String apiGetConfigValue(String key);
-    
+
     public int apiStartup(int manType, String[] argv) {
-        return apiStartup(manType, argv, true, true);
+        return apiStartup(manType, argv, true, true, true);
     }
-    public native int apiStartup(int manType, String[] argv, boolean connectToData, boolean connectToEvent);
+    public native int apiStartup(int manType, String[] argv, boolean connectToData, boolean connectToEvent, boolean initResources);
     public native int apiShutdown();
     
     public native void apiDispatch(int sec, int usec);    

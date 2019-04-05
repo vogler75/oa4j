@@ -27,8 +27,10 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 // JAVA JNI startup
 
 JNIEXPORT jint JNICALL Java_at_rocworks_oa4j_jni_Manager_apiStartup
-(JNIEnv *env, jobject jobj, jint jtype, jobjectArray jargv, jboolean connectToData, jboolean connectToEvent)
+(JNIEnv *env, jobject jobj, jint jtype, jobjectArray jargv, jboolean connectToData, jboolean connectToEvent, jboolean initResources)
 {
+  bool init = true;
+
 	int len = env->GetArrayLength(jargv);
 	char **argv = (char **)malloc(len * sizeof(char *));
 	for (int i = 0; i < len; i++)
@@ -37,21 +39,22 @@ JNIEXPORT jint JNICALL Java_at_rocworks_oa4j_jni_Manager_apiStartup
 		Java::copyJavaStringToString(env, (jstring)jstr, &argv[i]);
 		env->DeleteLocalRef(jstr);
 	}
-
-	std::cout << "Startup Java/WinCCOA connection..." << std::endl;
-
-	WCCOAJavaResources::init(len, argv);
+  
+  if (initResources) 
+    WCCOAJavaResources::init(len, argv);
 
 	if (jtype == API_MAN)
 	{
+		//std::cout << "Startup Java/WinCCOA API connection..." << std::endl;
 		WCCOAJavaManager::startupManager(len, argv, env, jobj, API_MAN, connectToData, connectToEvent);
-		std::cout << "Startup Java/WinCCOA API connection...done " << std::endl;
+		//std::cout << "Startup Java/WinCCOA API connection...done " << std::endl;
 		return 0;
 	}
 	else
 	if (jtype == DB_MAN) {
+		//std::cout << "Startup Java/WinCCOA DB connection..." << std::endl;
 		WCCOAJavaManager::startupManager(len, argv, env, jobj, DB_MAN, connectToData, connectToEvent);
-		std::cout << "Startup Java/WinCCOA DB connection...done " << std::endl;
+		//std::cout << "Startup Java/WinCCOA DB connection...done " << std::endl;
 		return 0;
 	}
 	else

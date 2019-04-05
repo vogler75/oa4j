@@ -81,8 +81,12 @@ void WCCOAJavaManager::startupManager(int &argc, char *argv[], JNIEnv *env, jobj
 	thisManager->g_env = env;
 	thisManager->g_obj = obj;
 	thisManager->javaInitialize(env, obj);
-	if (connectToData) thisManager->connectDataManager();
-	if (connectToEvent) thisManager->connectEventManager();
+	if (connectToData) {
+		thisManager->connectDataManager();
+	}
+	if (connectToEvent) {
+		thisManager->connectEventManager();
+	}
 	thisManager->g_env = nil;
 	thisManager->g_obj = nil;	
 }
@@ -309,7 +313,7 @@ void WCCOAJavaManager::handleHotLink(jint jHdl, const DpMsgAnswer &answer)
 				if (item != NULL) {
 					jobject objDpId = Java::convertToJava(g_env, item->getDpIdentifier(), &cdpid);
 					jobject objVar = Java::convertToJava(g_env, item->getValuePtr(), &cdpid, &cvar);
-					jlong objTim = item->getTime().getSeconds()*1000 + item->getTime().getMilli();
+					jlong objTim = item->getTime().getSeconds()*1000 + item->getTime().getMilliSeconds();
 
 					// create Variable object	
 					if (objDpId != NULL /*&& objVar != NULL => dont't check NULL: if a datapoint is deleted the value is null, it is ok to get this information*/)
