@@ -79,6 +79,7 @@ JNIEXPORT jstring JNICALL Java_at_rocworks_oa4j_jni_Msg_toDebug
 JNIEXPORT void JNICALL Java_at_rocworks_oa4j_jni_Msg_free
   (JNIEnv *, jobject, jlong);
 
+
 #ifdef __cplusplus
 }
 #endif

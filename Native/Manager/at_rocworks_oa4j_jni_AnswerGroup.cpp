@@ -18,7 +18,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <at_rocworks_oa4j_jni_AnswerGroup.h>
 #include <WCCOAJavaManager.hxx>
 #include <DpMsgAnswer.hxx>
-#include <../LibJava/Java.hxx>
+#include <Java.hxx>
 #include <TimeVar.hxx>
 #include <FloatVar.hxx>
 
@@ -63,5 +63,5 @@ JNIEXPORT jlong JNICALL Java_at_rocworks_oa4j_jni_AnswerGroup_malloc
 JNIEXPORT void JNICALL Java_at_rocworks_oa4j_jni_AnswerGroup_free
 (JNIEnv *, jobject, jlong cptr)
 {
-	if (cptr != nil) delete (AnswerGroup*)cptr;
+	if (cptr != NULL) delete (AnswerGroup*)cptr;
 }

@@ -15,21 +15,35 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+#include <version.hxx>
+
+#include <Java.hxx>
+
 #include <WCCOAJavaManager.hxx>
 #include <WCCOAJavaResources.hxx>
-#include <../LibJava/Java.hxx>
+
 #include <at_rocworks_oa4j_jni_Manager.h>
 
 #include <DpIdentifierVar.hxx>
 #include <MsgItcDispatcher.hxx>
 
+
+//------------------------------------------------------------------------------------------------
+// JAVA JNI PVSS Version
+
+JNIEXPORT jstring JNICALL Java_at_rocworks_oa4j_jni_Manager_apiGetVersion
+(JNIEnv *env, jobject)
+{
+    return env->NewStringUTF(PVSS_VERSION);
+}
+
 //------------------------------------------------------------------------------------------------
 // JAVA JNI startup
 
 JNIEXPORT jint JNICALL Java_at_rocworks_oa4j_jni_Manager_apiStartup
-(JNIEnv *env, jobject jobj, jint jtype, jobjectArray jargv, jboolean connectToData, jboolean connectToEvent, jboolean initResources)
+(JNIEnv *env, jobject jobj, jint jtype, jobjectArray jargv, jboolean connectToData, jboolean connectToEvent, jboolean initResources, jboolean debugFlag)
 {
-  bool init = true;
+    bool init = true;
 
 	int len = env->GetArrayLength(jargv);
 	char **argv = (char **)malloc(len * sizeof(char *));
@@ -40,21 +54,27 @@ JNIEXPORT jint JNICALL Java_at_rocworks_oa4j_jni_Manager_apiStartup
 		env->DeleteLocalRef(jstr);
 	}
   
-  if (initResources) 
-    WCCOAJavaResources::init(len, argv);
+    if (initResources) {
+        WCCOAJavaResources::init(len, argv);
+    }
+
+    if (debugFlag)  {
+        std::cout << "Debug Mode..." << std::endl;
+        Java::DEBUG=WCCOAJavaManager::DEBUG=true;
+    } 
 
 	if (jtype == API_MAN)
 	{
-		//std::cout << "Startup Java/WinCCOA API connection..." << std::endl;
+		std::cout << "Startup Java/WinCCIL API connection..." << std::endl;
 		WCCOAJavaManager::startupManager(len, argv, env, jobj, API_MAN, connectToData, connectToEvent);
-		//std::cout << "Startup Java/WinCCOA API connection...done " << std::endl;
+		std::cout << "Startup Java/WinCCIL API connection...done " << std::endl;
 		return 0;
 	}
 	else
 	if (jtype == DB_MAN) {
-		//std::cout << "Startup Java/WinCCOA DB connection..." << std::endl;
+		std::cout << "Startup Java/WinCCIL DB connection..." << std::endl;
 		WCCOAJavaManager::startupManager(len, argv, env, jobj, DB_MAN, connectToData, connectToEvent);
-		//std::cout << "Startup Java/WinCCOA DB connection...done " << std::endl;
+		std::cout << "Startup Java/WinCCIL DB connection...done " << std::endl;
 		return 0;
 	}
 	else
@@ -70,7 +90,9 @@ JNIEXPORT jint JNICALL Java_at_rocworks_oa4j_jni_Manager_apiStartup
 JNIEXPORT jint JNICALL Java_at_rocworks_oa4j_jni_Manager_apiShutdown
 (JNIEnv *, jobject)
 {
-	Manager::closeConnection(*(WCCOAJavaManager::thisManager->getFirstConnection()));
+    std::cout << "Shutdown Java/WinCCIL... " << std::endl;
+    Manager::shutdown();
+    std::cout << "Shutdown Java/WinCCIL...done" << std::endl;
 	return 0;
 }
 
@@ -182,7 +204,7 @@ JNIEXPORT jint JNICALL Java_at_rocworks_oa4j_jni_Manager_apiDpQueryConnectAll
 	return WCCOAJavaManager::thisManager->javaDpQueryConnect(env, obj, jHdl, jValues, jQuery, false);
 }
 
-JNIEXPORT jint JNICALL Java_at_rocworks_oa4j_jni_Manager_apiDpQueryDisonnect
+JNIEXPORT jint JNICALL Java_at_rocworks_oa4j_jni_Manager_apiDpQueryDisconnect
 (JNIEnv *env, jobject obj, jobject jHdl)
 {
 	return WCCOAJavaManager::thisManager->javaDpQueryDisconnect(env, obj, jHdl);
@@ -218,7 +240,7 @@ JNIEXPORT jstring JNICALL Java_at_rocworks_oa4j_jni_Manager_apiGetConfigValue
 }
 
 //------------------------------------------------------------------------------------------------
-// JAVA JNI DpMsgHotLink
+// JAVA JNI SendArchivedDPs
 
 JNIEXPORT jint JNICALL Java_at_rocworks_oa4j_jni_Manager_apiSendArchivedDPs
 (JNIEnv *env, jobject, jobject jDynVar, jboolean isAlert)
@@ -239,16 +261,16 @@ JNIEXPORT jint JNICALL Java_at_rocworks_oa4j_jni_Manager_apiSendArchivedDPs
 	}
 
 	//Append the other Elements with the valid DpIdentifications
-	int idx = 0;
-	for (Variable* varPtr = dynvar->getFirstVar(); varPtr; varPtr = dynvar->getNextVar())
+    unsigned int len = dynvar->getArrayLength();
+    for (unsigned int idx=0; idx<=len; idx++)
 	{
+        Variable *varPtr = dynvar->getAt(idx);
 		if (msg == NULL)
 		{
 			msg = new DpMsgHotLink();
 		}
 		DpHLGroup *entry = new DpHLGroup();
 		DpIdentifierVar *dpIdVarPtr = ((DpIdentifierVar*)varPtr);
-		std::cout << "apiSendDpMsgHotLink " << dpIdVarPtr << std::endl;
 		if (!isAlert)
 		{
 			entry->appendItem(dpIdVarPtr->getValue(), new TimeVar(TimeVar::NullTimeVar));
@@ -299,8 +321,9 @@ JNIEXPORT jobjectArray JNICALL Java_at_rocworks_oa4j_jni_Manager_apiGetIdSet
 	const char *pattern = env->GetStringUTFChars(jpattern, &patternIsCopy);
 
 	PVSSlong count;
-	DpIdentifier *list;
-	Manager::getIdSet(pattern, list, count);
+    DpIdentList *list = new DpIdentList();
+    Manager::getIdSet(pattern, *list);
+    count = list->size();
 
 	// create java string[]
 	jclass cls = env->FindClass("java/lang/String");
@@ -308,18 +331,19 @@ JNIEXPORT jobjectArray JNICALL Java_at_rocworks_oa4j_jni_Manager_apiGetIdSet
 
 	// add datapoints to java array
 	CharString dpName;
-	for (int i = 0; i < count; i++)
+    int i=0;
+    for (DpIdentifier *item=list->getFirst(); item; item=list->getNext() )
 	{
-		list[i].convertToString(dpName);
+        item->convertToString(dpName);
 		jstring jstr = Java::convertToJava(env, &dpName);
 		env->SetObjectArrayElement(jarr, i, jstr);
 		env->DeleteLocalRef(jstr);
-		//std::cout << "apiDpConnectLogger " << dpName << std::endl;
+        i++;		
 	}
 
 	env->ReleaseStringUTFChars(jpattern, pattern);
 	env->DeleteLocalRef(cls);
-	delete [] list;
+    delete list;
 	//if (patternIsCopy) delete pattern;
 	return jarr;
 }
@@ -344,23 +368,25 @@ JNIEXPORT jobjectArray JNICALL Java_at_rocworks_oa4j_jni_Manager_apiGetIdSetOfTy
 	else
 	{
 		PVSSlong count;
-		DpIdentifier *list;
-		Manager::getIdSet(pattern, list, count, dptype);
+        DpIdentList *list = new DpIdentList();
+        Manager::getIdSet(pattern, *list, dptype);
+        count = list->size();
 
 		// create java string[]		
 		jarr = env->NewObjectArray(count, cls, (jobject)NULL);
 
 		// add datapoints to java array
 		CharString dpName;
-		for (int i = 0; i < count; i++)
+        int i=0;
+        for (DpIdentifier *item=list->getFirst(); item; item=list->getNext() )        
 		{
-			list[i].convertToString(dpName);
+            item->convertToString(dpName);
 			jstring jstr = Java::convertToJava(env, &dpName);
 			env->SetObjectArrayElement(jarr, i, jstr);
 			env->DeleteLocalRef(jstr);
-			//std::cout << "apiDpConnectLogger " << dpName << std::endl;
+            i++;
 		}
-		delete[] list;
+        delete list;
 	}
 	env->ReleaseStringUTFChars(jpattern, pattern);
 	env->ReleaseStringUTFChars(jtype, type);
@@ -392,7 +418,7 @@ JNIEXPORT jobject JNICALL Java_at_rocworks_oa4j_jni_Manager_apiDpGetComment
 	Java::convertJDpIdentifierToDpIdentifier(env, jDpId, *dpid);
 	LangTextVar *comment = new LangTextVar();
 	jobject jComment = NULL;
-	if (WCCOAJavaManager::thisManager->dpGetComment(*dpid, *comment) == DpIdentOK) {
+	if (WCCOAJavaManager::thisManager->dpGetDisplayName(*dpid, *comment) == DpIdentOK) {
 		VariablePtr varptr = comment;
 		jComment = Java::convertToJava(env, varptr);
 	}
@@ -411,7 +437,7 @@ JNIEXPORT jobject JNICALL Java_at_rocworks_oa4j_jni_Manager_apiDpGetComment
 JNIEXPORT void JNICALL Java_at_rocworks_oa4j_jni_Manager_apiSetManagerState
 (JNIEnv *env, jobject obj, jint state)
 {
-	WCCOAJavaManager::thisManager->setManagerState(static_cast<WCCOAJavaManager::ManagerState>(state));
+	WCCOAJavaManager::thisManager->setManagerState(static_cast<ManagerState>(state));
 }
 
 /*

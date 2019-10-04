@@ -31,7 +31,7 @@ JNIEXPORT jlong JNICALL Java_at_rocworks_oa4j_jni_Msg_getMsgId
 	jclass cls = env->GetObjectClass(obj);
 	Msg *msg = (Msg*)env->GetLongField(obj, env->GetFieldID(cls, "cptr", "J"));
 	env->DeleteLocalRef(cls);
-	if (msg != nil)
+	if (msg != NULL)
 	{
 		PVSSulong id = msg->getCurrentMsgId();
 		//std::cout << "getMsgId " << id << std::endl;
@@ -52,7 +52,7 @@ JNIEXPORT void JNICALL Java_at_rocworks_oa4j_jni_Msg_forwardMsg
 	Msg *msg = (Msg*)env->GetLongField(obj, env->GetFieldID(cls, "cptr", "J"));
 	env->DeleteLocalRef(cls);
 
-	if (msg != nil)
+	if (msg != NULL)
 	{
 		PVSSuchar xManType = PVSSuchar(manType);
 		PVSSuchar xManNum = PVSSuchar(manNum);
@@ -77,7 +77,7 @@ JNIEXPORT void JNICALL Java_at_rocworks_oa4j_jni_Msg_forwardMsgToData
 	Msg *msg = (Msg*)env->GetLongField(obj, env->GetFieldID(cls, "cptr", "J"));
 	env->DeleteLocalRef(cls);
 
-	if (msg != nil)
+	if (msg != NULL)
 	{
 		//std::cout << "forwardMsgToData " << msg << " " << (*msg) << std::endl;
 		msg->forwardMsg(Manager::dataId);
@@ -127,7 +127,7 @@ JNIEXPORT void JNICALL Java_at_rocworks_oa4j_jni_Msg_free
 (JNIEnv *, jobject, jlong cptr)
 {
 	//std::cout << "free Msg" << std::endl;
-	if ( cptr != nil ) delete (Msg*)cptr;
+	if ( cptr != NULL ) delete (Msg*)cptr;
 }
 
 /*
@@ -141,7 +141,7 @@ JNIEXPORT jint JNICALL Java_at_rocworks_oa4j_jni_Msg_getSourceManTypeNr
 	jclass cls = env->GetObjectClass(obj);
 	Msg *msg = (Msg*)env->GetLongField(obj, env->GetFieldID(cls, "cptr", "J"));
 	env->DeleteLocalRef(cls);
-	if (msg != nil)
+	if (msg != NULL)
 	{
 		return msg->getSource().getManType();
 	}
@@ -162,7 +162,7 @@ JNIEXPORT jint JNICALL Java_at_rocworks_oa4j_jni_Msg_getSourceManNum
 	jclass cls = env->GetObjectClass(obj);
 	Msg *msg = (Msg*)env->GetLongField(obj, env->GetFieldID(cls, "cptr", "J"));
 	env->DeleteLocalRef(cls);
-	if (msg != nil)
+	if (msg != NULL)
 	{
 		return msg->getSource().getManNum();
 	}

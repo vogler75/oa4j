@@ -17,7 +17,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 #include <at_rocworks_oa4j_jni_DpVCGroup.h>
 #include <WCCOAJavaManager.hxx>
-#include <../LibJava/Java.hxx>
+#include <Java.hxx>
 
 /*
 * Class:     at_rocworks_oa4j_jni_DpVCGroup
@@ -104,7 +104,7 @@ JNIEXPORT jlong JNICALL Java_at_rocworks_oa4j_jni_DpVCGroup_malloc
 JNIEXPORT void JNICALL Java_at_rocworks_oa4j_jni_DpVCGroup_free
 (JNIEnv *env, jobject, jlong cptr)
 {
-	if (cptr != nil) delete (DpVCGroup*)cptr;
+	if (cptr != NULL) delete (DpVCGroup*)cptr;
 }
 
 JNIEXPORT jstring JNICALL Java_at_rocworks_oa4j_jni_DpVCGroup_toDebug

@@ -17,8 +17,7 @@
 */
 import at.rocworks.oa4j.base.JDebug;
 import at.rocworks.oa4j.base.JManager;
-import at.rocworks.oa4j.jni.DpMsg;
-import at.rocworks.oa4j.jni.DpMsgManipDp;
+import at.rocworks.oa4j.jni.*;
 
 import java.util.logging.Level;
 
@@ -32,19 +31,19 @@ public class ApiTestManager extends JManager {
     public boolean doReceiveDpMsg(long cPtrDpMsg) {
         DpMsg msg = new DpMsg(cPtrDpMsg);
         JDebug.out.info("------------DPMSG DEBUG BEGIN-------------------------");
-        JDebug.out.log(Level.INFO, "isA => {0}", msg.isA());
+        JDebug.out.log(Level.INFO, "isA => {0}", msg.getType());
         JDebug.out.info(msg.toDebug(99));
         JDebug.out.info("------------DPMSG DEBUG END  -------------------------");
         try {
-            switch (msg.isA()) {
-                case DP_MSG_MANIP_DP: {
+            if (msg.getType()== msg.getMsgTypes().DP_MSG_MANIP_DP()) {
                     DpMsgManipDp x = new DpMsgManipDp(msg);
                     JDebug.out.info("isDeleteDpMsg: " + x.isDeleteDpMsg());
                     JDebug.out.info("DpId: " + x.getDpId());
                     JDebug.out.info("DpName: " + x.getDpName());
                     JDebug.out.info("DpTypeId: " + x.getDpTypeId());
                     JDebug.out.info("DpTypeName: " + x.getDpTypeName());
-                }
+            } else if (msg.getType() == msg.getMsgTypes().DP_MSG_IDENTIFICATION()) {
+                JDebug.out.info("It's a DP_MSG message...");
             }
         } catch (Exception ex) {
             JDebug.StackTrace(Level.SEVERE, ex);

@@ -17,7 +17,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 #include <at_rocworks_oa4j_jni_DpMsgValueChange.h>
 #include <WCCOAJavaManager.hxx>
-#include <../LibJava/Java.hxx>
+#include <Java.hxx>
 
 /*
 * Class:     at_rocworks_oa4j_jni_DpMsgValueChange
@@ -68,7 +68,7 @@ JNIEXPORT jobject JNICALL Java_at_rocworks_oa4j_jni_DpMsgValueChange_getFirstGro
 
 	DpMsgValueChange *msg = (DpMsgValueChange*)cptr;
 	DpVCGroup *itm = msg->getFirstGroup();
-	if (itm == nil) return nil;
+	if (itm == NULL) return NULL;
 
 	cls = env->FindClass("at/rocworks/oa4j/jni/DpVCGroup");
 	jmethodID mid = env->GetMethodID(cls, "<init>", "(J)V");
@@ -93,7 +93,7 @@ JNIEXPORT jobject JNICALL Java_at_rocworks_oa4j_jni_DpMsgValueChange_getNextGrou
 
 	DpMsgValueChange *msg = (DpMsgValueChange*)cptr;
 	DpVCGroup *itm = msg->getNextGroup();
-	if (itm == nil) return nil;
+	if (itm == NULL) return NULL;
 
 	cls = env->FindClass("at/rocworks/oa4j/jni/DpVCGroup");
 	jmethodID mid = env->GetMethodID(cls, "<init>", "(J)V");
@@ -111,5 +111,5 @@ JNIEXPORT jobject JNICALL Java_at_rocworks_oa4j_jni_DpMsgValueChange_getNextGrou
 JNIEXPORT void JNICALL Java_at_rocworks_oa4j_jni_DpMsgValueChange_free
 (JNIEnv *env, jobject obj, jlong cptr)
 {
-	if (cptr != nil) delete (DpMsgValueChange*)cptr;
+	if (cptr != NULL) delete (DpMsgValueChange*)cptr;
 }

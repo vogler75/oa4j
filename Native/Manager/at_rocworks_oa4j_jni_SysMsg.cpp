@@ -19,7 +19,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <WCCOAJavaManager.hxx>
 #include <SysMsg.hxx>
 #include <InitSysMsg.hxx>
-#include <../LibJava/Java.hxx>
+#include <Java.hxx>
 
 JNIEXPORT jint JNICALL Java_at_rocworks_oa4j_jni_SysMsg_getSysMsgType
 (JNIEnv *, jobject, jlong cptr)

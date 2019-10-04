@@ -17,7 +17,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 #include <at_rocworks_oa4j_jni_DpIdValueList.h>
 #include <WCCOAJavaManager.hxx>
-#include <../LibJava/Java.hxx>
+#include <Java.hxx>
 
 /*
 * Class:     at_rocworks_oa4j_jni_DpIdValueList
@@ -35,7 +35,7 @@ JNIEXPORT jobject JNICALL Java_at_rocworks_oa4j_jni_DpIdValueList_getFirstItem
 	DpIdValueList *list = (DpIdValueList*)cptr;
 	DpVCItem *item = list->getFirstItem();
 
-	if (item == nil) return nil;
+	if (item == NULL) return NULL;
 
 	cls = env->FindClass("at/rocworks/oa4j/jni/DpVCItem");
 	jmethodID mid = env->GetMethodID(cls, "<init>", "(J)V");
@@ -61,7 +61,7 @@ JNIEXPORT jobject JNICALL Java_at_rocworks_oa4j_jni_DpIdValueList_getNextItem
 	DpIdValueList *list = (DpIdValueList*)cptr;
 	DpVCItem *item = list->getNextItem();
 
-	if (item == nil) return nil;
+	if (item == NULL) return NULL;
 
 	cls = env->FindClass("at/rocworks/oa4j/jni/DpVCItem");
 	jmethodID mid = env->GetMethodID(cls, "<init>", "(J)V");
@@ -87,7 +87,7 @@ JNIEXPORT jobject JNICALL Java_at_rocworks_oa4j_jni_DpIdValueList_cutFirstItem
 	DpIdValueList *list = (DpIdValueList*)cptr;
 	DpVCItem *item = list->cutFirstItem();
 
-	if (item == nil) return nil;
+	if (item == NULL) return NULL;
 
 	cls = env->FindClass("at/rocworks/oa4j/jni/DpVCItem");
 	jmethodID mid = env->GetMethodID(cls, "<init>", "(J)V");
@@ -161,7 +161,7 @@ JNIEXPORT jlong JNICALL Java_at_rocworks_oa4j_jni_DpIdValueList_malloc
 JNIEXPORT void JNICALL Java_at_rocworks_oa4j_jni_DpIdValueList_free
 (JNIEnv *env, jobject, jlong cptr)
 {
-	if (cptr != nil) delete (DpIdValueList*)cptr;
+	if (cptr != NULL) delete (DpIdValueList*)cptr;
 }
 
 JNIEXPORT jstring JNICALL Java_at_rocworks_oa4j_jni_DpIdValueList_toDebug

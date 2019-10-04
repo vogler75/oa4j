@@ -43,7 +43,7 @@ public class ApiTestAlertConnect {
         new ApiTestAlertConnect().run();        
         m.stop();
     }
-    
+
     public void run() throws InterruptedException {        
         JDebug.out.info("alertConnect...");
         
@@ -70,12 +70,12 @@ public class ApiTestAlertConnect {
                 .add(":_alert_hdl.._gone_time")
                 .add(":_alert_hdl.._gone_time_idx")
                 .add(":_alert_hdl.._inact_ack" )
-                .add(":_alert_hdl.._panel" )
-                .add(":_alert_hdl.._partner" )                
+                //.add(":_alert_hdl.._panel" )
+                .add(":_alert_hdl.._partner" )
                 .add(":_alert_hdl.._partn_idx" )
-                .add(":_alert_hdl.._prior")
+                //.add(":_alert_hdl.._prior")
                 .add(":_alert_hdl.._single_ack" )
-                .add(":_alert_hdl.._text")
+                //.add(":_alert_hdl.._text")
                 .add(":_alert_hdl.._value")
                 .add(":_alert_hdl.._visible" )
                 .action((JDpHLGroup hotlink) -> {

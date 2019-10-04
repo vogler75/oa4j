@@ -17,9 +17,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 #include <at_rocworks_oa4j_jni_DpMsgManipDp.h>
 #include <DpMsgManipDp.hxx>
-
+#include <DpIdentifierItem.hxx>
 #include <WCCOAJavaManager.hxx>
-#include <../LibJava/Java.hxx>
+#include <Java.hxx>
 
 /*
  * Class:     at_rocworks_oa4j_jni_DpMsgManipDp
@@ -34,7 +34,7 @@ JNIEXPORT jboolean JNICALL Java_at_rocworks_oa4j_jni_DpMsgManipDp_isDeleteDpMsg
 	env->DeleteLocalRef(cls);
 
 	DpMsgManipDp *msg = (DpMsgManipDp*)cptr;
-	return msg->isDeleteDpMsg();
+	return msg->getActionType() == DpMsgManipDp::ActionType::DELETE_DP;
 }
 
 /*
@@ -84,7 +84,7 @@ JNIEXPORT jint JNICALL Java_at_rocworks_oa4j_jni_DpMsgManipDp_getDpTypeId
 	env->DeleteLocalRef(cls);
 	DpMsgManipDp *msg = (DpMsgManipDp*)cptr;
 	DpTypeId type = msg->getDpType();
-	return type;
+	return type.toNumber();
 }
 
 /*

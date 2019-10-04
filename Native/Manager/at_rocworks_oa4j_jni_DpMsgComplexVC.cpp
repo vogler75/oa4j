@@ -17,7 +17,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 #include <at_rocworks_oa4j_jni_DpMsgComplexVC.h>
 #include <WCCOAJavaManager.hxx>
-#include <../LibJava/Java.hxx>
+#include <Java.hxx>
 
 /*
 * Class:     at_rocworks_oa4j_jni_DpMsgComplexVC
@@ -35,7 +35,7 @@ JNIEXPORT jobject JNICALL Java_at_rocworks_oa4j_jni_DpMsgComplexVC_getFirstGroup
 	DpMsgComplexVC *list = (DpMsgComplexVC*)cptr;
 	DpVCGroup *item = list->getFirstGroup();
 
-	if (item == nil) return nil;
+	if (item == NULL) return NULL;
 
 	cls = env->FindClass("at/rocworks/oa4j/jni/DpVCGroup");
 	jmethodID mid = env->GetMethodID(cls, "<init>", "(J)V");
@@ -61,7 +61,7 @@ JNIEXPORT jobject JNICALL Java_at_rocworks_oa4j_jni_DpMsgComplexVC_getNextGroup
 	DpMsgComplexVC *list = (DpMsgComplexVC*)cptr;
 	DpVCGroup *item = list->getNextGroup();
 
-	if (item == nil) return nil;
+	if (item == NULL) return NULL;
 
 	cls = env->FindClass("at/rocworks/oa4j/jni/DpVCGroup");
 	jmethodID mid = env->GetMethodID(cls, "<init>", "(J)V");
@@ -88,7 +88,7 @@ JNIEXPORT jobject JNICALL Java_at_rocworks_oa4j_jni_DpMsgComplexVC_getLastGroup
 	DpMsgComplexVC *list = (DpMsgComplexVC*)cptr;
 	DpVCGroup *item = list->getLastGroup();
 
-	if (item == nil) return nil;
+	if (item == NULL) return NULL;
 
 	cls = env->FindClass("at/rocworks/oa4j/jni/DpVCGroup");
 	jmethodID mid = env->GetMethodID(cls, "<init>", "(J)V");

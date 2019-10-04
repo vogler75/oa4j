@@ -19,7 +19,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <DpMsgRequest.hxx>
 
 #include <WCCOAJavaManager.hxx>
-#include <../LibJava/Java.hxx>
+#include <Java.hxx>
 
 
 JNIEXPORT jobject JNICALL Java_at_rocworks_oa4j_jni_DpMsgRequest_getFirstGroup
@@ -32,7 +32,7 @@ JNIEXPORT jobject JNICALL Java_at_rocworks_oa4j_jni_DpMsgRequest_getFirstGroup
 
 	DpMsgRequest *req = (DpMsgRequest*)cptr;
 	RequestGroup *grp = req->getFirstGroup();
-	if (grp == nil) return nil;
+	if (grp == NULL) return NULL;
 
 	cls = env->FindClass("at/rocworks/oa4j/jni/RequestGroup");
 	jmethodID mid = env->GetMethodID(cls, "<init>", "(J)V");
@@ -53,7 +53,7 @@ JNIEXPORT jobject JNICALL Java_at_rocworks_oa4j_jni_DpMsgRequest_getNextGroup
 
 	DpMsgRequest *req = (DpMsgRequest*)cptr;
 	RequestGroup *grp = req->getNextGroup();
-	if (grp == nil) return nil;
+	if (grp == NULL) return NULL;
 
 	cls = env->FindClass("at/rocworks/oa4j/jni/RequestGroup");
 	jmethodID mid = env->GetMethodID(cls, "<init>", "(J)V");
@@ -73,7 +73,7 @@ JNIEXPORT jboolean JNICALL Java_at_rocworks_oa4j_jni_DpMsgRequest_getMultipleAns
 	env->DeleteLocalRef(cls);
 
 	DpMsgRequest *req = (DpMsgRequest*)cptr;
-	return req->getMultipleAnswersAllowed();
+	return false; /*req->getMultipleAnswersAllowed();*/
 }
 
 JNIEXPORT jstring JNICALL Java_at_rocworks_oa4j_jni_DpMsgRequest_toString

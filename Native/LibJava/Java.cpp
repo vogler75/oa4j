@@ -357,7 +357,7 @@ jobject Java::convertToJava(JNIEnv *env, VariablePtr varptr, JDpIdentifierClass 
 			case DYNBIT_VAR: jvar = convertToJava(env, (BitVar*)var, cdpid, cvar); break;
 			case DYNBIT32_VAR: jvar = convertToJava(env, (Bit32Var*)var, cdpid, cvar); break;
 			case DYNBIT64_VAR: jvar = convertToJava(env, (Bit64Var*)var, cdpid, cvar); break;
-			case DYNINTEGER_VAR: jvar = convertToJava(env, (TimeVar*)var, cdpid, cvar); break;
+			case DYNINTEGER_VAR: jvar = convertToJava(env, (IntegerVar*)var, cdpid, cvar); break;
 			case DYNUINTEGER_VAR: jvar = convertToJava(env, (UIntegerVar*)var, cdpid, cvar); break;
 			case DYNLONG_VAR: jvar = convertToJava(env, (LongVar*)var, cdpid, cvar); break;
 			case DYNULONG_VAR: jvar = convertToJava(env, (ULongVar*)var, cdpid, cvar); break;

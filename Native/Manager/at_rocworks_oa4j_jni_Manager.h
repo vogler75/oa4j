@@ -9,6 +9,14 @@ extern "C" {
 #endif
 /*
  * Class:     at_rocworks_oa4j_jni_Manager
+ * Method:    apiGetVersion
+ * Signature: ()Ljava/lang/String;
+ */
+JNIEXPORT jstring JNICALL Java_at_rocworks_oa4j_jni_Manager_apiGetVersion
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     at_rocworks_oa4j_jni_Manager
  * Method:    apiGetLogPath
  * Signature: ()Ljava/lang/String;
  */
@@ -37,7 +45,7 @@ JNIEXPORT jstring JNICALL Java_at_rocworks_oa4j_jni_Manager_apiGetConfigValue
  * Signature: (I[Ljava/lang/String;ZZ)I
  */
 JNIEXPORT jint JNICALL Java_at_rocworks_oa4j_jni_Manager_apiStartup
-  (JNIEnv *, jobject, jint, jobjectArray, jboolean, jboolean, jboolean);
+  (JNIEnv *, jobject, jint, jobjectArray, jboolean, jboolean, jboolean, jboolean);
 
 /*
  * Class:     at_rocworks_oa4j_jni_Manager
@@ -145,10 +153,10 @@ JNIEXPORT jint JNICALL Java_at_rocworks_oa4j_jni_Manager_apiDpQueryConnectAll
 
 /*
  * Class:     at_rocworks_oa4j_jni_Manager
- * Method:    apiDpQueryDisonnect
+ * Method:    apiDpQueryDisconnect
  * Signature: (Lat/rocworks/oa4j/base/JHotLinkWaitForAnswer;)I
  */
-JNIEXPORT jint JNICALL Java_at_rocworks_oa4j_jni_Manager_apiDpQueryDisonnect
+JNIEXPORT jint JNICALL Java_at_rocworks_oa4j_jni_Manager_apiDpQueryDisconnect
   (JNIEnv *, jobject, jobject);
 
 /*

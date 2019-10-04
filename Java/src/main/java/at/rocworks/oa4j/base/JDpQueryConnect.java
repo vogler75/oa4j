@@ -103,7 +103,7 @@ public abstract class JDpQueryConnect extends JHotLinkWaitForAnswer {
             for ( ConnectGroup c: delList ) {
                 this.cptr=c.cptr;
                 this.cid=c.cid;
-                if ( (ret = JManager.getInstance().apiDpQueryDisonnect(this)) == 0 ) {
+                if ( (ret = JManager.getInstance().apiDpQueryDisconnect(this)) == 0 ) {
                     conList.remove(c);
                 }
             }

@@ -1,0 +1,28 @@
+SRCROOT := $(APIS_ROOT)
+
+NO_ADDVERINFO=1
+
+include $(SRCROOT)/HMI/gmk/common.gmk
+
+TARGET = $(TGT_PLATFORM)java$(E)
+
+INCL_FILES=$(OFILES_INCL_FILE)
+-include $(INCL_FILES)
+
+INCLOPTS = -I. $(BASICS_INCL) \
+  -I$(SRCROOT)/PLF/Libs/Manager/Manager \
+  -I$(SRCROOT)/PLF/Libs/Manager/Datapoint \
+  -I$(SRCROOT)/PLF/Libs/Manager/Messages \
+  -I$(SRCROOT)/PLF/Libs/Manager/Interfaces \
+  -I$(SRCROOT)/PLF/Libs/Manager/Configs/Configs \
+  -I$(SRCROOT)/PLF/ExternLibs/Qt5/include/QtCore \
+  -I$(JAVA_HOME)/include \
+  -I$(JAVA_HOME)/include/win32
+
+OTHER_LIBS = $(MANAGER_LIB) $(BASICS_LIB) "$(JAVA_HOME)/lib/jvm.lib"
+
+LOCAL_TARGET_OUTPUT = 1
+LINK_TARGET = $(TARGET)
+LIB_TARGET  = $(NO_TARGET)
+
+include $(MAKE_SUPPORT_DIR)/general.gmk

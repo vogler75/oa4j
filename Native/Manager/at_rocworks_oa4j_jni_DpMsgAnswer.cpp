@@ -35,20 +35,20 @@ JNIEXPORT jboolean JNICALL Java_at_rocworks_oa4j_jni_DpMsgAnswer_insertGroup
 	env->DeleteLocalRef(cls);
 
 	//std::cout << "insertGroup " << msg << " " << (*msg) << std::endl;
-
 	return msg->insertGroup(group);
 }
 
+/* TODO: not available in IOWA
 JNIEXPORT void JNICALL Java_at_rocworks_oa4j_jni_DpMsgAnswer_setOutstandingProgress
 (JNIEnv *env, jobject obj, jint percents)
 {
 	jclass cls = env->GetObjectClass(obj);
 	DpMsgAnswer *msg = (DpMsgAnswer*)env->GetLongField(obj, env->GetFieldID(cls, "cptr", "J"));
 	env->DeleteLocalRef(cls);
-
 	//std::cout << "setOutstandingProgress " << percents << std::endl;
 	msg->setOutstandingProgress((int)percents);
 }
+*/
 
 JNIEXPORT jlong JNICALL Java_at_rocworks_oa4j_jni_DpMsgAnswer_newFromMsg
 (JNIEnv *, jobject, jlong msgPtr)

@@ -20,8 +20,10 @@ JNIEXPORT jboolean JNICALL Java_at_rocworks_oa4j_jni_DpMsgAnswer_insertGroup
  * Method:    setOutstandingProgress
  * Signature: (I)V
  */
+/*
 JNIEXPORT void JNICALL Java_at_rocworks_oa4j_jni_DpMsgAnswer_setOutstandingProgress
   (JNIEnv *, jobject, jint);
+*/
 
 /*
  * Class:     at_rocworks_oa4j_jni_DpMsgAnswer
