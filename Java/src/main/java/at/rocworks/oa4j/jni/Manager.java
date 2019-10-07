@@ -36,13 +36,12 @@ public abstract class Manager {
     private static Boolean _isV3 = null;
 
     public static boolean isV3() {
-        return (_isV3==null ? _isV3=(apiGetVersion().equals("3.0")) : _isV3);
+        return (_isV3==null ? _isV3=(apiGetVersion().startsWith("3.")) : _isV3);
     }
 
     public static boolean isV4() {
-        return (_isV4==null ? _isV4=(apiGetVersion().equals("4.0")) : _isV4);
+        return (_isV4==null ? _isV4=(apiGetVersion().startsWith("4.")) : _isV4);
     }
-
 
     public native String apiGetLogPath();
     public native String apiGetDataPath();
