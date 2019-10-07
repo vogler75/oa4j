@@ -180,7 +180,7 @@ public class JManager extends Manager implements Runnable {
         apiEnabled=false;        
         String errmsg="";        
         try {
-            System.loadLibrary("WCCOAjava");
+            System.loadLibrary("WCCILjava");
             apiEnabled=true;
         } catch ( java.lang.UnsatisfiedLinkError ex ) {
             errmsg=ex.getMessage();
@@ -223,7 +223,7 @@ public class JManager extends Manager implements Runnable {
     }
 
     public String getManName() {
-        return "WCCOAjava"+manNum;
+        return "WCCILjava"+manNum;
     }
     
     public void start() {
@@ -253,7 +253,7 @@ public class JManager extends Manager implements Runnable {
     @Override
     public void run() {
         apiStartup(manType,
-                new String[]{"WCCOAjava", "-proj", projName, "-num", Integer.toString(manNum)},
+                new String[]{"WCCILjava", "-proj", projName, "-num", Integer.toString(manNum)},
                 connectToData, connectToEvent,
                 initResources, debugFlag);
         loopPaused.sendFalse();
