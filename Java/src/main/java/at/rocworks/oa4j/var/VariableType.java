@@ -10,31 +10,26 @@ package at.rocworks.oa4j.var;
  * @author vogler
  */
 public enum VariableType {
-     AnyTypeVar (0x00180000),
-     Bit32Var (0x00090000),
-     Bit64Var (0x004C0000),
-     BitVar (0x00040000),
-     BlobVar (0x002E0000),
-     CharVar (0x000A0000),
-     CmdHdlVar (0x00330000),
-     ConnHdlVar (0x00320000),
-     DpIdentifierVar (0x00150000),
-     DynVar (0x000C0000),
-     ErrorVar (0x002B0000),
-     FileVar (0x00170000),
-     FloatVar (0x00070000),
-     IntegerVar (0x00050000),
-     LangTextVar (0x00280000),
-     PointerVar (0x00340000),
-     RecHdlVar (0x00310000),
-     TextVar (0x00080000),
-     TimeVar (0x00030000),
-     UIntegerVar (0x00060000),
-     LongVar (0x00460000),
-     ULongVar (0x00490000),
-     NullVar (0xFFFFFFFF),
-     Unknown (0);   
-     
+     Unknown (0),
+     AnyTypeVar (1),
+     Bit32Var (2),
+     Bit64Var (3),
+     BitVar (4),
+     BlobVar (5),
+     CharVar (6),
+     DpIdentifierVar (7),
+     DynVar (8),
+     ErrorVar (9),
+     FloatVar (10),
+     IntegerVar (11),
+     LangTextVar (12),
+     TextVar (13),
+     TimeVar (14),
+     UIntegerVar (15),
+     LongVar (16),
+     ULongVar (17),
+     NullVar (0xFFFFFFFF);
+
      VariableType(int n) {
          value=n;
      }

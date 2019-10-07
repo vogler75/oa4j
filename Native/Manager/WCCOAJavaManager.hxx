@@ -32,6 +32,8 @@ public:
 	// Default constructor
 	WCCOAJavaManager(ManagerType manType);
 
+	static bool DEBUG;
+
 	static WCCOAJavaManager* thisManager;
 	static void startupManager(int &argc, char *argv[], JNIEnv *env, jobject obj, ManagerType manType, jboolean connectToData, jboolean connectToEvent);
 
@@ -85,13 +87,8 @@ private:
 	static void connectDataManager();
 	static void connectEventManager();
 
-	// our exit flag. The signal handler will set it to PVSS_TRUE
-	virtual void signalHandler(int sig);
-
 	JNIEnv *g_env;
 	jobject g_obj;
-
-	static const bool DEBUG;
 
 	static const char *ManagerName;
 	static const char *ManagerClassName;
@@ -116,6 +113,8 @@ private:
 
 	void javaSetHdlCid(JNIEnv *env, jobject jHdl, jlong cid);
 	jlong javaGetHdlCid(JNIEnv *env, jobject jHdl);
+
+    virtual void signalHandler(int sig);
 };
 
 #endif

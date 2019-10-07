@@ -39,7 +39,7 @@ public class DpMsgAnswer extends Msg {
     }    
     
     public native boolean insertGroup(AnswerGroup group);
-    public native void setOutstandingProgress(int percents);
+    //public native void setOutstandingProgress(int percents); // TODO: not available in IOWA
     
     protected native long newFromMsg(long dpMsgPtr);        
     protected native long newFromMsgAnswer(long dpMsgPtr);                

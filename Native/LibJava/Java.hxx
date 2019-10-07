@@ -117,9 +117,10 @@ public:
 class Java {
 private:
 	static const char *NAME;
-	static const bool DEBUG;
 
 public:
+	static bool DEBUG;
+
 	static const char *DpVCItemClassName;
 	static const char *DpIdentifierClassName;
 	static const char *VariableClassName;

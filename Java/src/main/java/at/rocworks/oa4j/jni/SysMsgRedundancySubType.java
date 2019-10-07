@@ -31,7 +31,8 @@ public enum SysMsgRedundancySubType {
     DM_START_TOUCHING(5),         // Tell data to start touching
     DM_STOP_TOUCHING(6),          // Tell data to stop touching
     REDUNDANCY_ACTIVE_REQ(7),     // Initiate Redu-State-Switch
-    REDUNDANCY_PASSIVE_REQ(8);     // Initiate Redu-State-Switch
+    REDUNDANCY_PASSIVE_REQ(8),     // Initiate Redu-State-Switch
+    REDUNDANCY_PEER_RECONN(9);          // Redundancy peer reconnected
 
     SysMsgRedundancySubType(int value) {
         this.value = value;

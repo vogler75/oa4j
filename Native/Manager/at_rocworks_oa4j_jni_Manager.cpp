@@ -15,6 +15,7 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+#include <version.hxx>
 #include <WCCOAJavaManager.hxx>
 #include <WCCOAJavaResources.hxx>
 #include <../LibJava/Java.hxx>
@@ -22,6 +23,15 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #include <DpIdentifierVar.hxx>
 #include <MsgItcDispatcher.hxx>
+
+//------------------------------------------------------------------------------------------------
+// JAVA JNI PVSS Version
+
+JNIEXPORT jstring JNICALL Java_at_rocworks_oa4j_jni_Manager_apiGetVersion
+(JNIEnv *env, jobject)
+{
+	return env->NewStringUTF(PVSS_VERSION);
+}
 
 //------------------------------------------------------------------------------------------------
 // JAVA JNI startup
@@ -182,7 +192,7 @@ JNIEXPORT jint JNICALL Java_at_rocworks_oa4j_jni_Manager_apiDpQueryConnectAll
 	return WCCOAJavaManager::thisManager->javaDpQueryConnect(env, obj, jHdl, jValues, jQuery, false);
 }
 
-JNIEXPORT jint JNICALL Java_at_rocworks_oa4j_jni_Manager_apiDpQueryDisonnect
+JNIEXPORT jint JNICALL Java_at_rocworks_oa4j_jni_Manager_apiDpQueryDisconnect
 (JNIEnv *env, jobject obj, jobject jHdl)
 {
 	return WCCOAJavaManager::thisManager->javaDpQueryDisconnect(env, obj, jHdl);
@@ -218,7 +228,7 @@ JNIEXPORT jstring JNICALL Java_at_rocworks_oa4j_jni_Manager_apiGetConfigValue
 }
 
 //------------------------------------------------------------------------------------------------
-// JAVA JNI DpMsgHotLink
+// JAVA JNI SendArchivedDPs
 
 JNIEXPORT jint JNICALL Java_at_rocworks_oa4j_jni_Manager_apiSendArchivedDPs
 (JNIEnv *env, jobject, jobject jDynVar, jboolean isAlert)

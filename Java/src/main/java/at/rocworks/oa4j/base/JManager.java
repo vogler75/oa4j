@@ -17,9 +17,7 @@
 */
 package at.rocworks.oa4j.base;
 
-import at.rocworks.oa4j.jni.Manager;
-import at.rocworks.oa4j.jni.ManagerType;
-import at.rocworks.oa4j.jni.SysMsg;
+import at.rocworks.oa4j.jni.*;
 import at.rocworks.oa4j.var.DpIdentifierVar;
 import at.rocworks.oa4j.var.Variable;
 
@@ -69,6 +67,7 @@ public class JManager extends Manager implements Runnable {
     private int manNum=1;
 
     private boolean initResources=true;
+    private boolean debugFlag=false;
 
     private Map<String, String> initSysMsgData;
 
@@ -151,9 +150,14 @@ public class JManager extends Manager implements Runnable {
                 setManType(DB_MAN);
             }
 
-            // noInitFlag
+            // initResources
             if ( args[i].equals("-noinit") ) {
                 initResources=false;
+            }
+
+            // debug
+            if ( args[i].equals("-debug")) {
+                debugFlag=true;
             }
         }        
         return init();
@@ -182,14 +186,31 @@ public class JManager extends Manager implements Runnable {
             errmsg=ex.getMessage();
         }
 
-        if ( !apiEnabled ) {
-            setDebugConsole();
-            JDebug.out.warning(errmsg);
-        } else {
+        if ( apiEnabled ) {
             // Set log file settings
             setDebugOutput();
             JDebug.out.info("Manager API enabled");
+
+            if (!isV3() && !isV4()) {
+                JDebug.out.info("Manager Version "+apiGetVersion()+" is not V3 and not V4!");
+                throw new Exception("Manager Version "+apiGetVersion()+" is not V3 and not V4!");
+            }
+        } else {
+            setDebugConsole();
+            JDebug.out.warning(errmsg);
         }
+
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            try {
+                Thread.sleep(200);
+                System.out.println("ShutdownHook...");
+                stop();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                e.printStackTrace();
+            }
+        }));
+
         return this;
     }
 
@@ -233,7 +254,8 @@ public class JManager extends Manager implements Runnable {
     public void run() {
         apiStartup(manType,
                 new String[]{"WCCOAjava", "-proj", projName, "-num", Integer.toString(manNum)},
-                connectToData, connectToEvent, initResources);
+                connectToData, connectToEvent,
+                initResources, debugFlag);
         loopPaused.sendFalse();
         apiConnected=true;
         while (apiConnected) {
@@ -385,18 +407,15 @@ public class JManager extends Manager implements Runnable {
 //        JDebug.out.log(Level.INFO, "isA => {0}", msg.isA());
 //        JDebug.out.info(msg.toDebug(99));
 //        JDebug.out.info("------------SYSMSG DEBUG END  -------------------------");
-        switch ( msg.getSysMsgType()) {
-            case INIT_SYS_MSG:
-                initSysMsgData=msg.getInitSysMsgData();
-                break;
-            case REDUNDANCY_SYS_MSG:
-                if (msg.getSourceManType()== ManagerType.EVENT_MAN) { // msg comes twice, from data and event manager
-                    switch (msg.getSysMsgRedundancySubType()) {
-                        case REDUNDANCY_ACTIVE: becameActive(); break;
-                        case REDUNDANCY_PASSIVE: becamePassive(); break;
-                    }
+        if (msg.getSysMsgType() == msg.getSysMsgTypes().INIT_SYS_MSG()) {
+            initSysMsgData = msg.getInitSysMsgData();
+        } else if (msg.getSysMsgType() == msg.getSysMsgTypes().REDUNDANCY_SYS_MSG()) {
+            if (msg.getSourceManType()== ManagerType.EVENT_MAN) { // msg comes twice, from data and event manager
+                switch (msg.getSysMsgRedundancySubType()) {
+                    case REDUNDANCY_ACTIVE: becameActive(); break;
+                    case REDUNDANCY_PASSIVE: becamePassive(); break;
                 }
-                break;
+            }
         }
         return false;
     }

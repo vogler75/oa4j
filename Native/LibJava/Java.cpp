@@ -41,7 +41,27 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #include <sys/time.h>
 
-#include <Mutex.hxx>
+bool Java::DEBUG = false;
+
+#define JUnknown 0
+#define JAnyTypeVar 1
+#define JBit32Var 2
+#define JBit64Var 3
+#define JBitVar 4
+#define JBlobVar 5
+#define JCharVar 6
+#define JDpIdentifierVar 7
+#define JDynVar 8
+#define JErrorVar 9
+#define JFloatVar 10
+#define JIntegerVar 11
+#define JLangTextVar 12
+#define JTextVar 13
+#define JTimeVar 14
+#define JUIntegerVar 15
+#define JLongVar 16
+#define JULongVar 17
+#define JNullVar 0xFFFFFFFF
 
 //---------------------------------------------------------------------------------------------------------
 JDpIdentifierClass::JDpIdentifierClass(JNIEnv *p_env)
@@ -89,7 +109,6 @@ JVariableClass::~JVariableClass()
 
 //---------------------------------------------------------------------------------------------------------
 const char *Java::NAME = "java";
-const bool Java::DEBUG = false;
 
 const char *Java::DpIdentifierClassName = "at/rocworks/oa4j/var/DpIdentifierVar";
 const char *Java::VariableClassName = "at/rocworks/oa4j/var/Variable";
@@ -101,7 +120,7 @@ Mutex Java::dpIdMutex;
 jclass Java::FindClass(JNIEnv *env, const char* name)
 {
 	jclass jClass = env->FindClass(name);
-	if (jClass == nil) {
+	if (jClass == NULL) {
 		std::string msg = "class " + std::string(name) + " not found";
 		ErrHdl::error(ErrClass::PRIO_SEVERE, ErrClass::ERR_IMPL, ErrClass::UNEXPECTEDSTATE,
 			NAME, "FindClass", msg.c_str());
@@ -112,7 +131,7 @@ jclass Java::FindClass(JNIEnv *env, const char* name)
 jmethodID Java::GetMethodID(JNIEnv *env, jclass clazz, const char *name, const char *sig)
 {
 	jmethodID jMethod = env->GetMethodID(clazz, name, sig);
-	if (jMethod == nil) {
+	if (jMethod == NULL) {
 		std::string msg = "java method " + std::string(name) + std::string(sig) + " not found";
 		ErrHdl::error(ErrClass::PRIO_SEVERE, ErrClass::ERR_IMPL, ErrClass::UNEXPECTEDSTATE,
 			NAME, "GetMethodID", msg.c_str());
@@ -123,7 +142,7 @@ jmethodID Java::GetMethodID(JNIEnv *env, jclass clazz, const char *name, const c
 jmethodID Java::GetStaticMethodID(JNIEnv *env, jclass clazz, const char *name, const char *sig)
 {
 	jmethodID jMethod = env->GetStaticMethodID(clazz, name, sig);
-	if (jMethod == nil) {
+	if (jMethod == NULL) {
 		std::string msg = "static java method " + std::string(name) + std::string(sig) + " not found";
 		ErrHdl::error(ErrClass::PRIO_SEVERE, ErrClass::ERR_IMPL, ErrClass::UNEXPECTEDSTATE,
 			NAME, "GetStaticMethodID", msg.c_str());
@@ -217,11 +236,6 @@ jobject Java::convertToJava(JNIEnv *env, VariablePtr varptr, JDpIdentifierClass 
 	{
 	case DPIDENTIFIER_VAR: {
 		DpIdentifierVar value = ((DpIdentifierVar*)varptr)->getValue();
-
-		//jm = env->GetStaticMethodID(clsVariable, "newDpIdentifierVar", "(Lat/rocworks/oa4j/var/DpIdentifierVar;)Lat/rocworks/oa4j/var/Variable;");		
-		//jobject jValue = convertToJava(env, value);
-		//res = env->CallStaticObjectMethod(clsVariable, jm, jValue);
-
 		res = convertToJava(env, value, cdpid);
 		break;
 	}
@@ -357,13 +371,15 @@ jobject Java::convertToJava(JNIEnv *env, VariablePtr varptr, JDpIdentifierClass 
 			case DYNBIT_VAR: jvar = convertToJava(env, (BitVar*)var, cdpid, cvar); break;
 			case DYNBIT32_VAR: jvar = convertToJava(env, (Bit32Var*)var, cdpid, cvar); break;
 			case DYNBIT64_VAR: jvar = convertToJava(env, (Bit64Var*)var, cdpid, cvar); break;
-			case DYNINTEGER_VAR: jvar = convertToJava(env, (TimeVar*)var, cdpid, cvar); break;
+			case DYNINTEGER_VAR: jvar = convertToJava(env, (IntegerVar*)var, cdpid, cvar); break;
 			case DYNUINTEGER_VAR: jvar = convertToJava(env, (UIntegerVar*)var, cdpid, cvar); break;
 			case DYNLONG_VAR: jvar = convertToJava(env, (LongVar*)var, cdpid, cvar); break;
 			case DYNULONG_VAR: jvar = convertToJava(env, (ULongVar*)var, cdpid, cvar); break;
 			case DYNDPIDENTIFIER_VAR: jvar = convertToJava(env, (DpIdentifierVar*)var, cdpid, cvar); break;
 			case DYNLANGTEXT_VAR: jvar = convertToJava(env, (LangTextVar*)var, cdpid, cvar); break;
-			default: jvar = NULL;
+			default: 
+                if (DEBUG) std::cout << "convertToJava:dynvariable type not implemented " << varptr->isA() << std::endl;            
+                jvar = NULL;                
 			}
 			//jm = env->GetMethodID(clsDynVar, "add", "(Lat/rocworks/oa4j/var/Variable;)V");
 			env->CallVoidMethod(jdyn, cvar->addDynVar(), jvar);
@@ -459,8 +475,8 @@ VariablePtr Java::convertJVariable(JNIEnv *env, jobject jVariable)
 	VariablePtr varPtr = NULL;
 
 	switch (jTypeNr) {
-	case ANYTYPE_VAR /*AnyTypeVar*/: break;
-	case BIT32_VAR /*Bit32Var */:  {
+	case /*ANYTYPE_VAR*/ JAnyTypeVar : break;
+	case /*BIT32_VAR*/ JBit32Var :  {
 		if (DEBUG) std::cout << "convertJVariable:13:Bit32Var" << std::endl;
 		jclass cls = env->FindClass("java/lang/Long");
 		jm = env->GetMethodID(cls, "longValue", "()J");
@@ -472,7 +488,7 @@ VariablePtr Java::convertJVariable(JNIEnv *env, jobject jVariable)
 		if (DEBUG) std::cout << "Bit32Var=" << var << std::endl;		
 		break;
 	}
-	case BIT64_VAR /*Bit64Var */: {
+	case /*BIT64_VAR*/ JBit64Var : {
 		if (DEBUG) std::cout << "convertJVariable:13:Bit64Var" << std::endl;
 		jclass cls = env->FindClass("java/lang/Long");
 		jm = env->GetMethodID(cls, "longValue", "()J");
@@ -487,7 +503,7 @@ VariablePtr Java::convertJVariable(JNIEnv *env, jobject jVariable)
 		if (DEBUG) std::cout << "Bit64Var=" << var << std::endl;
 		break;
 	}
-	case BIT_VAR /*BitVar */: {
+	case /*BIT_VAR*/ JBitVar : {
 		if (DEBUG) std::cout << "convertJVariable:13:BitVar" << std::endl;
 		jclass cls = env->FindClass("java/lang/Boolean");
 		jm = env->GetMethodID(cls, "booleanValue", "()Z");
@@ -498,8 +514,8 @@ VariablePtr Java::convertJVariable(JNIEnv *env, jobject jVariable)
 		if (DEBUG) std::cout << "BitVar=" << var << std::endl;
 		break;
 	}
-	case BLOB_VAR /*BlobVar */: break;
-	case CHAR_VAR /*CharVar */: {
+	case /*BLOB_VAR*/ JBlobVar : break;
+	case /*CHAR_VAR*/ JCharVar : {
 		if (DEBUG) std::cout << "convertJVariable:6:CharVar" << std::endl;
 		jclass cls = env->FindClass("java/lang/Character");
 		jm = env->GetMethodID(cls, "charValue", "()C");
@@ -510,7 +526,7 @@ VariablePtr Java::convertJVariable(JNIEnv *env, jobject jVariable)
 		if (DEBUG) std::cout << "CharVar=" << var << std::endl;
 		break;
 	}
-	case DPIDENTIFIER_VAR /*DpIdentifierVar */: {
+	case /*DPIDENTIFIER_VAR*/ JDpIdentifierVar : {
 		//jclass cls = env->FindClass(DpIdentifierClassName);
 		//jm = env->GetMethodID(cls, "getName", "()Ljava/lang/String;");
 		//jstring jValue = (jstring)env->CallObjectMethod(jValueObject, jm);
@@ -532,7 +548,7 @@ VariablePtr Java::convertJVariable(JNIEnv *env, jobject jVariable)
 		varPtr = new DpIdentifierVar(dpId);
 		break;
 	}
-	case DYN_VAR /*DynVar */: {
+	case /*DYN_VAR*/ JDynVar : {
 		if (DEBUG) std::cout << "convertJVariable:13:DynVar" << std::endl;
 		jclass cls = env->GetObjectClass(jVariable);
 
@@ -563,7 +579,7 @@ VariablePtr Java::convertJVariable(JNIEnv *env, jobject jVariable)
 		env->DeleteLocalRef(cls);
 		break;
 	}
-	case FLOAT_VAR /*FloatVar */: {
+	case /*FLOAT_VAR*/ JFloatVar : {
 		if (DEBUG) std::cout << "convertJVariable:13:FloatVar" << std::endl;
 		jclass cls = env->FindClass("java/lang/Double");
 		jm = env->GetMethodID(cls, "doubleValue", "()D");
@@ -574,8 +590,8 @@ VariablePtr Java::convertJVariable(JNIEnv *env, jobject jVariable)
 		if (DEBUG) std::cout << "FloatVar=" << var->formatValue("%g") << std::endl;
 		break;
 	}
-	case INTEGER_VAR /*IntegerVar */:
-	case UINTEGER_VAR /*UIntegerVar */: {
+	case /*INTEGER_VAR*/ JIntegerVar :
+	case /*UINTEGER_VAR*/ JUIntegerVar : {
 		if (DEBUG) std::cout << "convertJVariable:20:UIntegerVar" << std::endl;
 		jclass cls = env->FindClass("java/lang/Integer");
 		jm = env->GetMethodID(cls, "intValue", "()I");
@@ -586,8 +602,8 @@ VariablePtr Java::convertJVariable(JNIEnv *env, jobject jVariable)
 		if (DEBUG) std::cout << "UIntegerVar=" << *var << std::endl;
 		break;
 	}
-	case LANGTEXT_VAR /*LangTextVar */: break;
-	case TEXT_VAR /*TextVar */: {
+	case /*LANGTEXT_VAR*/ JLangTextVar : break;
+	case /*TEXT_VAR*/ JTextVar : {
 		if (DEBUG) std::cout << "convertJVariable:18:TextVar" << std::endl;
 		jstring jValue = (jstring)jValueObject;
 		CharString *cValue = convertJString(env, jValue); // TODO inefficient! copy string twice...
@@ -598,7 +614,7 @@ VariablePtr Java::convertJVariable(JNIEnv *env, jobject jVariable)
 		if (DEBUG) std::cout << "TextVar=" << var << std::endl;
 		break;
 	}
-	case TIME_VAR /*TimeVar */: {
+	case /*TIME_VAR*/ JTimeVar : {
 		if (DEBUG) std::cout << "convertJVariable:19:TimeVar" << std::endl;
 		jclass cls = env->FindClass("java/util/Date");
 		jm = env->GetMethodID(cls, "getTime", "()J");
@@ -612,7 +628,7 @@ VariablePtr Java::convertJVariable(JNIEnv *env, jobject jVariable)
 		if (DEBUG) std::cout << "TimeVar=" << var->formatValue("") << " ms: " << jValue << std::endl;
 		break;
 	}
-	case LONG_VAR /*LongVar */: {
+	case /*LONG_VAR*/ JLongVar : {
 		if (DEBUG) std::cout << "convertJVariable:21:LongVar" << std::endl;
 		jclass cls = env->FindClass("java/lang/Integer");
 		jm = env->GetMethodID(cls, "intValue", "()I");
@@ -623,7 +639,7 @@ VariablePtr Java::convertJVariable(JNIEnv *env, jobject jVariable)
 		if (DEBUG) std::cout << "LongVar=" << *var << std::endl;
 		break;
 	}
-	case ULONG_VAR /*ULongVar */: {
+	case /*ULONG_VAR*/ JULongVar : {
 		if (DEBUG) std::cout << "convertJVariable:21:ULongVar" << std::endl;
 		jclass cls = env->FindClass("java/lang/Integer");
 		jm = env->GetMethodID(cls, "intValue", "()I");

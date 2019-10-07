@@ -63,5 +63,5 @@ JNIEXPORT jlong JNICALL Java_at_rocworks_oa4j_jni_AnswerGroup_malloc
 JNIEXPORT void JNICALL Java_at_rocworks_oa4j_jni_AnswerGroup_free
 (JNIEnv *, jobject, jlong cptr)
 {
-	if (cptr != nil) delete (AnswerGroup*)cptr;
+	if (cptr != NULL) delete (AnswerGroup*)cptr;
 }

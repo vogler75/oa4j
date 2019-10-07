@@ -39,7 +39,7 @@ JNIEXPORT jlong JNICALL Java_at_rocworks_oa4j_jni_DpVCItem_malloc
 JNIEXPORT void JNICALL Java_at_rocworks_oa4j_jni_DpVCItem_free
 (JNIEnv *env, jobject, jlong cptr)
 {
-	if (cptr != nil) delete (DpVCItem*)cptr;
+	if (cptr != NULL) delete (DpVCItem*)cptr;
 }
 
 /*
@@ -60,7 +60,7 @@ JNIEXPORT jobject JNICALL Java_at_rocworks_oa4j_jni_DpVCItem_getDpIdentifier
 	if (!dpid.isNull())
 		return Java::convertToJava(env, dpid);
 	else
-		return nil;
+		return NULL;
 }
 
 /*
@@ -104,10 +104,10 @@ JNIEXPORT jobject JNICALL Java_at_rocworks_oa4j_jni_DpVCItem_getValue
 	DpVCItem *item = (DpVCItem*)cptr;
 
 	VariablePtr ptr = item->getValuePtr();
-	if (ptr != nil)
+	if (ptr != NULL)
 		return Java::convertToJava(env, ptr);
 	else
-		return nil;
+		return NULL;
 }
 
 /*

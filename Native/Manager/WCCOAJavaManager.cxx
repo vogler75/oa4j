@@ -46,7 +46,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 WCCOAJavaManager* WCCOAJavaManager::thisManager;
 
-const bool WCCOAJavaManager::DEBUG = false;
+bool WCCOAJavaManager::DEBUG = false;
 
 const char *WCCOAJavaManager::ManagerName = "WCCOAjava";
 
@@ -87,8 +87,8 @@ void WCCOAJavaManager::startupManager(int &argc, char *argv[], JNIEnv *env, jobj
 	if (connectToEvent) {
 		thisManager->connectEventManager();
 	}
-	thisManager->g_env = nil;
-	thisManager->g_obj = nil;	
+	thisManager->g_env = NULL;
+	thisManager->g_obj = NULL;	
 }
 
 //--------------------------------------------------------------------------------
@@ -98,13 +98,13 @@ void WCCOAJavaManager::javaInitialize(JNIEnv *env, jobject obj){
 
 	//----------------------------------------------------------------------------
 	javaManagerClass = env->FindClass(ManagerClassName);
-	if (javaManagerClass == nil) {
+	if (javaManagerClass == NULL) {
 		std::cout << "class " << ManagerClassName << " not found" << std::endl;
 		return;
 	}
 
 	midJavaHotlink = env->GetMethodID(javaManagerClass, "callbackHotlink", "(IILat/rocworks/oa4j/var/DpIdentifierVar;Lat/rocworks/oa4j/var/Variable;)I");
-	if (midJavaHotlink == nil) {
+	if (midJavaHotlink == NULL) {
 		std::string msg = "mid callbackHotlink not found";
 		ErrHdl::error(ErrClass::PRIO_SEVERE, ErrClass::ERR_IMPL, ErrClass::UNEXPECTEDSTATE,
 			ManagerName, "javaInitialize", msg.c_str());
@@ -112,49 +112,49 @@ void WCCOAJavaManager::javaInitialize(JNIEnv *env, jobject obj){
 	}
 
 	midJavaHotlinkI = env->GetMethodID(javaManagerClass, "callbackHotlink", "(II)I");
-	if (midJavaHotlinkI == nil) {
+	if (midJavaHotlinkI == NULL) {
 		ErrHdl::error(ErrClass::PRIO_SEVERE, ErrClass::ERR_IMPL, ErrClass::UNEXPECTEDSTATE,
 			ManagerName, "javaInitialize", CharString("mid for callbackHotlinkI not found"));
 		return;
 	}
 
 	midJavaHotlinkGroup = env->GetMethodID(javaManagerClass, "callbackHotlinkGroup", "(IJ)I");
-	if (midJavaHotlinkGroup == nil) {
+	if (midJavaHotlinkGroup == NULL) {
 		ErrHdl::error(ErrClass::PRIO_SEVERE, ErrClass::ERR_IMPL, ErrClass::UNEXPECTEDSTATE,
 			ManagerName, "javaInitialize", CharString("mid for callbackHotlinkGroup not found"));
 		return;
 	}
 
 	midJavaAnswer = env->GetMethodID(javaManagerClass, "callbackAnswer", "(IILat/rocworks/oa4j/var/DpIdentifierVar;Lat/rocworks/oa4j/var/Variable;J)I");
-	if (midJavaAnswer == nil) {
+	if (midJavaAnswer == NULL) {
 		ErrHdl::error(ErrClass::PRIO_SEVERE, ErrClass::ERR_IMPL, ErrClass::UNEXPECTEDSTATE,
 			ManagerName, "javaInitialize", CharString("mid for callbackAnswer not found"));
 		return;
 	}
 
 	midJavaAnswerI = env->GetMethodID(javaManagerClass, "callbackAnswer", "(II)I");
-	if (midJavaAnswerI == nil) {
+	if (midJavaAnswerI == NULL) {
 		ErrHdl::error(ErrClass::PRIO_SEVERE, ErrClass::ERR_IMPL, ErrClass::UNEXPECTEDSTATE,
 			ManagerName, "javaInitialize", CharString("mid for callbackAnswerI not found"));
 		return;
 	}
 
 	midJavaAnswerErr = env->GetMethodID(javaManagerClass, "callbackAnswerError", "(IILjava/lang/String;)I");
-	if (midJavaAnswerErr == nil) {
+	if (midJavaAnswerErr == NULL) {
 		ErrHdl::error(ErrClass::PRIO_SEVERE, ErrClass::ERR_IMPL, ErrClass::UNEXPECTEDSTATE,
 			ManagerName, "javaInitialize", CharString("mid for callbackAnswerErr not found"));
 		return;
 	}
 
 	midDoReceiveSysMsg = env->GetMethodID(javaManagerClass, "doReceiveSysMsg", "(J)Z");
-	if (midDoReceiveSysMsg == nil) {
+	if (midDoReceiveSysMsg == NULL) {
 		ErrHdl::error(ErrClass::PRIO_SEVERE, ErrClass::ERR_IMPL, ErrClass::UNEXPECTEDSTATE,
 			ManagerName, "javaInitialize", CharString("mid for doReceiveSysMsg not found"));
 		return;
 	}
 
 	midDoReceiveDpMsg = env->GetMethodID(javaManagerClass, "doReceiveDpMsg", "(J)Z");
-	if (midDoReceiveDpMsg == nil) {
+	if (midDoReceiveDpMsg == NULL) {
 		ErrHdl::error(ErrClass::PRIO_SEVERE, ErrClass::ERR_IMPL, ErrClass::UNEXPECTEDSTATE,
 			ManagerName, "javaInitialize", CharString("mid for doReceiveDpMsg not found"));
 		return;
@@ -162,7 +162,7 @@ void WCCOAJavaManager::javaInitialize(JNIEnv *env, jobject obj){
 
 	//----------------------------------------------------------------------------
 	//javaLoggerClass = env->FindClass(LoggerClassName);
-	//if (javaLoggerClass == nil) {
+	//if (javaLoggerClass == NULL) {
 	//	std::string msg = "class " + std::string(LoggerClassName) + " not found";
 	//	ErrHdl::error(ErrClass::PRIO_SEVERE, ErrClass::ERR_IMPL, ErrClass::UNEXPECTEDSTATE,
 	//		ManagerName, "javaInitialize", msg.c_str());
@@ -170,7 +170,7 @@ void WCCOAJavaManager::javaInitialize(JNIEnv *env, jobject obj){
 	//}
 
 	//midJavaHotlinkLogger = env->GetMethodID(javaLoggerClass, "callbackLogger", "(Ljava/lang/String;DD)I");
-	//if (midJavaHotlinkLogger == nil) {
+	//if (midJavaHotlinkLogger == NULL) {
 	//	ErrHdl::error(ErrClass::PRIO_SEVERE, ErrClass::ERR_IMPL, ErrClass::UNEXPECTEDSTATE,
 	//		ManagerName, "javaInitialize", CharString("mid for callbackLogger not found"));
 	//	return;
@@ -178,7 +178,7 @@ void WCCOAJavaManager::javaInitialize(JNIEnv *env, jobject obj){
 
 	//----------------------------------------------------------------------------
 	javaHotLinkWaitForAnswerClass = env->FindClass(HotLinkWaitForAnswerClassName);
-	if (javaHotLinkWaitForAnswerClass == nil) {
+	if (javaHotLinkWaitForAnswerClass == NULL) {
 		std::string msg = "class " + std::string(HotLinkWaitForAnswerClassName) + " not found";
 		ErrHdl::error(ErrClass::PRIO_SEVERE, ErrClass::ERR_IMPL, ErrClass::UNEXPECTEDSTATE,
 			ManagerName, "javaInitialize", msg.c_str());
@@ -186,7 +186,7 @@ void WCCOAJavaManager::javaInitialize(JNIEnv *env, jobject obj){
 	}
 
 	midJavaHotLinkGetHdlId = env->GetMethodID(javaHotLinkWaitForAnswerClass, "getHdlId", "()I");
-	if (midJavaHotLinkGetHdlId == nil) {
+	if (midJavaHotLinkGetHdlId == NULL) {
 		ErrHdl::error(ErrClass::PRIO_SEVERE, ErrClass::ERR_IMPL, ErrClass::UNEXPECTEDSTATE,
 			ManagerName, "javaInitialize", CharString("mid for getHdlId not found"));
 		return;
@@ -234,21 +234,12 @@ void WCCOAJavaManager::connectEventManager()
 }
 
 //--------------------------------------------------------------------------------
-// Receive Signals.
-// We are interested in SIGINT and SIGTERM.
-
-void WCCOAJavaManager::signalHandler(int sig)
-{
-	Manager::signalHandler(sig);
-}
-
-//--------------------------------------------------------------------------------
 
 void WCCOAJavaManager::doReceive(SysMsg &sysMsg)
 {
 	if ( DEBUG ) std::cout << "doReceiveSysMsg..." << std::endl;
 	jboolean handled = false;
-	if (g_env == nil || g_obj == nil) {
+	if (g_env == NULL || g_obj == NULL) {
 		ErrHdl::error(ErrClass::PRIO_SEVERE, ErrClass::ERR_PARAM, ErrClass::UNEXPECTEDSTATE, "doReceiveSysMsg without java env!");
 	}
 	else
@@ -263,7 +254,7 @@ void WCCOAJavaManager::doReceive(DpMsg& dpMsg)
 {
 	if (DEBUG) std::cout << "doReceiveDpMsg..." << std::endl;
 	jboolean handled = false;
-	if (g_env == nil || g_obj == nil) {
+	if (g_env == NULL || g_obj == NULL) {
 		ErrHdl::error(ErrClass::PRIO_SEVERE, ErrClass::ERR_PARAM, ErrClass::UNEXPECTEDSTATE, "doReceiveDpMsg without java env!");
 	} 
 	else 
@@ -313,7 +304,8 @@ void WCCOAJavaManager::handleHotLink(jint jHdl, const DpMsgAnswer &answer)
 				if (item != NULL) {
 					jobject objDpId = Java::convertToJava(g_env, item->getDpIdentifier(), &cdpid);
 					jobject objVar = Java::convertToJava(g_env, item->getValuePtr(), &cdpid, &cvar);
-					jlong objTim = item->getTime().getSeconds()*1000 + item->getTime().getMilliSeconds();
+					//jlong objTim = item->getTime().getSeconds()*1000 + item->getTime().getMilliSeconds(); // V3.17
+					jlong objTim = item->getTime().getSeconds() * 1000 + item->getTime().getMilli(); // V3.16
 
 					// create Variable object	
 					if (objDpId != NULL /*&& objVar != NULL => dont't check NULL: if a datapoint is deleted the value is null, it is ok to get this information*/)
@@ -435,8 +427,8 @@ void WCCOAJavaManager::javaDispatch(JNIEnv *env, jobject obj, jint sec, jint use
 	long l_sec = sec;
 	long l_usec = usec;
 	dispatch(l_sec, l_usec);
-	g_env = nil;
-	g_obj = nil;
+	g_env = NULL;
+	g_obj = NULL;
 }
 
 //--------------------------------------------------------------------------------
@@ -849,3 +841,8 @@ jlong WCCOAJavaManager::javaGetHdlCid(JNIEnv *env, jobject jHdl)
 	env->DeleteLocalRef(cls);
 	return cid;
 }  
+
+void WCCOAJavaManager::signalHandler(int sig)
+{
+    std::cout << "signalHandler: " << sig << std::endl;
+}

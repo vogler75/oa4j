@@ -32,7 +32,7 @@ JNIEXPORT jobject JNICALL Java_at_rocworks_oa4j_jni_RequestGroup_getFirstItem
 
 	RequestGroup *grp = (RequestGroup*)cptr;
 	RequestItem *itm = grp->getFirstItem();
-	if (itm == nil) return nil;
+	if (itm == NULL) return NULL;
 
 	cls = env->FindClass("at/rocworks/oa4j/jni/RequestItem");
 	jmethodID mid = env->GetMethodID(cls, "<init>", "(J)V");
@@ -54,7 +54,7 @@ JNIEXPORT jobject JNICALL Java_at_rocworks_oa4j_jni_RequestGroup_getNextItem
 	env->DeleteLocalRef(cls);
 
 	RequestItem *itm = grp->getNextItem();
-	if (itm == nil) return nil;
+	if (itm == NULL) return NULL;
 
 	cls = env->FindClass("at/rocworks/oa4j/jni/RequestItem");
 	jmethodID mid = env->GetMethodID(cls, "<init>", "(J)V");
@@ -125,5 +125,5 @@ JNIEXPORT jlong JNICALL Java_at_rocworks_oa4j_jni_RequestGroup_malloc
 JNIEXPORT void JNICALL Java_at_rocworks_oa4j_jni_RequestGroup_free
 (JNIEnv *, jobject, jlong cptr)
 {
-	if (cptr != nil) delete (RequestGroup*)cptr;
+	if (cptr != NULL) delete (RequestGroup*)cptr;
 }

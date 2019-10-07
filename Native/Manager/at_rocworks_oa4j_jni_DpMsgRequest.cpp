@@ -32,7 +32,7 @@ JNIEXPORT jobject JNICALL Java_at_rocworks_oa4j_jni_DpMsgRequest_getFirstGroup
 
 	DpMsgRequest *req = (DpMsgRequest*)cptr;
 	RequestGroup *grp = req->getFirstGroup();
-	if (grp == nil) return nil;
+	if (grp == NULL) return NULL;
 
 	cls = env->FindClass("at/rocworks/oa4j/jni/RequestGroup");
 	jmethodID mid = env->GetMethodID(cls, "<init>", "(J)V");
@@ -53,7 +53,7 @@ JNIEXPORT jobject JNICALL Java_at_rocworks_oa4j_jni_DpMsgRequest_getNextGroup
 
 	DpMsgRequest *req = (DpMsgRequest*)cptr;
 	RequestGroup *grp = req->getNextGroup();
-	if (grp == nil) return nil;
+	if (grp == NULL) return NULL;
 
 	cls = env->FindClass("at/rocworks/oa4j/jni/RequestGroup");
 	jmethodID mid = env->GetMethodID(cls, "<init>", "(J)V");

@@ -7,6 +7,15 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+/*
+* Class:     at_rocworks_oa4j_jni_Manager
+* Method:    apiGetVersion
+* Signature: ()Ljava/lang/String;
+*/
+JNIEXPORT jstring JNICALL Java_at_rocworks_oa4j_jni_Manager_apiGetVersion
+	(JNIEnv *, jobject);
+
 /*
  * Class:     at_rocworks_oa4j_jni_Manager
  * Method:    apiGetLogPath

@@ -30,14 +30,29 @@ import at.rocworks.oa4j.var.Variable;
  * @author vogler
  */
 public abstract class Manager {
+    public static native String apiGetVersion(); // Runtime Version (PVSS_VERSION)
+
+    private static Boolean _isV4 = null;
+    private static Boolean _isV3 = null;
+
+    public static boolean isV3() {
+        return (_isV3==null ? _isV3=(apiGetVersion().startsWith("3.")) : _isV3);
+    }
+
+    public static boolean isV4() {
+        return (_isV4==null ? _isV4=(apiGetVersion().startsWith("4.")) : _isV4);
+    }
+
     public native String apiGetLogPath();
     public native String apiGetDataPath();
     public native String apiGetConfigValue(String key);
 
     public int apiStartup(int manType, String[] argv) {
-        return apiStartup(manType, argv, true, true, true);
+        return apiStartup(manType, argv, true, true, true, false);
     }
-    public native int apiStartup(int manType, String[] argv, boolean connectToData, boolean connectToEvent, boolean initResources);
+    public native int apiStartup(int manType, String[] argv,
+                                 boolean connectToData, boolean connectToEvent,
+                                 boolean initResources, boolean debugFlag);
     public native int apiShutdown();
     
     public native void apiDispatch(int sec, int usec);    
@@ -56,7 +71,7 @@ public abstract class Manager {
     
     public native int apiDpQueryConnectSingle(JHotLinkWaitForAnswer hdl, boolean values, String query);
     public native int apiDpQueryConnectAll(JHotLinkWaitForAnswer hdl, boolean values, String query);
-    public native int apiDpQueryDisonnect(JHotLinkWaitForAnswer hdl);    
+    public native int apiDpQueryDisconnect(JHotLinkWaitForAnswer hdl);
     
     public native int apiAlertConnect(JHotLinkWaitForAnswer hdl, String[] dps);
     public native int apiAlertDisconnect(JHotLinkWaitForAnswer hdl, String[] dps);
