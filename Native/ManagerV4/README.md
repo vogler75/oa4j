@@ -92,7 +92,7 @@ You can use [IntelliJ IDEA](https://www.jetbrains.com/idea/) to open the project
 
 
 # Java Manager Startup <a name="start"></a>
-The Executable WCCILjava.exe starts up a JVM and the JVM is calling native IOWA (C++) functions to startup the manager and do the native IOWA communication. That's why we need the DLL. You can also startup the JVM directly without executing the WCCILjava.exe.
+The Executable WCCILjava.exe starts up a JVM and the JVM is calling native API (C++) functions to startup the manager and do the native API communication. That's why we need the DLL. You can also startup the JVM directly without executing the WCCILjava.exe.
 
 * Download and Install Java SE 8 JDK or JRE
   https://www.oracle.com/technetwork/java/javase/downloads/index.html
@@ -107,7 +107,7 @@ The Executable WCCILjava.exe starts up a JVM and the JVM is calling native IOWA 
   ```
   copy /y Z:\Workspace\oa4j\Native\ManagerV4\win64vc15\release\* "C:\Program Files\Siemens\Automation\WinCCUnified\bin\"
   ```
-* Copy the Java Runtime to the WinCCUnified Project bin directory (replace *HMI_RT_1-SIM* with your project name)
+* Copy the Java Runtime to the WinCC Unified Project bin directory (replace *HMI_RT_1-SIM* with your project name)
   ```
   copy /y Z:\Workspace\oa4j\Java\lib\winccoa-java.jar C:\ProgramData\SCADAProjects\HMI_RT_1-SIM\bin
   ```
