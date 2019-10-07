@@ -1,0 +1,39 @@
+@startuml
+package "IOWA Runtime" {
+    [WCCILevent]
+    [WCCILdata]
+}
+package "Java Manager" {
+
+    package "Startup" {
+        [EXE] as "WCCILjava.exe"
+        [JVM] as "JVM (jvm.dll)"        
+    }
+
+    package "Interface" {
+        (JAR) as "winccoa-java.jar"
+        [DLL] as "WCCILjava.dll" 
+    }
+
+    package "User Program" {
+        [PRG] as "Main Java Class"
+    }
+
+    :User: --> [PRG]
+
+    note left of [EXE] : Main class as argument
+    note left of [JVM] : Java Virtual Machine
+    note left of [JAR] : JNI Library
+    note left of [DLL] : IOWA API
+
+    [EXE] --> [JVM] : "JNI_CreateJavaVM()"
+    [JVM] --> [PRG]
+
+    [PRG] --> [JAR]
+
+    [JAR] --> [DLL] : Java Native Interface (JNI)
+
+    [DLL] --> [WCCILevent]
+    [DLL] --> [WCCILdata]
+}
+@enduml
