@@ -11,7 +11,7 @@
   
 
 # Introduction <a name="introduction"></a>
-The IOWA Java Manager consists of three components:
+The Java Manager consists of three components:
 * The C++ Runtime Part  
   - WCCILjava.exe
   - WCCILjava.dll
@@ -26,7 +26,7 @@ The IOWA Java Manager consists of three components:
 
 # Compile C++ Components <a name="c++"></a>
 
-* Get the sources of IOWA  
+* Get the API of the Runtime  
   Example: D:\Workspace\<Source>
   
 * Get the sources of oa4j\Native\ManagerV4  
@@ -36,7 +36,7 @@ The IOWA Java Manager consists of three components:
   https://www.oracle.com/technetwork/java/javase/downloads/index.html
 
 
-* Change to IOWA source directory and set environment
+* Change to API source directory and set environment
   ```
   cd D:\Workspace\<Source>\src
   senv
@@ -46,7 +46,7 @@ The IOWA Java Manager consists of three components:
   set JAVA_HOME=C:\Program Files\Java\jdk1.8.0_221
   ```
 
-* Set APIS_ROOT to your IOWA sources (**Remark**: use "/" and not backslashes)
+* Set APIS_ROOT to your API sources (**Remark**: use "/" and not backslashes)
   ```
   set APIS_ROOT=D:/Workspace/<Source>/src
   ```
