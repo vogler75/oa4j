@@ -43,7 +43,7 @@ public class ApiTestDpQuery {
     
     public void run() throws InterruptedException {        
         JDebug.out.info("dpQuery...");
-        JClient.dpQuery("SELECT '_online.._value','_online.._stime' FROM 'Test*.**'")
+        JClient.dpQuery("SELECT '_online.._value','_online.._stime' FROM 'HMI_Tag_*.**'")
                 .action((JDpMsgAnswer answer)->{
                     JDebug.out.info(answer.toString());
                 })

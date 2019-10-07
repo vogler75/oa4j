@@ -45,9 +45,9 @@ public class ApiTestDpQueryConnect {
     }    
     
     public static void main(String[] args) throws Exception {
-        // add path to WCCOAjava.dll to your path environment!
-        // logs are printed to WCCOAjava<num>.0.log and WCCOAjava10.err         
         JManager m = new JManager();
+        // add path to WCCOAjava.dll to your path environment!
+        // logs are printed to WCCOAjava<num>.0.log and WCCOAjava10.err
         m.init(args).start();
         new ApiTestDpQueryConnect().run();
         m.stop();
@@ -70,7 +70,7 @@ public class ApiTestDpQueryConnect {
 
     private JDpQueryConnect doDpQueryConnect() {
         JDebug.out.info("dpQueryConnect...");
-        JDpQueryConnect conn = JClient.dpQueryConnectSingle("SELECT '_online.._value','_online.._stime' FROM 'Test_*.**'");
+        JDpQueryConnect conn = JClient.dpQueryConnectSingle("SELECT '_online.._value','_online.._stime' FROM 'HMI_Tag_*.**'");
         conn.action((JDpMsgAnswer answer)->{
                 try {
                     JDebug.out.info("--- ANSWER BEG --- "+answer.getErrorText());
@@ -106,7 +106,7 @@ public class ApiTestDpQueryConnect {
                 
             t2=new Date();
             long ms;
-            if ( (ms=t2.getTime()-t1.getTime()) >= 1000 && c.value > 0) {
+            if ( (ms=t2.getTime()-t1.getTime()) >= 3000 && c.value > 0) {
                 JDebug.out.log(Level.INFO, "v/s: {0}", c.value/(ms/1000));
                 t1=t2;
                 c.value=0;

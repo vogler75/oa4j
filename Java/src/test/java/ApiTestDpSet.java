@@ -51,9 +51,54 @@ public class ApiTestDpSet {
         //DynVar ds = new DynVar(new TextVar("hello"), new TextVar("dynamic"), new TextVar("string"));
         //JClient.dpSet("test.dyn_string", ds);
 
-        DynVar di = new DynVar(1.0, 2.0, 3.0);
-        JClient.dpSet("test.dyn_int", di);
+        //DynVar di = new DynVar(1.0, 2.0, 3.0);
+        //JClient.dpSet("test.dyn_int", di);
 
+
+        for (int j=1; j<=10; j++) {
+            for (int i = 1; i <= 200000; i++) {
+                int val = (int) Math.round(Math.random() * 1000);
+                //JDebug.out.info("value="+val);
+                ret = JClient.dpSet().add("HMI_Tag_2.", new IntegerVar(val)).send().getRetCode();
+                //Thread.sleep(1000);
+            }
+
+            JDebug.out.info("wait...");
+            Thread.sleep(10000);
+            JDebug.out.info("continue...");
+        }
+
+        JDebug.out.info("done.");
+
+        /*
+        JDebug.out.info("--- Tag_Text ... ---");
+        ret = JClient.dpSet().add("HMI_Tag_Text.", new TextVar("Hallo du da")).await().getRetCode();
+        JDebug.out.info("--- Tag_Text Done ---");
+        */
+
+        /*
+        for (int i=1; i<=100000; i++) {
+            //JDebug.out.info("--- DPSET BEG ---");
+            ret = JClient.dpSet()
+                    .add("HMI_Tag_1.", new IntegerVar(i))
+                    //.add("HMI_Tag_Text.", "hello "+i)
+                    .send()
+                    .getRetCode();
+            //JDebug.out.log(Level.INFO, "retCode={0}", ret);
+            //JDebug.out.info("--- DPSET END ---");
+
+            //Thread.sleep(10);
+        }
+        JDebug.out.info("--- LOOP END ---");
+        Thread.sleep(1000);
+        ret = JClient.dpSet()
+                .add("HMI_Tag_1.", new IntegerVar(-1))
+                .await()
+                .getRetCode();
+        JDebug.out.info("--- END END ---");
+        */
+
+        /*
         JDebug.out.info("--- DPSET BEG ---");
         ret = JClient.dpSet()
                 .add("System1:ExampleDP_Trend1.", new FloatVar(Math.random()))
@@ -75,7 +120,7 @@ public class ApiTestDpSet {
                 .getRetCode();
         JDebug.out.log(Level.INFO, "retCode={0}", ret);
         JDebug.out.info("--- DPSETTIMED END ---");
-
-        Thread.sleep(1000);
+        */
+        //Thread.sleep(10000);
     }    
 }

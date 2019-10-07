@@ -49,25 +49,17 @@ public class ApiTestDpConnect {
     public void run() throws InterruptedException {
         JDebug.out.info("dpConnect...");
         JDpConnect conn = JClient.dpConnect()
-                .add("ExampleDP_Trend1.")
-                .add("ExampleDP_Trend2.")
+                .add("HMI_Tag_1.")
                 .action((JDpMsgAnswer answer)->{
                     JDebug.out.info("--- ANSWER BEG ---");
                     JDebug.out.info(answer.toString());
                     JDebug.out.info("--- ANSWER END ---");
                 })                
                 .action((JDpHLGroup hotlink)->{
-                    JDebug.out.info("--- HOTLINK BEG ---");
-                    JDebug.out.info(hotlink.toString());
-                    JDebug.out.info("getItemVar(0): "+hotlink.getItemVar(0));
-                    JDebug.out.info("getItemVar(1): "+hotlink.getItemVar(1));
-                    JDebug.out.info("getItemVar(2): "+hotlink.getItemVar(2).toDouble(0.0));
-                    JDebug.out.info("getItemVar(2).isNull: "+hotlink.getItemVar(2).isNull());
+                    //JDebug.out.info("--- HOTLINK BEG ---");
                     val=hotlink.getItemVar(0).toInt();
-                    Double v1 = hotlink.getItemVar(0).toDouble();
-                    Double v2 = hotlink.getItemVar(1).toDouble();
-                    JClient.dpSet("ExampleDP_Trend3.", v1+v2).send();
-                    JDebug.out.info("--- HOTLINK END ---");
+                    /*if (val%10000==0)*/ JDebug.out.info(val.toString());
+                    //JDebug.out.info("--- HOTLINK END ---");
                 })
                 .connect();
         

@@ -39,7 +39,7 @@ import java.util.logging.Level;
 public class ApiTestDpGet {
     public static void main(String[] args) throws Exception {
         // add path to WCCOAjava.dll to your path environment!
-        // logs are printed to WCCOAjava<num>.0.log and WCCOAjava10.err         
+        // logs are printed to WCCOAjava<num>.0.log and WCCOAjava10.err
         JManager m = new JManager();
         m.init(args).start();
         new ApiTestDpGet().run();
@@ -47,23 +47,24 @@ public class ApiTestDpGet {
     }      
     
     private void run() throws InterruptedException {
-        JDebug.out.info("--- DPGET BEG ---");
+        JDebug.out.info("--- DPGET XXX ---");
         JClient.dpGet()
-                .add("System1:ExampleDP_Trend1.")
-                .add("System1:ExampleDP_SumAlert.:_online.._value")
+                .add("HMI_Tag_1.:_online.._value")
+                .add("HMI_Tag_Text.:_online.._value")
                 .action((JDpMsgAnswer answer)->{
                     JDebug.out.info("--- ANSWER BEG ---");
                     JDebug.out.info(answer.toString());
                     JDebug.out.info("--- ANSWER END ---");
-                })       
+                })
                 .await();
         JDebug.out.info("--- DPGET END ---");
-        
+
+        /*
         JDebug.out.info("--- DPGET BEG ---");
         JDpMsgAnswer answer = JClient.dpGet()
-                .add("System1:ExampleDP_Trend1.:_online.._value")
-                .add("System1:ExampleDP_SumAlert.:_online.._value")
-                .await();       
+                .add("HMI_Tag_1.:_online.._value")
+                .add("HMI_Tag_2.:_online.._value")
+                .await();
         JDebug.out.log(Level.INFO, "ret={0}", answer.getRetCode());
         answer.forEach((vc)->JDebug.out.info(vc.toString()));
         JDebug.out.log(Level.INFO, "toDouble:");
@@ -73,22 +74,23 @@ public class ApiTestDpGet {
             JDebug.StackTrace(Level.INFO, ex);
         }
         JDebug.out.info("--- DPGET END ---");
-        
+
         JDebug.out.info("--- DPGET BEG ---");
         VariablePtr res1 = new VariablePtr();
         VariablePtr res2 = new VariablePtr();
         JClient.dpGet()
-                .add("System1:ExampleDP_Trend1.:_online.._value", res1)
-                .add("System1:ExampleDP_SumAlert.:_online.._value", res2)
+                .add("HMI_Tag_1.:_online.._value", res1)
+                .add("HMI_Tag_2.:_online.._value", res2)
                 .await();
         JDebug.out.log(Level.INFO, "res1 is a {0} value={1}", new Object[] {res1.get().isA(), res1.get()});
         JDebug.out.log(Level.INFO, "res2 is a {0} value={1}", new Object[] {res2.get().isA(), res2.get()});
         JDebug.out.info("--- DPGET END ---");
 
         JDebug.out.info("--- DPGET BEG ARRAY ---");
-        List<Variable> res3 = JClient.dpGet(Arrays.asList("ExampleDP_Trend1.", "ExampleDP_SumAlert."));
+        List<Variable> res3 = JClient.dpGet(Arrays.asList("HMI_Tag_1.", "HMI_Tag_1."));
         res3.forEach((v)->JDebug.out.log(Level.INFO, "res3 is a {0} value={1}", new Object[] {v.isA(), v.formatValue()}));
         JDebug.out.info("--- DPGET END ARRAY ---");
+        */
 
 //        int i=0;
 //        String oldc="", newc="";
@@ -100,9 +102,10 @@ public class ApiTestDpGet {
 //                oldc=newc;
 //            }
 //        }
+        //Thread.sleep(10000);
 
 
-    }       
-    
+    }
+
 
 }

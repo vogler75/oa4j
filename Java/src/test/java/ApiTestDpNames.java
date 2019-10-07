@@ -42,17 +42,17 @@ public class ApiTestDpNames {
         m.stop();
     }    
     
-    public void run() throws InterruptedException {               
-        // variant 1
-        JDebug.out.info("--- DPNAMES BEG ---");
-        List<String> dps1 = Arrays.asList(JClient.dpNames("ExampleDP*"));
-        dps1.forEach((dp)->JDebug.out.info(dp));
-        JDebug.out.info("--- DPNAMES END ---");
-        
+    public void run() throws InterruptedException {
         // variant 2
         JDebug.out.info("--- DPNAMES BEG ---");
         String[] dps2 = JClient.dpNames("*.**");
         JDebug.out.log(Level.INFO, "found {0} datapoints.", dps2.length);
+        JDebug.out.info("--- DPNAMES END ---");
+
+        // variant 1
+        JDebug.out.info("--- DPNAMES BEG ---");
+        List<String> dps1 = Arrays.asList(JClient.dpNames("HMI_Tag*"));
+        dps1.forEach((dp)->JDebug.out.info(dp));
         JDebug.out.info("--- DPNAMES END ---");
 
         // variant 3 with dpType

@@ -38,8 +38,8 @@ public class ApiTestDpGetPeriod {
 
     public void run() throws InterruptedException {
         JDebug.out.info("dpGetPeriod...");
-        JClient.dpGetPeriod(new Date().getTime() - 1000 * 60, new Date().getTime(), 0)
-            .add("ExampleDP_Trend1.")
+        JClient.dpGetPeriod(new Date().getTime() - 1000 * 60 * 60 * 24, new Date().getTime() + 1000 *60 * 60 * 24, 0)
+            .add("HMI_Tag_1:LoggingTag_1")
             .action((JDpMsgAnswer answer) -> {
                 JDebug.out.info(answer.toString());
             })
