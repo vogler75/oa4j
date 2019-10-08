@@ -11,25 +11,26 @@ package "Java Manager" {
     }
 
     package "Interface" {
-        (JAR) as "winccoa-java.jar"
+        (JAR) as "WCCILjava.jar"
         [DLL] as "WCCILjava.dll" 
     }
 
-    package "User Program" {
-        [PRG] as "Main Java Class"
-    }
+    package "Java Program" {
+        [PRG] as "Java Classes or JAR"
+    }    
 
     :User: --> [PRG]
 
+    note right of [PRG] : Business Logic implemented Java \nUse Libraries of Java Ecosystem
     note left of [EXE] : Main class as argument
     note left of [JVM] : Java Virtual Machine
-    note left of [JAR] : JNI Library
-    note left of [DLL] : IOWA API
+    note left of [JAR] : Java Interface to IOWA Runtime (JNI)
+    note left of [DLL] : C++ Interface based on IOWA API
 
     [EXE] --> [JVM] : "JNI_CreateJavaVM()"
     [JVM] --> [PRG]
 
-    [PRG] --> [JAR]
+    [PRG] --> [JAR] : uses
 
     [JAR] --> [DLL] : Java Native Interface (JNI)
 
