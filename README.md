@@ -146,7 +146,14 @@ classPath = "bin;bin/winccoa-java-1.0-SNAPSHOT.jar"
 
 * Download oa4j binaries http://rocworks.at/oa4j/.
 
-* Or compile oa4j from the Native/Tools directory. Open vc-start_3.XX.bat to open Visual Studio and open the solution from Native/Manager and build it. Then copy bin\WCCOAjava.* files to C:\Siemens\Automation\WinCC_OA\%VERS%\bin
+* Or compile oa4j from the Native/Tools directory.   
+  Open vc-start_3.XX.bat to start Visual Studio.  
+  <br>
+  Open the solution from Native/Manager/build and build it.  
+  &rarr; use the solution in dir "build" for WinCC OA Version >= 3.18  
+  &rarr; use the solution in dir "build-pre-318" for WinCC OA Version < 3.18  
+  <br>
+  Then copy bin\WCCOAjava.dll & bin\WCCOAjava.exe files to C:\Siemens\Automation\WinCC_OA\%VERS%\bin  
 
 * Add the following lines to the WinCC OA message catalouge "managers.cat"  
   WCCOAjava,Java Manager  

@@ -10,21 +10,36 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\LibJava\Java.cpp" />
+    <ClCompile Include="..\WCCOAJavaMain.cxx" />
+    <ClCompile Include="..\WCCOAJavaResources.cxx" />
+    <ClCompile Include="$(API_ROOT)\addVerInfo.cxx" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\LibJava\Java.hxx" />
+    <ClInclude Include="..\WCCOAJavaResources.hxx" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="VersInfo.rc" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{E8131800-D743-4497-8A01-61174B35F225}</ProjectGuid>
+    <ProjectGuid>{DB3F2A94-F6BF-44A5-BCB8-E103DC4077AD}</ProjectGuid>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <TargetName>WCCOAjavadrv</TargetName>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
     <PlatformToolset>v120</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <TargetName>WCCOAjavadrv</TargetName>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <WholeProgramOptimization>false</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
     <PlatformToolset>v120</PlatformToolset>
   </PropertyGroup>
@@ -40,15 +55,16 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(SolutionDir)\bin\</OutDir>
+    <IntDir>$(Platform)\$(Configuration)\exe\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
-      <Optimization>Disabled</Optimization>
+      <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;IS_MSWIN__;_EXCURSION;bcm_boolean_h;FUNCPROTO;_NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(API_INCL)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(API_INCL);..</AdditionalIncludeDirectories>
       <ForcedIncludeFiles>$(API_ROOT)\include\winnt\win32.h</ForcedIncludeFiles>
       <AdditionalOptions>$(VC8_DEFS) $(D_PVSS_VER) %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
@@ -62,32 +78,21 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
-      <Optimization>MaxSpeed</Optimization>
+      <Optimization>Disabled</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;IS_MSWIN__;_EXCURSION;bcm_boolean_h;FUNCPROTO;_NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(API_INCL)</AdditionalIncludeDirectories>
-      <ForcedIncludeFiles>$(API_ROOT)\include\winnt\win32.h</ForcedIncludeFiles>
+      <AdditionalIncludeDirectories>$(API_INCL);..</AdditionalIncludeDirectories>
+      <ForcedIncludeFiles>$(API_ROOT)/include/winnt/win32.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <AdditionalOptions>$(VC8_DEFS) $(D_PVSS_VER) %(AdditionalOptions)</AdditionalOptions>
+      <PreprocessorDefinitions>WIN32;IS_MSWIN__;_EXCURSION;bcm_boolean_h;FUNCPROTO;_NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalDependencies>$(API_LIB);kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AddModuleNamesToAssembly>%(AddModuleNamesToAssembly)</AddModuleNamesToAssembly>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClCompile Include="..\LibJava\Java.cpp" />
-    <ClCompile Include="JavaExternHdl.cxx" />
-    <ClCompile Include="JavaResources.cxx" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\LibJava\Java.hxx" />
-    <ClInclude Include="JavaExternHdl.hxx" />
-    <ClInclude Include="JavaResources.hxx" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

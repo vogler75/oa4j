@@ -11,39 +11,21 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\LibJava\Java.cpp" />
-    <ClCompile Include="at_rocworks_oa4j_jni_Driver.cpp" />
-    <ClCompile Include="WCCOAJavaDrv.cxx" />
-    <ClCompile Include="WCCOAJavaDrvIntDp.cxx" />
-    <ClCompile Include="WCCOAJavaHWMapper.cxx" />
-    <ClCompile Include="WCCOAJavaHWService.cxx" />
-    <ClCompile Include="WCCOAJavaResources.cxx" />
-    <ClCompile Include="WCCOAJavaTrans.cxx" />
-    <ClCompile Include="WCCOAJavaConnection.cxx" />
-    <ClCompile Include="WCCOAJavaAlertService.cxx" />
     <ClCompile Include="$(API_ROOT)\addVerInfo.cxx" />
+    <ClCompile Include="..\..\LibJava\Java.cpp" />
+    <ClCompile Include="..\WCCOAJavaMain.cxx" />
+    <ClCompile Include="..\WCCOAJavaResources.cxx" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\LibJava\Java.hxx" />
-    <ClInclude Include="at_rocworks_oa4j_jni_Driver.h" />
-    <ClInclude Include="WCCOAJavaDrv.hxx" />
-    <ClInclude Include="WCCOAJavaDrvIntDp.hxx" />
-    <ClInclude Include="WCCOAJavaHWMapper.hxx" />
-    <ClInclude Include="WCCOAJavaHWService.hxx" />
-    <ClInclude Include="WCCOAJavaConnection.hxx" />
-    <ClInclude Include="WCCOAJavaAlertService.hxx" />
-    <ClInclude Include="WCCOAJavaResources.hxx" />
-    <ClInclude Include="WCCOAJavaTrans.hxx" />
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="VersInfo.rc" />
+    <ClInclude Include="..\..\LibJava\Java.hxx" />
+    <ClInclude Include="..\WCCOAJavaResources.hxx" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{12BAFA7D-6164-4FB2-AE00-4E03FA3B4ACD}</ProjectGuid>
+    <ProjectGuid>{F849B28A-2E86-423C-8A47-FB299CE19D1D}</ProjectGuid>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <TargetName>WCCOAjavadrv</TargetName>
+    <TargetName>WCCOAjava</TargetName>
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -51,10 +33,10 @@
     <PlatformToolset>v120</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <TargetName>WCCOAjavadrv</TargetName>
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <TargetName>WCCOAjava</TargetName>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <WholeProgramOptimization>false</WholeProgramOptimization>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
     <PlatformToolset>v120</PlatformToolset>
   </PropertyGroup>
@@ -69,8 +51,9 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(JDK_HOME)\include</IncludePath>
     <OutDir>$(SolutionDir)\bin\</OutDir>
-    <IntDir>$(Platform)\$(Configuration)\dll\</IntDir>
+    <IntDir>$(Platform)\$(Configuration)\exe\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -78,10 +61,10 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;IS_MSWIN__;_EXCURSION;bcm_boolean_h;FUNCPROTO;_NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(API_INCL)</AdditionalIncludeDirectories>
-      <ForcedIncludeFiles>$(API_ROOT)\include\winnt\win32.h</ForcedIncludeFiles>
+      <AdditionalIncludeDirectories>$(API_INCL);..</AdditionalIncludeDirectories>
+      <ForcedIncludeFiles>$(API_ROOT)/include/winnt/win32.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <AdditionalOptions>$(VC8_DEFS) $(D_PVSS_VER) %(AdditionalOptions)</AdditionalOptions>
+      <PreprocessorDefinitions>WIN32;IS_MSWIN__;_EXCURSION;bcm_boolean_h;FUNCPROTO;_NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -96,7 +79,7 @@
       <Optimization>Disabled</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>$(API_INCL);.</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(API_INCL);..</AdditionalIncludeDirectories>
       <ForcedIncludeFiles>$(API_ROOT)/include/winnt/win32.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <AdditionalOptions>$(VC8_DEFS) $(D_PVSS_VER) %(AdditionalOptions)</AdditionalOptions>
       <PreprocessorDefinitions>WIN32;IS_MSWIN__;_EXCURSION;bcm_boolean_h;FUNCPROTO;_NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -106,6 +89,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalDependencies>$(API_LIB);kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

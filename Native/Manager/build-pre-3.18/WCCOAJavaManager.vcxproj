@@ -11,25 +11,53 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="$(API_ROOT)\include\Basics\Utilities\addVerInfo.hxx" />
-    <ClCompile Include="..\LibJava\Java.cpp" />
-    <ClCompile Include="linkedAt.cxx" />
-    <ClCompile Include="WCCOAJavaMain.cxx" />
-    <ClCompile Include="WCCOAJavaResources.cxx" />
+    <ClCompile Include="$(API_ROOT)\addVerInfo.cxx" />
+    <ClCompile Include="..\..\LibJava\Java.cpp" />
+    <ClCompile Include="..\at_rocworks_oa4j_jni_AnswerGroup.cpp" />
+    <ClCompile Include="..\at_rocworks_oa4j_jni_DpIdValueList.cpp" />
+    <ClCompile Include="..\at_rocworks_oa4j_jni_DpMsgAnswer.cpp" />
+    <ClCompile Include="..\at_rocworks_oa4j_jni_DpMsgComplexVC.cpp" />
+    <ClCompile Include="..\at_rocworks_oa4j_jni_DpMsgHotLink.cpp" />
+    <ClCompile Include="..\at_rocworks_oa4j_jni_DpMsgManipDp.cpp" />
+    <ClCompile Include="..\at_rocworks_oa4j_jni_DpMsgRequest.cpp" />
+    <ClCompile Include="..\at_rocworks_oa4j_jni_DpMsgValueChange.cpp" />
+    <ClCompile Include="..\at_rocworks_oa4j_jni_DpVCGroup.cpp" />
+    <ClCompile Include="..\at_rocworks_oa4j_jni_DpVCItem.cpp" />
+    <ClCompile Include="..\at_rocworks_oa4j_jni_Manager.cpp" />
+    <ClCompile Include="..\at_rocworks_oa4j_jni_Msg.cpp" />
+    <ClCompile Include="..\at_rocworks_oa4j_jni_RequestGroup.cpp" />
+    <ClCompile Include="..\at_rocworks_oa4j_jni_RequestItem.cpp" />
+    <ClCompile Include="..\at_rocworks_oa4j_jni_SysMsg.cpp" />
+    <ClCompile Include="..\WCCOAJavaAlertHotLinkWaitForAnswer.cpp" />
+    <ClCompile Include="..\WCCOAJavaHotLinkWaitForAnswer.cpp" />
+    <ClCompile Include="..\WCCOAJavaManager.cxx" />
+    <ClCompile Include="..\WCCOAJavaResources.cxx" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\LibJava\Java.hxx" />
-    <ClInclude Include="WCCOAJavaResources.hxx" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="linkedAt_lib.vcxproj">
-      <Project>{b443a969-d37e-3362-9e43-23c60156514e}</Project>
-      <LinkLibraryDependencies>false</LinkLibraryDependencies>
-    </ProjectReference>
+    <ClInclude Include="..\..\LibJava\Java.hxx" />
+    <ClInclude Include="..\at_rocworks_oa4j_jni_AnswerGroup.h" />
+    <ClInclude Include="..\at_rocworks_oa4j_jni_DpIdValueList.h" />
+    <ClInclude Include="..\at_rocworks_oa4j_jni_DpMsg.h" />
+    <ClInclude Include="..\at_rocworks_oa4j_jni_DpMsgAnswer.h" />
+    <ClInclude Include="..\at_rocworks_oa4j_jni_DpMsgComplexVC.h" />
+    <ClInclude Include="..\at_rocworks_oa4j_jni_DpMsgHotLink.h" />
+    <ClInclude Include="..\at_rocworks_oa4j_jni_DpMsgManipDp.h" />
+    <ClInclude Include="..\at_rocworks_oa4j_jni_DpMsgRequest.h" />
+    <ClInclude Include="..\at_rocworks_oa4j_jni_DpMsgValueChange.h" />
+    <ClInclude Include="..\at_rocworks_oa4j_jni_DpVCGroup.h" />
+    <ClInclude Include="..\at_rocworks_oa4j_jni_DpVCItem.h" />
+    <ClInclude Include="..\at_rocworks_oa4j_jni_Manager.h" />
+    <ClInclude Include="..\at_rocworks_oa4j_jni_Msg.h" />
+    <ClInclude Include="..\at_rocworks_oa4j_jni_RequestGroup.h" />
+    <ClInclude Include="..\at_rocworks_oa4j_jni_RequestItem.h" />
+    <ClInclude Include="..\at_rocworks_oa4j_jni_SysMsg.h" />
+    <ClInclude Include="..\WCCOAJavaAlertHotLinkWaitForAnswer.hxx" />
+    <ClInclude Include="..\WCCOAJavaHotLinkWaitForAnswer.hxx" />
+    <ClInclude Include="..\WCCOAJavaManager.hxx" />
+    <ClInclude Include="..\WCCOAJavaResources.hxx" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{F849B28A-2E86-423C-8A47-FB299CE19D1D}</ProjectGuid>
-    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectGuid>{E6F5163E-4D03-486C-8F05-387BFFE4F148}</ProjectGuid>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
@@ -38,15 +66,15 @@
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v120</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <TargetName>WCCOAjava</TargetName>
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v120</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -61,7 +89,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(JDK_HOME)\include</IncludePath>
     <OutDir>$(SolutionDir)\bin\</OutDir>
-    <IntDir>$(Platform)\$(Configuration)\exe\</IntDir>
+    <IntDir>$(Platform)\$(Configuration)\dll\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -69,10 +97,10 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>$(API_INCL);.;$(API_ROOT)\include\winnt;$(API_ROOT)\include\OaBasics\Accu;$(API_ROOT)\include\OaBasics\Variables;$(API_ROOT)\include\OaBasics\Utilities;$(API_ROOT)\include\OaBasics\NoPosix;$(API_ROOT)\include\OaBasics\Core;$(API_ROOT)\include\Basics\Variables;$(API_ROOT)\include\Basics\Utilities;$(API_ROOT)\include\Basics\NoPosix;$(API_ROOT)\include\Basics\DpBasics;$(API_ROOT)\include\BCMNew;$(API_ROOT)\include\Datapoint;$(API_ROOT)\include\Messages;$(API_ROOT)\include\Manager;$(API_ROOT)\include\Ctrl;$(API_ROOT)\include\V24;$(API_ROOT)\include\ComDrv;$(API_ROOT)\include\Configs;$(API_ROOT)\include\Configs\DrvConfigs\DrvCommon;$(API_ROOT)\include\Configs\DrvConfigs\ConvSmooth;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(API_INCL);..</AdditionalIncludeDirectories>
       <ForcedIncludeFiles>$(API_ROOT)/include/winnt/win32.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <AdditionalOptions>$(VC8_DEFS) $(D_PVSS_VER) %(AdditionalOptions)</AdditionalOptions>
-      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;PVI_VERSION_X=3;PVI_VERSION_Y=18;PVI_VERSION_Z=0;PVI_PATCH_NUM=0;PVSS_VERSION="3.18";PVSS_VERSION_DISP="3.18";PVSS_PATCH="";PVSS_VERS=318000;PVSS_VERS_DLL="318000";PVSS_FD_SETSIZE=8192;PVSS_PLATFORM="Windows AMD64";USE_OWN_ALLOCATOR;IS_MSWIN__;_BOOL_T_DEFINED;_SBCS;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;NODEF__RPC_H__;WINVER=0x0500;CMAKE_INTDIR="Release";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;IS_MSWIN__;_EXCURSION;bcm_boolean_h;FUNCPROTO;_NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -87,17 +115,17 @@
       <Optimization>Disabled</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>$(API_INCL);.;$(API_ROOT)\include\winnt;$(API_ROOT)\include\OaBasics\Accu;$(API_ROOT)\include\OaBasics\Variables;$(API_ROOT)\include\OaBasics\Utilities;$(API_ROOT)\include\OaBasics\NoPosix;$(API_ROOT)\include\OaBasics\Core;$(API_ROOT)\include\Basics\Variables;$(API_ROOT)\include\Basics\Utilities;$(API_ROOT)\include\Basics\NoPosix;$(API_ROOT)\include\Basics\DpBasics;$(API_ROOT)\include\BCMNew;$(API_ROOT)\include\Datapoint;$(API_ROOT)\include\Messages;$(API_ROOT)\include\Manager;$(API_ROOT)\include\Ctrl;$(API_ROOT)\include\V24;$(API_ROOT)\include\ComDrv;$(API_ROOT)\include\Configs;$(API_ROOT)\include\Configs\DrvConfigs\DrvCommon;$(API_ROOT)\include\Configs\DrvConfigs\ConvSmooth;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(API_INCL);..</AdditionalIncludeDirectories>
       <ForcedIncludeFiles>$(API_ROOT)/include/winnt/win32.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <AdditionalOptions>$(VC8_DEFS) $(D_PVSS_VER) %(AdditionalOptions)</AdditionalOptions>
-      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;PVI_VERSION_X=3;PVI_VERSION_Y=18;PVI_VERSION_Z=0;PVI_PATCH_NUM=0;PVSS_VERSION="3.18";PVSS_VERSION_DISP="3.18";PVSS_PATCH="";PVSS_VERS=318000;PVSS_VERS_DLL="318000";PVSS_FD_SETSIZE=8192;PVSS_PLATFORM="Windows AMD64";USE_OWN_ALLOCATOR;IS_MSWIN__;_BOOL_T_DEFINED;_SBCS;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;NODEF__RPC_H__;WINVER=0x0500;CMAKE_INTDIR="Release";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;IS_MSWIN__;_EXCURSION;bcm_boolean_h;FUNCPROTO;_NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>$(API_LIB);bcm.lib;libBasics.lib;libConfigs.lib;libDatapoint.lib;libMessages.lib;libManager.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(API_ROOT)/../bin;$(API_ROOT)/../bin/windows;$(API_ROOT)/../bin/windows-64;$(API_ROOT)/lib.winnt;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>$(API_LIB);kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -11,20 +11,35 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\LibJava\Java.cpp" />
-    <ClCompile Include="WCCOAJavaMain.cxx" />
-    <ClCompile Include="WCCOAJavaResources.cxx" />
+    <ClCompile Include="..\..\LibJava\Java.cpp" />
+    <ClCompile Include="..\at_rocworks_oa4j_jni_Driver.cpp" />
+    <ClCompile Include="..\WCCOAJavaDrv.cxx" />
+    <ClCompile Include="..\WCCOAJavaDrvIntDp.cxx" />
+    <ClCompile Include="..\WCCOAJavaHWMapper.cxx" />
+    <ClCompile Include="..\WCCOAJavaHWService.cxx" />
+    <ClCompile Include="..\WCCOAJavaResources.cxx" />
+    <ClCompile Include="..\WCCOAJavaTrans.cxx" />
+    <ClCompile Include="..\WCCOAJavaConnection.cxx" />
+    <ClCompile Include="..\WCCOAJavaAlertService.cxx" />
     <ClCompile Include="$(API_ROOT)\addVerInfo.cxx" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\LibJava\Java.hxx" />
-    <ClInclude Include="WCCOAJavaResources.hxx" />
+    <ClInclude Include="..\..\LibJava\Java.hxx" />
+    <ClInclude Include="..\at_rocworks_oa4j_jni_Driver.h" />
+    <ClInclude Include="..\WCCOAJavaDrv.hxx" />
+    <ClInclude Include="..\WCCOAJavaDrvIntDp.hxx" />
+    <ClInclude Include="..\WCCOAJavaHWMapper.hxx" />
+    <ClInclude Include="..\WCCOAJavaHWService.hxx" />
+    <ClInclude Include="..\WCCOAJavaConnection.hxx" />
+    <ClInclude Include="..\WCCOAJavaAlertService.hxx" />
+    <ClInclude Include="..\WCCOAJavaResources.hxx" />
+    <ClInclude Include="..\WCCOAJavaTrans.hxx" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="VersInfo.rc" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{DB3F2A94-F6BF-44A5-BCB8-E103DC4077AD}</ProjectGuid>
+    <ProjectGuid>{12BAFA7D-6164-4FB2-AE00-4E03FA3B4ACD}</ProjectGuid>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
@@ -37,7 +52,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <TargetName>WCCOAjavadrv</TargetName>
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>false</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
@@ -55,7 +70,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(SolutionDir)\bin\</OutDir>
-    <IntDir>$(Platform)\$(Configuration)\exe\</IntDir>
+    <IntDir>$(Platform)\$(Configuration)\dll\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -64,7 +79,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;IS_MSWIN__;_EXCURSION;bcm_boolean_h;FUNCPROTO;_NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(API_INCL)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(API_INCL);..</AdditionalIncludeDirectories>
       <ForcedIncludeFiles>$(API_ROOT)\include\winnt\win32.h</ForcedIncludeFiles>
       <AdditionalOptions>$(VC8_DEFS) $(D_PVSS_VER) %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
@@ -81,7 +96,7 @@
       <Optimization>Disabled</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>$(API_INCL);.</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(API_INCL);..</AdditionalIncludeDirectories>
       <ForcedIncludeFiles>$(API_ROOT)/include/winnt/win32.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <AdditionalOptions>$(VC8_DEFS) $(D_PVSS_VER) %(AdditionalOptions)</AdditionalOptions>
       <PreprocessorDefinitions>WIN32;IS_MSWIN__;_EXCURSION;bcm_boolean_h;FUNCPROTO;_NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>

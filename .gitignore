@@ -17,31 +17,3 @@ lib
 out
 log
 target
-
-# Native
-/Native/LibJava/*.o
-/Native/Manager/*.o
-/Native/Manager/bin
-/Native/Manager/x64
-/Native/Manager/Release
-/Native/Manager/WCCOAJavaManager.sdf
-/Native/Manager/WCCOAJavaManager.opensdf
-/Native/Manager/WCCOAJavaManager.v12.suo
-/Native/Driver/*.o
-/Native/Driver/bin
-/Native/Driver/x64
-/Native/Driver/Release
-/Native/Driver/WCCOAJavaDrv.sdf
-/Native/Driver/WCCOAJavaDrv.opensdf
-/Native/Driver/WCCOAJavaDrv.v12.suo
-/Native/CtrlExt/*.o
-/Native/CtrlExt/bin
-/Native/CtrlExt/x64
-/Native/CtrlExt/Release
-/Native/CtrlExt/JavaCtrlExt.sdf
-/Native/CtrlExt/JavaCtrlExt.opensdf
-/Native/CtrlExt/JavaCtrlExt.v12.suo
-/Native/Builds
-
-# Visual Studio
-.vs

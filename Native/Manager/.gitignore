@@ -1,0 +1,8 @@
+*.o
+bin
+x64
+Release
+*.sdf
+*.opensdf
+*.v12.suo
+.vs

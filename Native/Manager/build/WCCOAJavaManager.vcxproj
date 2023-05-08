@@ -12,50 +12,50 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(API_ROOT)\include\Basics\Utilities\addVerInfo.hxx" />
-    <ClCompile Include="..\LibJava\Java.cpp" />
-    <ClCompile Include="at_rocworks_oa4j_jni_AnswerGroup.cpp" />
-    <ClCompile Include="at_rocworks_oa4j_jni_DpIdValueList.cpp" />
-    <ClCompile Include="at_rocworks_oa4j_jni_DpMsgAnswer.cpp" />
-    <ClCompile Include="at_rocworks_oa4j_jni_DpMsgComplexVC.cpp" />
-    <ClCompile Include="at_rocworks_oa4j_jni_DpMsgHotLink.cpp" />
-    <ClCompile Include="at_rocworks_oa4j_jni_DpMsgManipDp.cpp" />
-    <ClCompile Include="at_rocworks_oa4j_jni_DpMsgRequest.cpp" />
-    <ClCompile Include="at_rocworks_oa4j_jni_DpMsgValueChange.cpp" />
-    <ClCompile Include="at_rocworks_oa4j_jni_DpVCGroup.cpp" />
-    <ClCompile Include="at_rocworks_oa4j_jni_DpVCItem.cpp" />
-    <ClCompile Include="at_rocworks_oa4j_jni_Manager.cpp" />
-    <ClCompile Include="at_rocworks_oa4j_jni_Msg.cpp" />
-    <ClCompile Include="at_rocworks_oa4j_jni_RequestGroup.cpp" />
-    <ClCompile Include="at_rocworks_oa4j_jni_RequestItem.cpp" />
-    <ClCompile Include="at_rocworks_oa4j_jni_SysMsg.cpp" />
-    <ClCompile Include="linkedAt.cxx" />
-    <ClCompile Include="WCCOAJavaAlertHotLinkWaitForAnswer.cpp" />
-    <ClCompile Include="WCCOAJavaHotLinkWaitForAnswer.cpp" />
-    <ClCompile Include="WCCOAJavaManager.cxx" />
-    <ClCompile Include="WCCOAJavaResources.cxx" />
+    <ClCompile Include="..\..\LibJava\Java.cpp" />
+    <ClCompile Include="..\at_rocworks_oa4j_jni_AnswerGroup.cpp" />
+    <ClCompile Include="..\at_rocworks_oa4j_jni_DpIdValueList.cpp" />
+    <ClCompile Include="..\at_rocworks_oa4j_jni_DpMsgAnswer.cpp" />
+    <ClCompile Include="..\at_rocworks_oa4j_jni_DpMsgComplexVC.cpp" />
+    <ClCompile Include="..\at_rocworks_oa4j_jni_DpMsgHotLink.cpp" />
+    <ClCompile Include="..\at_rocworks_oa4j_jni_DpMsgManipDp.cpp" />
+    <ClCompile Include="..\at_rocworks_oa4j_jni_DpMsgRequest.cpp" />
+    <ClCompile Include="..\at_rocworks_oa4j_jni_DpMsgValueChange.cpp" />
+    <ClCompile Include="..\at_rocworks_oa4j_jni_DpVCGroup.cpp" />
+    <ClCompile Include="..\at_rocworks_oa4j_jni_DpVCItem.cpp" />
+    <ClCompile Include="..\at_rocworks_oa4j_jni_Manager.cpp" />
+    <ClCompile Include="..\at_rocworks_oa4j_jni_Msg.cpp" />
+    <ClCompile Include="..\at_rocworks_oa4j_jni_RequestGroup.cpp" />
+    <ClCompile Include="..\at_rocworks_oa4j_jni_RequestItem.cpp" />
+    <ClCompile Include="..\at_rocworks_oa4j_jni_SysMsg.cpp" />
+    <ClCompile Include="..\WCCOAJavaAlertHotLinkWaitForAnswer.cpp" />
+    <ClCompile Include="..\WCCOAJavaHotLinkWaitForAnswer.cpp" />
+    <ClCompile Include="..\WCCOAJavaManager.cxx" />
+    <ClCompile Include="..\WCCOAJavaResources.cxx" />
+    <ClCompile Include="linkedAt.cxx" />    
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\LibJava\Java.hxx" />
-    <ClInclude Include="at_rocworks_oa4j_jni_AnswerGroup.h" />
-    <ClInclude Include="at_rocworks_oa4j_jni_DpIdValueList.h" />
-    <ClInclude Include="at_rocworks_oa4j_jni_DpMsg.h" />
-    <ClInclude Include="at_rocworks_oa4j_jni_DpMsgAnswer.h" />
-    <ClInclude Include="at_rocworks_oa4j_jni_DpMsgComplexVC.h" />
-    <ClInclude Include="at_rocworks_oa4j_jni_DpMsgHotLink.h" />
-    <ClInclude Include="at_rocworks_oa4j_jni_DpMsgManipDp.h" />
-    <ClInclude Include="at_rocworks_oa4j_jni_DpMsgRequest.h" />
-    <ClInclude Include="at_rocworks_oa4j_jni_DpMsgValueChange.h" />
-    <ClInclude Include="at_rocworks_oa4j_jni_DpVCGroup.h" />
-    <ClInclude Include="at_rocworks_oa4j_jni_DpVCItem.h" />
-    <ClInclude Include="at_rocworks_oa4j_jni_Manager.h" />
-    <ClInclude Include="at_rocworks_oa4j_jni_Msg.h" />
-    <ClInclude Include="at_rocworks_oa4j_jni_RequestGroup.h" />
-    <ClInclude Include="at_rocworks_oa4j_jni_RequestItem.h" />
-    <ClInclude Include="at_rocworks_oa4j_jni_SysMsg.h" />
-    <ClInclude Include="WCCOAJavaAlertHotLinkWaitForAnswer.hxx" />
-    <ClInclude Include="WCCOAJavaHotLinkWaitForAnswer.hxx" />
-    <ClInclude Include="WCCOAJavaManager.hxx" />
-    <ClInclude Include="WCCOAJavaResources.hxx" />
+    <ClInclude Include="..\..\LibJava\Java.hxx" />
+    <ClInclude Include="..\at_rocworks_oa4j_jni_AnswerGroup.h" />
+    <ClInclude Include="..\at_rocworks_oa4j_jni_DpIdValueList.h" />
+    <ClInclude Include="..\at_rocworks_oa4j_jni_DpMsg.h" />
+    <ClInclude Include="..\at_rocworks_oa4j_jni_DpMsgAnswer.h" />
+    <ClInclude Include="..\at_rocworks_oa4j_jni_DpMsgComplexVC.h" />
+    <ClInclude Include="..\at_rocworks_oa4j_jni_DpMsgHotLink.h" />
+    <ClInclude Include="..\at_rocworks_oa4j_jni_DpMsgManipDp.h" />
+    <ClInclude Include="..\at_rocworks_oa4j_jni_DpMsgRequest.h" />
+    <ClInclude Include="..\at_rocworks_oa4j_jni_DpMsgValueChange.h" />
+    <ClInclude Include="..\at_rocworks_oa4j_jni_DpVCGroup.h" />
+    <ClInclude Include="..\at_rocworks_oa4j_jni_DpVCItem.h" />
+    <ClInclude Include="..\at_rocworks_oa4j_jni_Manager.h" />
+    <ClInclude Include="..\at_rocworks_oa4j_jni_Msg.h" />
+    <ClInclude Include="..\at_rocworks_oa4j_jni_RequestGroup.h" />
+    <ClInclude Include="..\at_rocworks_oa4j_jni_RequestItem.h" />
+    <ClInclude Include="..\at_rocworks_oa4j_jni_SysMsg.h" />
+    <ClInclude Include="..\WCCOAJavaAlertHotLinkWaitForAnswer.hxx" />
+    <ClInclude Include="..\WCCOAJavaHotLinkWaitForAnswer.hxx" />
+    <ClInclude Include="..\WCCOAJavaManager.hxx" />
+    <ClInclude Include="..\WCCOAJavaResources.hxx" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="linkedAt_lib.vcxproj">
@@ -105,7 +105,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>$(API_INCL);.;$(API_ROOT)\include\winnt;$(API_ROOT)\include\OaBasics\Accu;$(API_ROOT)\include\OaBasics\Variables;$(API_ROOT)\include\OaBasics\Utilities;$(API_ROOT)\include\OaBasics\NoPosix;$(API_ROOT)\include\OaBasics\Core;$(API_ROOT)\include\Basics\Variables;$(API_ROOT)\include\Basics\Utilities;$(API_ROOT)\include\Basics\NoPosix;$(API_ROOT)\include\Basics\DpBasics;$(API_ROOT)\include\BCMNew;$(API_ROOT)\include\Datapoint;$(API_ROOT)\include\Messages;$(API_ROOT)\include\Manager;$(API_ROOT)\include\Ctrl;$(API_ROOT)\include\V24;$(API_ROOT)\include\ComDrv;$(API_ROOT)\include\Configs;$(API_ROOT)\include\Configs\DrvConfigs\DrvCommon;$(API_ROOT)\include\Configs\DrvConfigs\ConvSmooth;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(API_INCL);..;$(API_ROOT)\include\winnt;$(API_ROOT)\include\OaBasics\Accu;$(API_ROOT)\include\OaBasics\Variables;$(API_ROOT)\include\OaBasics\Utilities;$(API_ROOT)\include\OaBasics\NoPosix;$(API_ROOT)\include\OaBasics\Core;$(API_ROOT)\include\Basics\Variables;$(API_ROOT)\include\Basics\Utilities;$(API_ROOT)\include\Basics\NoPosix;$(API_ROOT)\include\Basics\DpBasics;$(API_ROOT)\include\BCMNew;$(API_ROOT)\include\Datapoint;$(API_ROOT)\include\Messages;$(API_ROOT)\include\Manager;$(API_ROOT)\include\Ctrl;$(API_ROOT)\include\V24;$(API_ROOT)\include\ComDrv;$(API_ROOT)\include\Configs;$(API_ROOT)\include\Configs\DrvConfigs\DrvCommon;$(API_ROOT)\include\Configs\DrvConfigs\ConvSmooth;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ForcedIncludeFiles>$(API_ROOT)/include/winnt/win32.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <AdditionalOptions>$(VC8_DEFS) $(D_PVSS_VER) %(AdditionalOptions)</AdditionalOptions>
       <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;PVI_VERSION_X=3;PVI_VERSION_Y=18;PVI_VERSION_Z=0;PVI_PATCH_NUM=0;PVSS_VERSION="3.18";PVSS_VERSION_DISP="3.18";PVSS_PATCH="";PVSS_VERS=318000;PVSS_VERS_DLL="318000";PVSS_FD_SETSIZE=8192;PVSS_PLATFORM="Windows AMD64";USE_OWN_ALLOCATOR;IS_MSWIN__;_BOOL_T_DEFINED;_SBCS;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;NODEF__RPC_H__;WINVER=0x0500;CMAKE_INTDIR="Release";%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -123,7 +123,7 @@
       <Optimization>Disabled</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>$(API_INCL);.;$(API_ROOT)\include\winnt;$(API_ROOT)\include\OaBasics\Accu;$(API_ROOT)\include\OaBasics\Variables;$(API_ROOT)\include\OaBasics\Utilities;$(API_ROOT)\include\OaBasics\NoPosix;$(API_ROOT)\include\OaBasics\Core;$(API_ROOT)\include\Basics\Variables;$(API_ROOT)\include\Basics\Utilities;$(API_ROOT)\include\Basics\NoPosix;$(API_ROOT)\include\Basics\DpBasics;$(API_ROOT)\include\BCMNew;$(API_ROOT)\include\Datapoint;$(API_ROOT)\include\Messages;$(API_ROOT)\include\Manager;$(API_ROOT)\include\Ctrl;$(API_ROOT)\include\V24;$(API_ROOT)\include\ComDrv;$(API_ROOT)\include\Configs;$(API_ROOT)\include\Configs\DrvConfigs\DrvCommon;$(API_ROOT)\include\Configs\DrvConfigs\ConvSmooth;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(API_INCL);..;$(API_ROOT)\include\winnt;$(API_ROOT)\include\OaBasics\Accu;$(API_ROOT)\include\OaBasics\Variables;$(API_ROOT)\include\OaBasics\Utilities;$(API_ROOT)\include\OaBasics\NoPosix;$(API_ROOT)\include\OaBasics\Core;$(API_ROOT)\include\Basics\Variables;$(API_ROOT)\include\Basics\Utilities;$(API_ROOT)\include\Basics\NoPosix;$(API_ROOT)\include\Basics\DpBasics;$(API_ROOT)\include\BCMNew;$(API_ROOT)\include\Datapoint;$(API_ROOT)\include\Messages;$(API_ROOT)\include\Manager;$(API_ROOT)\include\Ctrl;$(API_ROOT)\include\V24;$(API_ROOT)\include\ComDrv;$(API_ROOT)\include\Configs;$(API_ROOT)\include\Configs\DrvConfigs\DrvCommon;$(API_ROOT)\include\Configs\DrvConfigs\ConvSmooth;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ForcedIncludeFiles>$(API_ROOT)/include/winnt/win32.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <AdditionalOptions>$(VC8_DEFS) $(D_PVSS_VER) %(AdditionalOptions)</AdditionalOptions>
       <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;PVI_VERSION_X=3;PVI_VERSION_Y=18;PVI_VERSION_Z=0;PVI_PATCH_NUM=0;PVSS_VERSION="3.18";PVSS_VERSION_DISP="3.18";PVSS_PATCH="";PVSS_VERS=318000;PVSS_VERS_DLL="318000";PVSS_FD_SETSIZE=8192;PVSS_PLATFORM="Windows AMD64";USE_OWN_ALLOCATOR;IS_MSWIN__;_BOOL_T_DEFINED;_SBCS;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;NODEF__RPC_H__;WINVER=0x0500;CMAKE_INTDIR="Release";%(PreprocessorDefinitions)</PreprocessorDefinitions>
