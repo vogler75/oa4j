@@ -15,7 +15,6 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-#include <version.hxx>
 #include <../LibJava/Java.hxx>
 #include <WCCOAJavaManager.hxx>
 #include <WCCOAJavaResources.hxx>
@@ -236,7 +235,7 @@ int main(int argc, char *argv[])
 	i++;
 
     // [6] 
-	CharString manNum = Resources::getManNum();
+	CharString manNum = CharString(Resources::getManNum());
 	str = env->NewStringUTF(manNum);
 	env->SetObjectArrayElement(jargv, i, str);
 	i++;

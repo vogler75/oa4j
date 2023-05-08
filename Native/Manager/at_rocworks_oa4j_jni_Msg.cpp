@@ -17,6 +17,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 #include <at_rocworks_oa4j_jni_Msg.h>
 #include <WCCOAJavaManager.hxx>
+#include <sstream>
 
 JNIEXPORT jint JNICALL Java_at_rocworks_oa4j_jni_Msg_isA
 (JNIEnv *, jobject, jlong cptr)

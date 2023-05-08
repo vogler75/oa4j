@@ -1,0 +1,90 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="C:\Workspace\oa4j\Native\Manager\WCCOAJavaMain.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Workspace\oa4j\Native\Manager\WCCOAJavaManager.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Workspace\oa4j\Native\Manager\WCCOAJavaResources.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Workspace\oa4j\Native\Manager\WCCOAJavaAlertHotLinkWaitForAnswer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Workspace\oa4j\Native\Manager\WCCOAJavaHotLinkWaitForAnswer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Workspace\oa4j\Native\Manager\at_rocworks_oa4j_jni_AnswerGroup.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Workspace\oa4j\Native\Manager\at_rocworks_oa4j_jni_DpIdValueList.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Workspace\oa4j\Native\Manager\at_rocworks_oa4j_jni_DpMsgAnswer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Workspace\oa4j\Native\Manager\at_rocworks_oa4j_jni_DpMsgComplexVC.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Workspace\oa4j\Native\Manager\at_rocworks_oa4j_jni_DpMsgHotLink.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Workspace\oa4j\Native\Manager\at_rocworks_oa4j_jni_DpMsgManipDp.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Workspace\oa4j\Native\Manager\at_rocworks_oa4j_jni_DpMsgRequest.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Workspace\oa4j\Native\Manager\at_rocworks_oa4j_jni_DpMsgValueChange.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Workspace\oa4j\Native\Manager\at_rocworks_oa4j_jni_DpVCGroup.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Workspace\oa4j\Native\Manager\at_rocworks_oa4j_jni_DpVCItem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Workspace\oa4j\Native\Manager\at_rocworks_oa4j_jni_Manager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Workspace\oa4j\Native\Manager\at_rocworks_oa4j_jni_Msg.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Workspace\oa4j\Native\Manager\at_rocworks_oa4j_jni_RequestGroup.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Workspace\oa4j\Native\Manager\at_rocworks_oa4j_jni_RequestItem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Workspace\oa4j\Native\Manager\at_rocworks_oa4j_jni_SysMsg.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Workspace\oa4j\Native\LibJava\Java.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Workspace\oa4j\Native\Manager\build\addverinfo.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\Workspace\oa4j\Native\Manager\build\CMakeFiles\9ff89e919933e891fb5c95049ac8ae58\addverinfo.cxx.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Workspace\oa4j\Native\Manager\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="C:\Workspace\oa4j\Native\Manager\VersInfo.rc">
+      <Filter>Source Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{5B066C5F-7AD9-34E7-A9C7-DFF5D6980BEE}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{0B356D96-09AB-34CA-BDCA-C5B6755EFD48}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

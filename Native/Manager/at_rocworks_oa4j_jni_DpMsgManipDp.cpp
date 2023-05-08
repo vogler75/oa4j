@@ -20,6 +20,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #include <WCCOAJavaManager.hxx>
 #include <../LibJava/Java.hxx>
+#include <sstream>
 
 /*
  * Class:     at_rocworks_oa4j_jni_DpMsgManipDp
