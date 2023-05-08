@@ -42,3 +42,6 @@ target
 /Native/CtrlExt/JavaCtrlExt.opensdf
 /Native/CtrlExt/JavaCtrlExt.v12.suo
 /Native/Builds
+
+# Visual Studio
+.vs

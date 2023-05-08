@@ -6,7 +6,7 @@
 #libraryPath = "<project-dir>/bin" 
 
 # java class path (-Djava.class.path), defaults to project/bin directory
-classPath = "bin;lib/winccoa-java-1.0-SNAPSHOT.jar"
+classPath = "bin;bin/winccoa-java-1.0-SNAPSHOT.jar"
 
 # if you have long class paths you can use a file
 #configFile = "config.java"
@@ -19,7 +19,7 @@ classPath = "bin;lib/winccoa-java-1.0-SNAPSHOT.jar"
 #libraryPath = "<project-dir>/bin" 
 
 # java class path (-Djava.class.path), defaults to project/bin directory
-classPath = "bin;lib/winccoa-java-1.0-SNAPSHOT.jar;lib/json-simple-1.1.1.jar"
+classPath = "bin;bin/winccoa-java-1.0-SNAPSHOT.jar;lib/json-simple-1.1.1.jar"
 
 # if you have long class paths you can use a file
 #configFile = "config.javadrv"

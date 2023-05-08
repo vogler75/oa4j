@@ -39,7 +39,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <ULongVar.hxx>
 #include <TimeVar.hxx>
 
-#include <sys/time.h>
+//#include <sys/time.h>
 
 bool Java::DEBUG = false;
 

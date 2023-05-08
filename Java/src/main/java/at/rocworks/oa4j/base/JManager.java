@@ -178,12 +178,19 @@ public class JManager extends Manager implements Runnable {
         }   
         
         apiEnabled=false;        
-        String errmsg="";        
+        String errmsg1="";
+        String errmsg2="";
         try {
-            System.loadLibrary("WCCILjava");
+            System.loadLibrary("WCCOAjava");
             apiEnabled=true;
-        } catch ( java.lang.UnsatisfiedLinkError ex ) {
-            errmsg=ex.getMessage();
+        } catch ( java.lang.UnsatisfiedLinkError ex1 ) {
+            errmsg1=ex1.getMessage();
+            try {
+                System.loadLibrary("WCCILjava");
+                apiEnabled=true;
+            } catch ( java.lang.UnsatisfiedLinkError ex2 ) {
+                errmsg2=ex2.getMessage();
+            }            
         }
 
         if ( apiEnabled ) {
@@ -197,7 +204,10 @@ public class JManager extends Manager implements Runnable {
             }
         } else {
             setDebugConsole();
-            JDebug.out.warning(errmsg);
+            if (!errmsg1.equals(""))
+                JDebug.out.warning(errmsg1);
+            if (!errmsg2.equals(""))
+                JDebug.out.warning(errmsg2);                
         }
 
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {

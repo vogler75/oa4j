@@ -1,5 +1,7 @@
 echo off
 
+call vc-env_3.18.bat
+
 echo check...
 
 if "%VC_HOME%"=="" (
@@ -15,7 +17,7 @@ if "%API_ROOT%"=="" (
 )
 
 echo check api env...
-call "%VC_HOME%\vcvarsall.bat" amd64
+call "%VC_HOME%\Auxiliary\Build\vcvarsall.bat" amd64
 call "%API_ROOT%\checkAPIenv.cmd"
 
 echo set java paths...
@@ -25,10 +27,11 @@ if "%JAVA_HOME%"=="" (
   exit
 )
 
-set API_INCL=%API_INCL%;%JAVA_HOME%\include;%JAVA_HOME%\include\win32
-set API_LIB=%API_LIB%;%JAVA_HOME%\lib\jvm.lib
+set API_INCL=%JAVA_HOME%\include;%JAVA_HOME%\include\win32
+set API_LIB=%JAVA_HOME%\lib\jvm.lib
 set PATH=%PATH%;%JAVA_HOME%\bin\;%JAVA_HOME%\jre\bin\server\
 
-devenv ..\Manager\WCCOAJavaManager.sln /rebuild
-devenv ..\Driver\WCCOAJavaDrv.sln /rebuild
-devenv ..\CtrlExt\JavaCtrlExt.sln /rebuild
+echo %OA_VERS%
+
+echo "start visual studio..."
+devenv

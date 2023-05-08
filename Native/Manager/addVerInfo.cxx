@@ -1,3 +1,15 @@
+// FILE: addVerInfo.hxx
+// VERANTWORTUNG: Stano
+
+// Specify the date and time
+
+// This is in fact cxx, but it should not be
+// compiled by default in Resources subproject.
+
+// The file will be copied to the managers directory
+// as cxx and will be recompiled each time a manager
+// is linked.
+
 #include <Resources.hxx>
 #include <stdio.h>
 
@@ -6,11 +18,13 @@
 // significant for the executable:
 #include <version.hxx>
 
+extern const char* linkedAt_dateTime;
+
 #define SET_VERSINFO(vi) \
     vi[0] = version[0]; /* warning-suppression: "version unused ..." */ \
     sprintf(vi, "%s %s platform %s linked at %s", \
     PVSS_VERSION " " PVSS_VERS_COMMENT PVSS_VERS_WARNING, \
-    PVSS_PATCH, PVSS_PLATFORM, __DATE__ " " __TIME__);
+    PVSS_PATCH, PVSS_PLATFORM, linkedAt_dateTime);
 
 
 #ifndef ADDVERINFO

@@ -1,6 +1,6 @@
 echo off
 
-echo check...
+call vc-env_3.18.bat
 
 if "%VC_HOME%"=="" (
   echo VC_HOME is not defined!
@@ -15,7 +15,7 @@ if "%API_ROOT%"=="" (
 )
 
 echo check api env...
-call "%VC_HOME%\vcvarsall.bat" amd64
+call "%VC_HOME%\Auxiliary\Build\vcvarsall.bat" amd64
 call "%API_ROOT%\checkAPIenv.cmd"
 
 echo set java paths...
@@ -29,7 +29,8 @@ set API_INCL=%API_INCL%;%JAVA_HOME%\include;%JAVA_HOME%\include\win32
 set API_LIB=%API_LIB%;%JAVA_HOME%\lib\jvm.lib
 set PATH=%PATH%;%JAVA_HOME%\bin\;%JAVA_HOME%\jre\bin\server\
 
-echo %OA_VERS%
+devenv ..\Manager\WCCOAJavaManager.sln /rebuild
+devenv ..\Driver\WCCOAJavaDrv.sln /rebuild
+devenv ..\CtrlExt\JavaCtrlExt.sln /rebuild
 
-echo "start visual studio..."
-devenv
+call deploy.bat
