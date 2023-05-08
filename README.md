@@ -32,7 +32,7 @@ m.stop();
 ```
 
 ## Driver (oa4j/Native/Driver <-> at.rocworks.oa4j.driver)<br>
-There is an API and framework to implement a WinCC OA driver program in Java. A driver program is used to connect WinCC OA to peripherial devices and exchange data. There is a driver class driver.JDriver and a driver.JDriverSimple class, which can be used to implement a driver. An example drivers can be found in Project/Drivers - Mqtt,  Apache Kafka, Epics (Experimental Physics and Industrial Control System), ...) <br>
+There is an API and framework to implement a WinCC OA driver program in Java. A driver program is used to connect WinCC OA to peripherial devices and exchange data. There is a driver class driver.JDriver and a driver.JDriverSimple class, which can be used to implement a driver. An example drivers can be found in Project/Drivers - Mqtt,  Apache Kafka, Epics (Experimental Physics and Industrial Control System), ... <br>
 
 ## CtrlExt (oa4j\Native\CtrlExt <-> at.rocworks.oa4j.base.ExternHdl)<br>
 It is possible to call a Java function from WinCC OA control language. 
