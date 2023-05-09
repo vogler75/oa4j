@@ -22,31 +22,31 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{808B7FBC-81DB-321E-B077-3F3F28133C7A}</ProjectGuid>
+    <ProjectGuid>{910BC9F6-4E3C-3456-9DF6-E26CAAD2765C}</ProjectGuid>
     <WindowsTargetPlatformVersion>10.0.19041.0</WindowsTargetPlatformVersion>
     <Keyword>Win32Proj</Keyword>
     <Platform>x64</Platform>
-    <ProjectName>linkedAt_lib</ProjectName>
+    <ProjectName>WCCOAJavaManager</ProjectName>
     <VCProjectUpgraderObjectName>NoUpgrade</VCProjectUpgraderObjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <CharacterSet>NotSet</CharacterSet>
     <PlatformToolset>v142</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <CharacterSet>NotSet</CharacterSet>
     <PlatformToolset>v142</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <CharacterSet>NotSet</CharacterSet>
     <PlatformToolset>v142</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <CharacterSet>NotSet</CharacterSet>
     <PlatformToolset>v142</PlatformToolset>
   </PropertyGroup>
@@ -60,21 +60,29 @@
   <PropertyGroup>
     <_ProjectFileVersion>10.0.20506.1</_ProjectFileVersion>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Workspace\oa4j\Native\Manager\build\Debug\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">linkedAt_lib.dir\Debug\</IntDir>
-    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">linkedAt_lib</TargetName>
-    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.lib</TargetExt>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">WCCOAJavaManager.dir\Debug\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">WCCOAJavaManager</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.exe</TargetExt>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</LinkIncremental>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</GenerateManifest>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Workspace\oa4j\Native\Manager\build\Release\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">linkedAt_lib.dir\Release\</IntDir>
-    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">linkedAt_lib</TargetName>
-    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.lib</TargetExt>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">WCCOAJavaManager.dir\Release\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">WCCOAJavaManager</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.exe</TargetExt>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkIncremental>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</GenerateManifest>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\Workspace\oa4j\Native\Manager\build\MinSizeRel\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">linkedAt_lib.dir\MinSizeRel\</IntDir>
-    <TargetName Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">linkedAt_lib</TargetName>
-    <TargetExt Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">.lib</TargetExt>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">WCCOAJavaManager.dir\MinSizeRel\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">WCCOAJavaManager</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">.exe</TargetExt>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkIncremental>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">true</GenerateManifest>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\Workspace\oa4j\Native\Manager\build\RelWithDebInfo\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">linkedAt_lib.dir\RelWithDebInfo\</IntDir>
-    <TargetName Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">linkedAt_lib</TargetName>
-    <TargetExt Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">.lib</TargetExt>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">WCCOAJavaManager.dir\RelWithDebInfo\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">WCCOAJavaManager</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">.exe</TargetExt>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">false</LinkIncremental>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">true</GenerateManifest>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -106,9 +114,19 @@
       <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
-    <Lib>
+    <Link>
+      <AdditionalDependencies>linkedAt_lib.lib;C:\Program Files\Amazon Corretto\jdk1.8.0_362\lib\jvm.lib;libBasics.lib;libConfigs.lib;libDatapoint.lib;libMessages.lib;libManager.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:/Siemens/Automation/WinCC_OA/3.19/api/../bin;C:/Siemens/Automation/WinCC_OA/3.19/api/../bin/$(Configuration);C:/Siemens/Automation/WinCC_OA/3.19/api/lib.winnt;C:/Siemens/Automation/WinCC_OA/3.19/api/lib.winnt/$(Configuration);C:/Workspace/oa4j/Native/Manager/build;C:/Workspace/oa4j/Native/Manager/build/$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
-    </Lib>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImportLibrary>C:/Workspace/oa4j/Native/Manager/build/Debug/WCCOAJavaManager.lib</ImportLibrary>
+      <ProgramDataBaseFile>C:/Workspace/oa4j/Native/Manager/build/Debug/WCCOAJavaManager.pdb</ProgramDataBaseFile>
+      <SubSystem>Console</SubSystem>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -140,9 +158,19 @@
       <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
-    <Lib>
+    <Link>
+      <AdditionalDependencies>linkedAt_lib.lib;C:\Program Files\Amazon Corretto\jdk1.8.0_362\lib\jvm.lib;libBasics.lib;libConfigs.lib;libDatapoint.lib;libMessages.lib;libManager.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:/Siemens/Automation/WinCC_OA/3.19/api/../bin;C:/Siemens/Automation/WinCC_OA/3.19/api/../bin/$(Configuration);C:/Siemens/Automation/WinCC_OA/3.19/api/lib.winnt;C:/Siemens/Automation/WinCC_OA/3.19/api/lib.winnt/$(Configuration);C:/Workspace/oa4j/Native/Manager/build;C:/Workspace/oa4j/Native/Manager/build/$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
-    </Lib>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImportLibrary>C:/Workspace/oa4j/Native/Manager/build/Release/WCCOAJavaManager.lib</ImportLibrary>
+      <ProgramDataBaseFile>C:/Workspace/oa4j/Native/Manager/build/Release/WCCOAJavaManager.pdb</ProgramDataBaseFile>
+      <SubSystem>Console</SubSystem>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">
     <ClCompile>
@@ -174,9 +202,19 @@
       <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
-    <Lib>
+    <Link>
+      <AdditionalDependencies>linkedAt_lib.lib;C:\Program Files\Amazon Corretto\jdk1.8.0_362\lib\jvm.lib;libBasics.lib;libConfigs.lib;libDatapoint.lib;libMessages.lib;libManager.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:/Siemens/Automation/WinCC_OA/3.19/api/../bin;C:/Siemens/Automation/WinCC_OA/3.19/api/../bin/$(Configuration);C:/Siemens/Automation/WinCC_OA/3.19/api/lib.winnt;C:/Siemens/Automation/WinCC_OA/3.19/api/lib.winnt/$(Configuration);C:/Workspace/oa4j/Native/Manager/build;C:/Workspace/oa4j/Native/Manager/build/$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
-    </Lib>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImportLibrary>C:/Workspace/oa4j/Native/Manager/build/MinSizeRel/WCCOAJavaManager.lib</ImportLibrary>
+      <ProgramDataBaseFile>C:/Workspace/oa4j/Native/Manager/build/MinSizeRel/WCCOAJavaManager.pdb</ProgramDataBaseFile>
+      <SubSystem>Console</SubSystem>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">
     <ClCompile>
@@ -208,10 +246,76 @@
       <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
-    <Lib>
+    <Link>
+      <AdditionalDependencies>linkedAt_lib.lib;C:\Program Files\Amazon Corretto\jdk1.8.0_362\lib\jvm.lib;libBasics.lib;libConfigs.lib;libDatapoint.lib;libMessages.lib;libManager.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:/Siemens/Automation/WinCC_OA/3.19/api/../bin;C:/Siemens/Automation/WinCC_OA/3.19/api/../bin/$(Configuration);C:/Siemens/Automation/WinCC_OA/3.19/api/lib.winnt;C:/Siemens/Automation/WinCC_OA/3.19/api/lib.winnt/$(Configuration);C:/Workspace/oa4j/Native/Manager/build;C:/Workspace/oa4j/Native/Manager/build/$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
-    </Lib>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImportLibrary>C:/Workspace/oa4j/Native/Manager/build/RelWithDebInfo/WCCOAJavaManager.lib</ImportLibrary>
+      <ProgramDataBaseFile>C:/Workspace/oa4j/Native/Manager/build/RelWithDebInfo/WCCOAJavaManager.pdb</ProgramDataBaseFile>
+      <SubSystem>Console</SubSystem>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
   </ItemDefinitionGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\Workspace\oa4j\Native\Manager\build\CMakeFiles\9ff89e919933e891fb5c95049ac8ae58\addverinfo.cxx.rule">
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Generating addverinfo.cxx</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
+"C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -E copy C:/Siemens/Automation/WinCC_OA/3.19/api/include/Basics/Utilities/addVerInfo.hxx addverinfo.cxx
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Siemens\Automation\WinCC_OA\3.19\api\include\Basics\Utilities\addVerInfo.hxx;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Workspace\oa4j\Native\Manager\build\addverinfo.cxx</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Generating addverinfo.cxx</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
+"C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -E copy C:/Siemens/Automation/WinCC_OA/3.19/api/include/Basics/Utilities/addVerInfo.hxx addverinfo.cxx
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Siemens\Automation\WinCC_OA\3.19\api\include\Basics\Utilities\addVerInfo.hxx;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Workspace\oa4j\Native\Manager\build\addverinfo.cxx</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">Generating addverinfo.cxx</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">setlocal
+"C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -E copy C:/Siemens/Automation/WinCC_OA/3.19/api/include/Basics/Utilities/addVerInfo.hxx addverinfo.cxx
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\Siemens\Automation\WinCC_OA\3.19\api\include\Basics\Utilities\addVerInfo.hxx;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\Workspace\oa4j\Native\Manager\build\addverinfo.cxx</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Generating addverinfo.cxx</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">setlocal
+"C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -E copy C:/Siemens/Automation/WinCC_OA/3.19/api/include/Basics/Utilities/addVerInfo.hxx addverinfo.cxx
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\Siemens\Automation\WinCC_OA\3.19\api\include\Basics\Utilities\addVerInfo.hxx;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\Workspace\oa4j\Native\Manager\build\addverinfo.cxx</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">false</LinkObjects>
+    </CustomBuild>
+  </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="C:\Workspace\oa4j\Native\Manager\CMakeLists.txt">
       <StdOutEncoding>UTF-8</StdOutEncoding>
@@ -270,7 +374,11 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="C:\Workspace\oa4j\Native\Manager\build\linkedAt.cxx" />
+    <ClCompile Include="C:\Workspace\oa4j\Native\Manager\WCCOAJavaMain.cxx" />
+    <ClCompile Include="C:\Workspace\oa4j\Native\Manager\WCCOAJavaResources.cxx" />
+    <ClCompile Include="C:\Workspace\oa4j\Native\LibJava\Java.cpp" />
+    <ResourceCompile Include="C:\Workspace\oa4j\Native\Manager\VersInfo.rc" />
+    <ClCompile Include="C:\Workspace\oa4j\Native\Manager\build\addverinfo.cxx" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="C:\Workspace\oa4j\Native\Manager\build\ZERO_CHECK.vcxproj">
@@ -279,11 +387,9 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </ProjectReference>
-    <ProjectReference Include="C:\Workspace\oa4j\Native\Manager\build\linkedAt_touch.vcxproj">
-      <Project>{DC38DDD7-F5D3-3B07-A33F-3541551B65FB}</Project>
-      <Name>linkedAt_touch</Name>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    <ProjectReference Include="C:\Workspace\oa4j\Native\Manager\build\linkedAt_lib.vcxproj">
+      <Project>{808B7FBC-81DB-321E-B077-3F3F28133C7A}</Project>
+      <Name>linkedAt_lib</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -5,11 +5,40 @@ set(API_ROOT "$ENV{API_ROOT}" CACHE FILEPATH "directory of the WinCC_OA API inst
 include(${API_ROOT}/CMakeDefines.txt)
 include_directories($ENV{API_INCL})
 
+set(MANAGER_LIBS
+    $ENV{API_LIB}
+    ${WCCOA_LIB_PREFIX}Basics${WCCOA_LIB_INFIX}
+    ${WCCOA_LIB_PREFIX}Configs${WCCOA_LIB_INFIX}
+    ${WCCOA_LIB_PREFIX}Datapoint${WCCOA_LIB_INFIX}
+    ${WCCOA_LIB_PREFIX}Messages${WCCOA_LIB_INFIX}
+    ${WCCOA_LIB_PREFIX}Manager${WCCOA_LIB_INFIX}
+)
+
 project(Manager)
 
-set(TARGET WCCOAManager)
+#############################################################
+# WCCOAJavaManager (EXE) 
+#############################################################
+
+set(TARGET WCCOAJavaManager)
 
 set(SOURCES
+WCCOAJavaMain.cxx
+WCCOAJavaResources.cxx
+../LibJava/Java.cpp
+)
+
+if ( WIN32 )
+  set (SOURCES ${SOURCES} VersInfo.rc)
+endif()
+
+add_manager(${TARGET} ${SOURCES})
+
+#############################################################
+# WCCOAJavaLibrary (DLL) 
+#############################################################
+
+add_library(WCCOAJavaLibrary SHARED 
 WCCOAJavaMain.cxx
 WCCOAJavaManager.cxx
 WCCOAJavaResources.cxx
@@ -32,9 +61,7 @@ at_rocworks_oa4j_jni_RequestItem.cpp
 at_rocworks_oa4j_jni_SysMsg.cpp
 ../LibJava/Java.cpp
 )
-
-if ( WIN32 )
-  set (SOURCES ${SOURCES} VersInfo.rc)
-endif()
-
-add_manager(${TARGET} ${SOURCES})
+target_link_libraries(WCCOAJavaLibrary ${MANAGER_LIBS})
+set_target_properties(WCCOAJavaLibrary PROPERTIES INSTALL_RPATH \$ORIGIN)
+add_dependencies(WCCOAJavaLibrary linkedAt_lib)
+set_target_properties(WCCOAJavaLibrary PROPERTIES OUTPUT_NAME WCCOAjava)

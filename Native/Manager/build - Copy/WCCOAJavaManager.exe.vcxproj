@@ -22,11 +22,11 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{F2D1ED0F-C423-38A5-A434-E7A1139C8836}</ProjectGuid>
+    <ProjectGuid>{2AF6F187-6A41-3E4C-A554-4AC8A8FF7655}</ProjectGuid>
     <WindowsTargetPlatformVersion>10.0.19041.0</WindowsTargetPlatformVersion>
     <Keyword>Win32Proj</Keyword>
     <Platform>x64</Platform>
-    <ProjectName>WCCOAManager</ProjectName>
+    <ProjectName>WCCOAJavaManager.exe</ProjectName>
     <VCProjectUpgraderObjectName>NoUpgrade</VCProjectUpgraderObjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -60,26 +60,26 @@
   <PropertyGroup>
     <_ProjectFileVersion>10.0.20506.1</_ProjectFileVersion>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Workspace\oa4j\Native\Manager\build\Debug\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">WCCOAManager.dir\Debug\</IntDir>
-    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">WCCOAManager</TargetName>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">WCCOAJavaManager.exe.dir\Debug\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">WCCOAJavaManager.exe</TargetName>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.exe</TargetExt>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</LinkIncremental>
     <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</GenerateManifest>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Workspace\oa4j\Native\Manager\build\Release\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">WCCOAManager.dir\Release\</IntDir>
-    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">WCCOAManager</TargetName>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">WCCOAJavaManager.exe.dir\Release\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">WCCOAJavaManager.exe</TargetName>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.exe</TargetExt>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkIncremental>
     <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</GenerateManifest>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\Workspace\oa4j\Native\Manager\build\MinSizeRel\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">WCCOAManager.dir\MinSizeRel\</IntDir>
-    <TargetName Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">WCCOAManager</TargetName>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">WCCOAJavaManager.exe.dir\MinSizeRel\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">WCCOAJavaManager.exe</TargetName>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">.exe</TargetExt>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkIncremental>
     <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">true</GenerateManifest>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\Workspace\oa4j\Native\Manager\build\RelWithDebInfo\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">WCCOAManager.dir\RelWithDebInfo\</IntDir>
-    <TargetName Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">WCCOAManager</TargetName>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">WCCOAJavaManager.exe.dir\RelWithDebInfo\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">WCCOAJavaManager.exe</TargetName>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">.exe</TargetExt>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">false</LinkIncremental>
     <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">true</GenerateManifest>
@@ -115,13 +115,13 @@
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
     <Link>
-      <AdditionalDependencies>linkedAt_lib.lib;libBasics.lib;libConfigs.lib;libDatapoint.lib;libMessages.lib;libManager.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalDependencies>linkedAt_lib.lib;C:\Program Files\Amazon Corretto\jdk1.8.0_362\lib\jvm.lib;libBasics.lib;libConfigs.lib;libDatapoint.lib;libMessages.lib;libManager.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>C:/Siemens/Automation/WinCC_OA/3.19/api/../bin;C:/Siemens/Automation/WinCC_OA/3.19/api/../bin/$(Configuration);C:/Siemens/Automation/WinCC_OA/3.19/api/lib.winnt;C:/Siemens/Automation/WinCC_OA/3.19/api/lib.winnt/$(Configuration);C:/Workspace/oa4j/Native/Manager/build;C:/Workspace/oa4j/Native/Manager/build/$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
-      <ImportLibrary>C:/Workspace/oa4j/Native/Manager/build/Debug/WCCOAManager.lib</ImportLibrary>
-      <ProgramDataBaseFile>C:/Workspace/oa4j/Native/Manager/build/Debug/WCCOAManager.pdb</ProgramDataBaseFile>
+      <ImportLibrary>C:/Workspace/oa4j/Native/Manager/build/Debug/WCCOAJavaManager.exe.lib</ImportLibrary>
+      <ProgramDataBaseFile>C:/Workspace/oa4j/Native/Manager/build/Debug/WCCOAJavaManager.exe.pdb</ProgramDataBaseFile>
       <SubSystem>Console</SubSystem>
     </Link>
     <ProjectReference>
@@ -159,13 +159,13 @@
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
     <Link>
-      <AdditionalDependencies>linkedAt_lib.lib;libBasics.lib;libConfigs.lib;libDatapoint.lib;libMessages.lib;libManager.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalDependencies>linkedAt_lib.lib;C:\Program Files\Amazon Corretto\jdk1.8.0_362\lib\jvm.lib;libBasics.lib;libConfigs.lib;libDatapoint.lib;libMessages.lib;libManager.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>C:/Siemens/Automation/WinCC_OA/3.19/api/../bin;C:/Siemens/Automation/WinCC_OA/3.19/api/../bin/$(Configuration);C:/Siemens/Automation/WinCC_OA/3.19/api/lib.winnt;C:/Siemens/Automation/WinCC_OA/3.19/api/lib.winnt/$(Configuration);C:/Workspace/oa4j/Native/Manager/build;C:/Workspace/oa4j/Native/Manager/build/$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
-      <ImportLibrary>C:/Workspace/oa4j/Native/Manager/build/Release/WCCOAManager.lib</ImportLibrary>
-      <ProgramDataBaseFile>C:/Workspace/oa4j/Native/Manager/build/Release/WCCOAManager.pdb</ProgramDataBaseFile>
+      <ImportLibrary>C:/Workspace/oa4j/Native/Manager/build/Release/WCCOAJavaManager.exe.lib</ImportLibrary>
+      <ProgramDataBaseFile>C:/Workspace/oa4j/Native/Manager/build/Release/WCCOAJavaManager.exe.pdb</ProgramDataBaseFile>
       <SubSystem>Console</SubSystem>
     </Link>
     <ProjectReference>
@@ -203,13 +203,13 @@
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
     <Link>
-      <AdditionalDependencies>linkedAt_lib.lib;libBasics.lib;libConfigs.lib;libDatapoint.lib;libMessages.lib;libManager.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalDependencies>linkedAt_lib.lib;C:\Program Files\Amazon Corretto\jdk1.8.0_362\lib\jvm.lib;libBasics.lib;libConfigs.lib;libDatapoint.lib;libMessages.lib;libManager.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>C:/Siemens/Automation/WinCC_OA/3.19/api/../bin;C:/Siemens/Automation/WinCC_OA/3.19/api/../bin/$(Configuration);C:/Siemens/Automation/WinCC_OA/3.19/api/lib.winnt;C:/Siemens/Automation/WinCC_OA/3.19/api/lib.winnt/$(Configuration);C:/Workspace/oa4j/Native/Manager/build;C:/Workspace/oa4j/Native/Manager/build/$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
-      <ImportLibrary>C:/Workspace/oa4j/Native/Manager/build/MinSizeRel/WCCOAManager.lib</ImportLibrary>
-      <ProgramDataBaseFile>C:/Workspace/oa4j/Native/Manager/build/MinSizeRel/WCCOAManager.pdb</ProgramDataBaseFile>
+      <ImportLibrary>C:/Workspace/oa4j/Native/Manager/build/MinSizeRel/WCCOAJavaManager.exe.lib</ImportLibrary>
+      <ProgramDataBaseFile>C:/Workspace/oa4j/Native/Manager/build/MinSizeRel/WCCOAJavaManager.exe.pdb</ProgramDataBaseFile>
       <SubSystem>Console</SubSystem>
     </Link>
     <ProjectReference>
@@ -247,13 +247,13 @@
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
     <Link>
-      <AdditionalDependencies>linkedAt_lib.lib;libBasics.lib;libConfigs.lib;libDatapoint.lib;libMessages.lib;libManager.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalDependencies>linkedAt_lib.lib;C:\Program Files\Amazon Corretto\jdk1.8.0_362\lib\jvm.lib;libBasics.lib;libConfigs.lib;libDatapoint.lib;libMessages.lib;libManager.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>C:/Siemens/Automation/WinCC_OA/3.19/api/../bin;C:/Siemens/Automation/WinCC_OA/3.19/api/../bin/$(Configuration);C:/Siemens/Automation/WinCC_OA/3.19/api/lib.winnt;C:/Siemens/Automation/WinCC_OA/3.19/api/lib.winnt/$(Configuration);C:/Workspace/oa4j/Native/Manager/build;C:/Workspace/oa4j/Native/Manager/build/$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
-      <ImportLibrary>C:/Workspace/oa4j/Native/Manager/build/RelWithDebInfo/WCCOAManager.lib</ImportLibrary>
-      <ProgramDataBaseFile>C:/Workspace/oa4j/Native/Manager/build/RelWithDebInfo/WCCOAManager.pdb</ProgramDataBaseFile>
+      <ImportLibrary>C:/Workspace/oa4j/Native/Manager/build/RelWithDebInfo/WCCOAJavaManager.exe.lib</ImportLibrary>
+      <ProgramDataBaseFile>C:/Workspace/oa4j/Native/Manager/build/RelWithDebInfo/WCCOAJavaManager.exe.pdb</ProgramDataBaseFile>
       <SubSystem>Console</SubSystem>
     </Link>
     <ProjectReference>

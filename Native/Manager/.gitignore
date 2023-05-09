@@ -1,9 +1,12 @@
-*.o
-bin
+.vs
 x64
 Release
+CMakeFiles
+linkedAt_lib.dir
+CMakeCache.txt
+*.o
 *.sdf
 *.opensdf
 *.v12.suo
-.vs
 *.vcxproj.user
+*.dir
