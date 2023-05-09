@@ -148,10 +148,12 @@ classPath = "bin;bin/winccoa-java-1.0-SNAPSHOT.jar"
   Open vc-start_3.XX.bat to start Visual Studio.  
   <br>
   Open the solution from Native/Manager/build and build it.  
-  &rarr; use the solution in dir "build" for WinCC OA Version >= 3.18  
+  &rarr; use the solution in dir "build" for WinCC OA Version >= 3.19
+  &rarr; use the solution in dir "build-318" for WinCC OA Version 3.18   
   &rarr; use the solution in dir "build-pre-318" for WinCC OA Version < 3.18  
   <br>
   Then copy bin\WCCOAjava.dll & bin\WCCOAjava.exe files to C:\Siemens\Automation\WinCC_OA\%VERS%\bin  
+  Note: With 3.19 the exe is named "WCCOAJavaManager.exe", rename it or use this name. 
 
 * Add the following lines to the WinCC OA message catalouge "managers.cat"  
   WCCOAjava,Java Manager  
