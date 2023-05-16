@@ -154,10 +154,10 @@ JNIEXPORT jint JNICALL Java_at_rocworks_oa4j_jni_Manager_apiDpQueryConnectAll
 
 /*
  * Class:     at_rocworks_oa4j_jni_Manager
- * Method:    apiDpQueryDisonnect
+ * Method:    apiDpQueryDisconnect
  * Signature: (Lat/rocworks/oa4j/base/JHotLinkWaitForAnswer;)I
  */
-JNIEXPORT jint JNICALL Java_at_rocworks_oa4j_jni_Manager_apiDpQueryDisonnect
+JNIEXPORT jint JNICALL Java_at_rocworks_oa4j_jni_Manager_apiDpQueryDisconnect
   (JNIEnv *, jobject, jobject);
 
 /*
