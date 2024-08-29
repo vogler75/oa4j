@@ -11,23 +11,26 @@ CharString WCCOAJavaResources::jvmLibraryPath = "";
 CharString WCCOAJavaResources::jvmConfigFile = "";
 CharString WCCOAJavaResources::drvDpName = CharString("_JavaDrv");
 
-map<string, const char*> WCCOAJavaResources::m;
+std::map<std::string, const char*> WCCOAJavaResources::m;
 
 //-------------------------------------------------------------------------------
 // init is a wrapper around begin, readSection and end
 
 void WCCOAJavaResources::init(int &argc, char *argv[])
 {
+	std::cout << "Test...1"<<argc<< argv << std::endl;
   // Prepass of commandline arguments, e.g. get the arguments needed to
   // find the config file.
   begin(argc, argv);
 
   // Read the config file
   while ( readSection() || generalSection() ) ;
+	std::cout << "Test...3" << std::endl;
 
   // Postpass of the commandline arguments, e.g. get the arguments that
   // will override entries in the config file
   end(argc, argv);
+	std::cout << "Test...4" << std::endl;
 
   // the user wants to know std. commandline options
   if (WCCOAJavaResources::getHelpFlag())
@@ -53,8 +56,10 @@ void WCCOAJavaResources::init(int &argc, char *argv[])
 PVSSboolean WCCOAJavaResources::readSection()
 {
   // Are we in our section ?
-  if ( !isSection("javadrv") ) return PVSS_FALSE;
-
+  if ( ! isSection("javadrv") )
+  {
+     return PVSS_FALSE;
+  }
   // Read next entry
   getNextEntry();
 
@@ -62,22 +67,22 @@ PVSSboolean WCCOAJavaResources::readSection()
   while ( (cfgState != CFG_SECT_START) && (cfgState != CFG_EOF) )
   {
     // read from the config file
-	if (!keyWord.icmp("jvmOption"))             
-		cfgStream >> jvmOption;                  
-	else if (!keyWord.icmp("userDir"))            
-		cfgStream >> jvmUserDir;                   
-	else if (!keyWord.icmp("classPath"))            
-		cfgStream >> jvmClassPath;                  
-	else if (!keyWord.icmp("libraryPath"))            
-		cfgStream >> jvmLibraryPath;                  
-	else if (!keyWord.icmp("configFile"))             
-		cfgStream >> jvmConfigFile;                   
+    if (!keyWord.icmp("jvmOption"))             
+      cfgStream >> jvmOption;                  
+    else if (!keyWord.icmp("userDir"))            
+      cfgStream >> jvmUserDir;                   
+    else if (!keyWord.icmp("classPath"))            
+      cfgStream >> jvmClassPath;                  
+    else if (!keyWord.icmp("libraryPath"))            
+      cfgStream >> jvmLibraryPath;                  
+    else if (!keyWord.icmp("configFile"))             
+      cfgStream >> jvmConfigFile;                   
     else if ( !commonKeyWord() )
     {
 		// store configs in a mapping
-		string *k = new string(keyWord);
+		std::string *k = new std::string(keyWord);
 		CharString *v = new CharString(); cfgStream >> *v;
-		m.insert(pair<string, const char*>(*k, v->c_str()));
+		m.insert(std::pair<std::string, const char*>(*k, v->c_str()));
 		/*
 		ErrHdl::error(ErrClass::PRIO_WARNING,    // Not that bad
 					ErrClass::ERR_PARAM,       // Error is with config file, not with driver

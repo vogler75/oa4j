@@ -32,7 +32,7 @@ private:
 	static CharString jvmLibraryPath;
 	static CharString jvmConfigFile;
 
-	static map<string, const char*> m;
+	static std::map<std::string, const char*> m;
 
 
 public:

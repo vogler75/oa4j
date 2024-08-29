@@ -160,15 +160,18 @@ int main(int argc, char **argv)
 	jint ver = env->GetVersion();
 	std::cout << ((ver >> 16) & 0x0f) << "." << (ver & 0x0f) << std::endl;
 
+	std::cout << "Debug: 1" <<std::endl;
 	//=============== Arguments ===========================================
 	int i = 0;
 	jstring str;
 	jobjectArray jargv = env->NewObjectArray(argc + 7, env->FindClass("java/lang/String"), 0);
 
+	std::cout << "Debug: 2" <<std::endl;
 	str = env->NewStringUTF("-exe");
 	env->SetObjectArrayElement(jargv, i, str);
 	i++;
 
+	std::cout << "Debug: 3" <<std::endl;
 	int classIdx = -1;
 	const char *className = 0;
 	// pass arguments through
@@ -205,37 +208,47 @@ int main(int argc, char **argv)
 
 	// add manager num to argument list
 	str = env->NewStringUTF("-num");
+	std::cout << "Debug: 8.1" << std::endl;
 	env->SetObjectArrayElement(jargv, i, str);
+	std::cout << "Debug: 8.2" << std::endl;
 	i++;
+	CharString manNum = std::to_string(static_cast<int>(Resources::getManNum()));//(const char*)Resources::getManNum();
+	std::cout << "Debug: 8.3" << std::endl;
 
-	CharString manNum = Resources::getManNum();
+	std::cout << "Debug: 9" << std::endl;
+	//CharString manNum = Resources::getManNum();
 	str = env->NewStringUTF(manNum);
 	env->SetObjectArrayElement(jargv, i, str);
 	i++;
 
+	std::cout << "Debug: 10" << std::endl;
 	// check if classname was given
 	if (className == 0) {
 		std::cout << "class Main will be used (no parameter -class given)" << std::endl;
 		className = "Main";
 	}
 
+	std::cout << "Debug: 11" << std::endl;
 	jclass javaMainClass = env->FindClass(className);
 	if (javaMainClass == 0) {
 		std::cout << "class " << className << " not found!" << std::endl;
 		return -2;
 	}
 
+	std::cout << "Debug: 12" << std::endl;
 	jmethodID javaMainMethod = env->GetStaticMethodID(javaMainClass, "main", "([Ljava/lang/String;)V");
 	if (javaMainMethod == 0) {
 		std::cout << "java main method not found!" << std::endl;
 		return -3;
 	}
-	
+
+	std::cout << "Debug: 13" << std::endl;
 	std::cout << "Java Driver..." << std::endl;
 	env->CallStaticVoidMethod(javaMainClass, javaMainMethod, jargv);
 	Java::CheckException(env, "Main Method Exception");
 
 	jvm->DestroyJavaVM();
 
+	std::cout << "Debug: end" <<std::endl;
 	return 0;
 }

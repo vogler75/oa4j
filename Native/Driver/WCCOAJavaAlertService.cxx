@@ -18,9 +18,9 @@ PVSSboolean WCCOAJavaAlertService::ackAlertInHW(AlertObject *alertPtr, HWObject 
 {
   if (Resources::isDbgFlag(DrvRsrce::DBG_DRV_ALERT))
   {
-      cerr << "got alert ack request for HW " << objPtr->getAddress() << endl;
+      std::cerr << "got alert ack request for HW " << objPtr->getAddress() << std::endl;
       alertPtr->debugPrint();
-      cerr << "----------------------------------------------" << endl;
+      std::cerr << "----------------------------------------------" << std::endl;
   }
 
   alertPtr->setEvent(AlertObject::EA_ACK);
@@ -35,9 +35,9 @@ void WCCOAJavaAlertService::ackConfirmCB(const AlertObject *alertPtr, const HWOb
 {
   if (Resources::isDbgFlag(DrvRsrce::DBG_DRV_ALERT))
   {
-      cerr << "got ack confirm CB for HW " << adrPtr->getAddress() << endl;
+      std::cerr << "got ack confirm CB for HW " << adrPtr->getAddress() << std::endl;
       alertPtr->debugPrint();
-      cerr << "----------------------------------------------" << endl;
+      std::cerr << "----------------------------------------------" << std::endl;
   }
 }
 
@@ -45,9 +45,9 @@ void WCCOAJavaAlertService::changeNotificationCB(const AlertObject *alertPtr, co
 {
   if (Resources::isDbgFlag(DrvRsrce::DBG_DRV_ALERT))
   {
-      cerr << "got change notification CB for HW " << adrPtr->getAddress() << endl;
+      std::cerr << "got change notification CB for HW " << adrPtr->getAddress() << std::endl;
       alertPtr->debugPrint();
-      cerr << "----------------------------------------------" << endl;
+      std::cerr << "----------------------------------------------" << std::endl;
   }
 }
 
@@ -55,8 +55,8 @@ void WCCOAJavaAlertService::invisibleConfirmCB(const AlertObject *alertPtr, cons
 {
   if (Resources::isDbgFlag(DrvRsrce::DBG_DRV_ALERT))
   {
-      cerr << "got invisible confirm CB for HW " << adrPtr->getAddress() << endl;
+      std::cerr << "got invisible confirm CB for HW " << adrPtr->getAddress() << std::endl;
       alertPtr->debugPrint();
-      cerr << "----------------------------------------------" << endl;
+      std::cerr << "----------------------------------------------" << std::endl;
   }
 }

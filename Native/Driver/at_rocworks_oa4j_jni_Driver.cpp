@@ -41,7 +41,7 @@ JNIEXPORT void JNICALL Java_at_rocworks_oa4j_jni_Driver_apiStartup
 {
 	int argc = env->GetArrayLength(jargv);
 	char **argv = (char **)malloc(argc * sizeof(char *));
-
+	std::cout << "ARGC: "<<argc<<std::endl;
 	for (int i = 0; i < argc; i++)
 	{
 		jobject jstr = env->GetObjectArrayElement(jargv, i);
@@ -52,8 +52,9 @@ JNIEXPORT void JNICALL Java_at_rocworks_oa4j_jni_Driver_apiStartup
 	if (argc < 1 || strcmp(argv[0], "-exe") != 0) {
 		std::cout << "Java Driver must be started from WCCOAjavadrv executable!" << std::endl;
 	} else {
-		std::cout << "InitResources..." << std::endl;
+
 		WCCOAJavaResources resources;
+		std::cout << "InitResources...1" << std::endl;
 		resources.init(argc, argv);
 
 		std::cout << "InitDriver..." << std::endl;
