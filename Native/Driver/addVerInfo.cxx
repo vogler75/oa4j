@@ -4,13 +4,11 @@
 // as significant part of "-version" - output is generated in a shared lib 
 // (since 2.10 on NT and since 2.11 also on Linux) und is therefore not 
 // significant for the executable:
-#include <version.hxx>
+//#include <version.hxx>
 
-#define SET_VERSINFO(vi) \
-    vi[0] = version[0]; /* warning-suppression: "version unused ..." */ \
-    sprintf(vi, "%s %s platform %s linked at %s", \
-    PVSS_VERSION " " PVSS_VERS_COMMENT PVSS_VERS_WARNING, \
-    PVSS_PATCH, PVSS_PLATFORM, __DATE__ " " __TIME__);
+void SET_VERSINFO(char *vi) {
+  sprintf(vi, "%s %s platform %s linked at %s","3.19", "", "Windows", __DATE__ " " __TIME__);
+}
 
 
 #ifndef ADDVERINFO
