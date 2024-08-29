@@ -1,0 +1,15 @@
+﻿C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Microsoft\VC\v160\Microsoft.CppBuild.targets(498,5): warning MSB8004: Katalog Intermediate nie kończy się ukośnikiem. To wystąpienie kompilacji doda ukośnik, ponieważ jest on niezbędny, aby możliwa była poprawna ocena katalogu Intermediate.
+  Java.cpp
+  addVerInfo.cxx
+  at_rocworks_oa4j_jni_Driver.cpp
+  WCCOAJavaDrv.cxx
+  WCCOAJavaDrvIntDp.cxx
+  WCCOAJavaHWMapper.cxx
+  WCCOAJavaHWService.cxx
+  WCCOAJavaResources.cxx
+  WCCOAJavaTrans.cxx
+  WCCOAJavaConnection.cxx
+  WCCOAJavaAlertService.cxx
+  Generowanie kodu...
+     Trwa tworzenie biblioteki C:\Workspace\oa4j\Native\Driver\build-pre318\Debug\WCCOAjavadrv.lib i obiektu C:\Workspace\oa4j\Native\Driver\build-pre318\Debug\WCCOAjavadrv.exp
+  WCCOAJavaDrv.vcxproj -> C:\Workspace\oa4j\Native\Driver\build-pre318\Debug\WCCOAjavadrv.dll

@@ -12,19 +12,20 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\LibJava\Java.cpp" />
+    <ClCompile Include="..\addVerInfo.cxx" />
     <ClCompile Include="..\WCCOAJavaMain.cxx" />
     <ClCompile Include="..\WCCOAJavaResources.cxx" />
-    <ClCompile Include="$(API_ROOT)\addVerInfo.cxx" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\LibJava\Java.hxx" />
     <ClInclude Include="..\WCCOAJavaResources.hxx" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="VersInfo.rc" />
+    <ResourceCompile Include="..\VersInfo.rc" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{DB3F2A94-F6BF-44A5-BCB8-E103DC4077AD}</ProjectGuid>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
@@ -33,15 +34,15 @@
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <TargetName>WCCOAjavadrv</TargetName>
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>false</WholeProgramOptimization>
-    <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v120</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v142</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -81,16 +82,18 @@
       <Optimization>Disabled</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>$(API_INCL);..</AdditionalIncludeDirectories>
-      <ForcedIncludeFiles>$(API_ROOT)/include/winnt/win32.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <AdditionalIncludeDirectories>C:\Siemens\Automation\WinCC_OA\3.19\api\include\winnt\windows;C:\Workspace\oa4j\Native\Driver\.;C:\Siemens\Automation\WinCC_OA\3.19\api\include\Basics\BCM;C:\Siemens\Automation\WinCC_OA\3.19\api\include\Basics\Accu;C:\Siemens\Automation\WinCC_OA\3.19\api\include\Basics\Variables;C:\Siemens\Automation\WinCC_OA\3.19\api\include\Basics\Utilities;C:\Siemens\Automation\WinCC_OA\3.19\api\include\Basics\NoPosix;C:\Siemens\Automation\WinCC_OA\3.19\api\include\Basics\DpBasics;C:\Siemens\Automation\WinCC_OA\3.19\api\include\Basics\Crypto;C:\Siemens\Automation\WinCC_OA\3.19\api\include\Datapoint;C:\Siemens\Automation\WinCC_OA\3.19\api\include\Messages;C:\Siemens\Automation\WinCC_OA\3.19\api\include\Manager;C:\Siemens\Automation\WinCC_OA\3.19\api\include\Ctrl;C:\Siemens\Automation\WinCC_OA\3.19\api\include\V24;C:\Siemens\Automation\WinCC_OA\3.19\api\include\ComDrv;C:\Siemens\Automation\WinCC_OA\3.19\api\include\Configs;C:\Siemens\Automation\WinCC_OA\3.19\api\include\Configs\DrvConfigs\DrvCommon;C:\Siemens\Automation\WinCC_OA\3.19\api\include\Configs\DrvConfigs\ConvSmooth;C:\Program Files\Java\jdk1.8.0_202\include;C:\Program Files\Java\jdk1.8.0_202\include\win32</AdditionalIncludeDirectories>
+      <ForcedIncludeFiles>C:/Siemens/Automation/WinCC_OA/3.19/api/include/winnt/win32.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <AdditionalOptions>$(VC8_DEFS) $(D_PVSS_VER) %(AdditionalOptions)</AdditionalOptions>
-      <PreprocessorDefinitions>WIN32;IS_MSWIN__;_EXCURSION;bcm_boolean_h;FUNCPROTO;_NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;IS_MSWIN__;_EXCURSION;bcm_boolean_h;FUNCPROTO;_NDEBUG;_CONSOLE;_WINDOWS;PVI_VERSION_X=3;PVI_VERSION_Y=19;PVI_VERSION_Z=0;PVI_PATCH_NUM=0;PVSS_VERSION="3.19";PVSS_VERSION_DISP="3.19";PVSS_PATCH="";PVSS_VERS=319000;PVSS_VERS_DLL="319000";PVSS_FD_SETSIZE=8192;PVSS_PLATFORM="Windows AMD64";USE_OWN_ALLOCATOR;_SBCS;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;NODEF__RPC_H__;WINVER=0x0500;DLLEXP_BASICS=__declspec(dllimport);DLLEXP_CONFIGS=__declspec(dllimport);DLLEXP_DATAPOINT=__declspec(dllimport);DLLEXP_MESSAGES=__declspec(dllimport);DLLEXP_MANAGER=__declspec(dllimport);DLLEXP_CTRL=__declspec(dllimport);CMAKE_INTDIR="Debug";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>$(API_LIB);kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(API_LIB);kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;WCCOAjavadrv.lib;libManager.lib;libDatapoint.lib;libCtrl.lib;CommonBackend.lib;CommonMultiplexer.lib;ewo.lib;libBasics.lib;libComDrv.lib;libConfigs.lib;libCsCoreBridge.lib;libMessages.lib;libV24.lib;NgaProtobufFiles.lib;ServerSideAuth.lib;jvm.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Siemens\Automation\WinCC_OA\3.19\api\lib.winnt;C:\Workspace\oa4j\Native\Driver\build-pre318\Debug;C:\Program Files\Java\jdk1.8.0_202\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
