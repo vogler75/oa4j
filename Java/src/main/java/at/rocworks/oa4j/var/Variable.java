@@ -96,7 +96,7 @@ public abstract class Variable implements Serializable {
             case BlobVar:
                 break;
             case CharVar:
-                return new Integer(this.getCharVar().getValue());
+                return Integer.valueOf(this.getCharVar().getValue());
             case FloatVar:
                 return this.getFloatVar().getValue().intValue();
             case IntegerVar:
@@ -137,7 +137,7 @@ public abstract class Variable implements Serializable {
             case BlobVar:
                 break;
             case CharVar:
-                return new Long(this.getCharVar().getValue());
+                return Long.valueOf(this.getCharVar().getValue());
             case FloatVar:
                 return this.getFloatVar().getValue().longValue();
             case IntegerVar:
@@ -178,7 +178,7 @@ public abstract class Variable implements Serializable {
             case BlobVar:
                 break;
             case CharVar:
-                return new Double(this.getCharVar().getValue());
+                return Double.valueOf(this.getCharVar().getValue());
             case FloatVar:
                 return this.getFloatVar().getValue();
             case IntegerVar:
@@ -188,7 +188,7 @@ public abstract class Variable implements Serializable {
             case TextVar:
                 break;
             case TimeVar:
-                return new Double(this.getTimeVar().getTime());
+                return Double.valueOf(this.getTimeVar().getTime());
             case UIntegerVar:
                 return this.getUIntegerVar().getValue().doubleValue();
             case LongVar:
