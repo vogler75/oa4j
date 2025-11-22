@@ -36,10 +36,8 @@ JNIEXPORT jstring JNICALL Java_at_rocworks_oa4j_jni_Manager_apiGetVersion
 // JAVA JNI startup
 
 JNIEXPORT jint JNICALL Java_at_rocworks_oa4j_jni_Manager_apiStartup
-(JNIEnv *env, jobject jobj, jint jtype, jobjectArray jargv, jboolean connectToData, jboolean connectToEvent, jboolean initResources)
+(JNIEnv *env, jobject jobj, jint jtype, jobjectArray jargv, jboolean connectToData, jboolean connectToEvent, jboolean initResources, jboolean debugFlag)
 {
-  bool init = true;
-
 	int len = env->GetArrayLength(jargv);
 	char **argv = (char **)malloc(len * sizeof(char *));
 	for (int i = 0; i < len; i++)

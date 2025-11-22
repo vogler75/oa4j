@@ -7,14 +7,13 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-
 /*
-* Class:     at_rocworks_oa4j_jni_Manager
-* Method:    apiGetVersion
-* Signature: ()Ljava/lang/String;
-*/
+ * Class:     at_rocworks_oa4j_jni_Manager
+ * Method:    apiGetVersion
+ * Signature: ()Ljava/lang/String;
+ */
 JNIEXPORT jstring JNICALL Java_at_rocworks_oa4j_jni_Manager_apiGetVersion
-	(JNIEnv *, jobject);
+  (JNIEnv *, jclass);
 
 /*
  * Class:     at_rocworks_oa4j_jni_Manager
@@ -43,10 +42,10 @@ JNIEXPORT jstring JNICALL Java_at_rocworks_oa4j_jni_Manager_apiGetConfigValue
 /*
  * Class:     at_rocworks_oa4j_jni_Manager
  * Method:    apiStartup
- * Signature: (I[Ljava/lang/String;ZZ)I
+ * Signature: (I[Ljava/lang/String;ZZZZ)I
  */
 JNIEXPORT jint JNICALL Java_at_rocworks_oa4j_jni_Manager_apiStartup
-  (JNIEnv *, jobject, jint, jobjectArray, jboolean, jboolean, jboolean);
+  (JNIEnv *, jobject, jint, jobjectArray, jboolean, jboolean, jboolean, jboolean);
 
 /*
  * Class:     at_rocworks_oa4j_jni_Manager
