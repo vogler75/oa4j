@@ -96,20 +96,75 @@ java -Djava.library.path=C:/Siemens/Automation/WinCC_OA/%VERS%/bin -cp C:/WinCC_
 If you get a message "MSVCR100.dll is missing", then you need to install Microsoft Visual C++ 2010 SP1 Redistributable Package (x64) http://www.microsoft.com/en-us/download/details.aspx?id=13523  
 
 # Config Java Manager
-```
+
+Configuration is done in the WinCC OA project config file (config or config.level) in the `[java]` section.
+
+## Available Configuration Options
+
+```ini
 [java]
-# java user dir (-Duser.dir), defaults to project directory
+# JVM options (e.g., -Xmx512m for max heap size, --enable-native-access=ALL-UNNAMED for Java 17+)
+# Multiple options can be separated with spaces
+#jvmOption = "-Xmx512m -Xms256m"
+#jvmOption = "--enable-native-access=ALL-UNNAMED"
+
+# Java user directory (-Duser.dir)
+# Defaults to the project directory
 #userDir = "<project-dir>"
 
-# java library path (-Djava.library.path), defaults to the project bin directory, WCCOAjava.dll must be located there. Defaults to WinCC OA bin directory.
-#libraryPath = "C:/Siemens/Automation/WinCC_OA/3.18/bin" 
+# Java library path (-Djava.library.path)
+# Defaults to the project bin directory and WinCC OA bin directory
+# WCCOAjava.dll/.so must be located in one of these directories
+#libraryPath = "C:/Siemens/Automation/WinCC_OA/3.18/bin"
 
-# java class path (-Djava.class.path), defaults to project/bin directory
+# Java class path (-Djava.class.path)
+# Defaults to project/bin directory
+# Use semicolon (;) on Windows, colon (:) on Linux as separator
 classPath = "bin;bin/winccoa-java-1.0-SNAPSHOT.jar"
 
-# if you have long class paths you can use a file
+# Config file for additional JVM options
+# If you have many JVM options or a long class path, you can use a separate file
+# Each line in the config file becomes a JVM option
 #configFile = "config.java"
 ```
+
+## Example Configuration
+
+**For Java 17+ with native access (Linux):**
+```ini
+[java]
+jvmOption = "--enable-native-access=ALL-UNNAMED"
+classPath = "/home/vogler/Workspace/oa4j/Java/target/classes:/home/vogler/Workspace/oa4j/Java/target/test-classes"
+```
+
+**For Windows:**
+```ini
+[java]
+jvmOption = "--enable-native-access=ALL-UNNAMED"
+classPath = "bin;bin/winccoa-java-1.0-SNAPSHOT.jar"
+```
+
+## Using a Separate Config File
+
+If you have many JVM options or a very long classpath, you can use a separate config file:
+
+**config or config.level:**
+```ini
+[java]
+classPath = "bin;bin/winccoa-java.jar"
+configFile = "config.java"
+```
+
+**config.java:**
+```
+-Djava.library.path=bin
+-Djava.class.path=lib/winccoa-java.jar;lib/dependency1.jar;lib/dependency2.jar
+-Xmx1024m
+-Xms256m
+--enable-native-access=ALL-UNNAMED
+```
+
+Each line in the config file is passed as a JVM option. Lines starting with `-Duser.dir`, `-Djava.class.path`, or `-Djava.library.path` override the defaults.
 
 # Compile Java Manager
 * Install WinCC OA 
