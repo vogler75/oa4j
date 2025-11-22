@@ -77,7 +77,29 @@ if [ -f "libWCCOAjava.so" ]; then
   echo "  Copied libWCCOAjava.so"
 fi
 
+# Copy to API_ROOT/../bin
+INSTALL_DIR="$API_ROOT/../bin"
+echo ""
+echo "=== Installing to $INSTALL_DIR ==="
+if [ ! -d "$INSTALL_DIR" ]; then
+  echo "Creating installation directory: $INSTALL_DIR"
+  mkdir -p "$INSTALL_DIR"
+fi
+
+if [ -f "../../Builds/WCCOAJavaManager" ]; then
+  sudo cp ../../Builds/WCCOAJavaManager "$INSTALL_DIR/WCCOAjava"
+  echo "  Copied WCCOAjava to $INSTALL_DIR"
+fi
+
+if [ -f "../../Builds/libWCCOAjava.so" ]; then
+  sudo cp ../../Builds/libWCCOAjava.so "$INSTALL_DIR/"
+  echo "  Copied libWCCOAjava.so to $INSTALL_DIR"
+fi
+
 echo ""
 echo "=== Build Complete ==="
 echo "Output files in: ../Builds/"
 ls -lh ../../Builds/
+echo ""
+echo "Installed files in: $INSTALL_DIR"
+ls -lh "$INSTALL_DIR"/WCCOAjava "$INSTALL_DIR"/libWCCOAjava.so 2>/dev/null || echo "  (files not found)"

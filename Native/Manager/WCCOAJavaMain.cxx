@@ -38,7 +38,7 @@ int main(int argc, char *argv[])
 
 	WCCOAJavaResources::init(argc, argv);
 
-    std::cout << "Runtime Version " << PVSS_VERSION << std::endl;
+	ErrHdl::error(ErrClass::PRIO_INFO, ErrClass::ERR_SYSTEM, 0, (CharString("Runtime Version ") + PVSS_VERSION).c_str());
 
 	//================== prepare loading of Java VM ============================
 	JavaVMInitArgs vm_args;                        // Initialization arguments
@@ -50,7 +50,7 @@ int main(int argc, char *argv[])
 	int iLibPathSet = 0;
 	int iClassPathSet = 0;	
 
-    std::cout << "JVM Configuration... " << std::endl;
+    ErrHdl::error(ErrClass::PRIO_INFO, ErrClass::ERR_SYSTEM, 0, "JVM Configuration...");
 
 	// defaults 
 
@@ -59,7 +59,7 @@ int main(int argc, char *argv[])
 		CharString *s = new CharString("-Duser.dir=" + WCCOAJavaResources::getProjDir());
 		iUserDirSet = ++idx;
 		options[iUserDirSet].optionString = strdup(s->c_str());
-		std::cout << "default: " << options[idx].optionString << std::endl;
+		ErrHdl::error(ErrClass::PRIO_INFO, ErrClass::ERR_SYSTEM, 0, (CharString("Default: ") + options[idx].optionString).c_str());
 	}
 
 	// java.library.path
@@ -67,7 +67,7 @@ int main(int argc, char *argv[])
 		CharString *s = new CharString("-Djava.library.path=" + WCCOAJavaResources::getProjBinDir() + CLASS_PATH_SEPARATOR + WCCOAJavaResources::getBinDir());
 		iLibPathSet = ++idx;
 		options[iLibPathSet].optionString = strdup(s->c_str());
-		std::cout << "default: " << options[idx].optionString << std::endl;
+		ErrHdl::error(ErrClass::PRIO_INFO, ErrClass::ERR_SYSTEM, 0, (CharString("Default: ") + options[idx].optionString).c_str());
 	}
 
 	// java.class.path
@@ -75,7 +75,7 @@ int main(int argc, char *argv[])
 		CharString *s = new CharString(CharString("-Djava.class.path=bin") /*+ CLASS_PATH_SEPARATOR + CharString("bin/winccoa-java.jar")*/);
 		iClassPathSet = ++idx;
 		options[iClassPathSet].optionString = strdup(s->c_str());
-		std::cout << "default: " << options[idx].optionString << std::endl;
+		ErrHdl::error(ErrClass::PRIO_INFO, ErrClass::ERR_SYSTEM, 0, (CharString("Default: ") + options[idx].optionString).c_str());
 	}
 
 	// config 
@@ -84,7 +84,7 @@ int main(int argc, char *argv[])
 	if (strlen(WCCOAJavaResources::getJvmOption().c_str()) > 0)
 	{
 		options[++idx].optionString = strdup(WCCOAJavaResources::getJvmOption().c_str());
-		std::cout << "configs: " << options[idx].optionString << "'" << std::endl;
+		ErrHdl::error(ErrClass::PRIO_INFO, ErrClass::ERR_SYSTEM, 0, (CharString("Configs: ") + options[idx].optionString).c_str());
 	}
 
 	// user.dir
@@ -93,7 +93,7 @@ int main(int argc, char *argv[])
 		CharString *s = new CharString("-Duser.dir=" + WCCOAJavaResources::getJvmUserDir());
 		if (iUserDirSet == 0) iUserDirSet = ++idx;
 		options[iUserDirSet].optionString = strdup(s->c_str()); 
-		std::cout << "configs: " << options[iUserDirSet].optionString << std::endl;
+		ErrHdl::error(ErrClass::PRIO_INFO, ErrClass::ERR_SYSTEM, 0, (CharString("Configs: ") + options[iUserDirSet].optionString).c_str());
 	}
 
 	// java.library.path
@@ -102,7 +102,7 @@ int main(int argc, char *argv[])
 		CharString *s = new CharString("-Djava.library.path=" + WCCOAJavaResources::getJvmLibraryPath());
 		if (iLibPathSet == 0) iLibPathSet = ++idx;
 		options[iLibPathSet].optionString = strdup(s->c_str());
-		std::cout << "configs: " << options[iLibPathSet].optionString << std::endl;
+		ErrHdl::error(ErrClass::PRIO_INFO, ErrClass::ERR_SYSTEM, 0, (CharString("Configs: ") + options[iLibPathSet].optionString).c_str());
 	}
 
 	// java.class.path
@@ -111,19 +111,19 @@ int main(int argc, char *argv[])
 		CharString *s = new CharString("-Djava.class.path=" + WCCOAJavaResources::getJvmClassPath());
 		if (iClassPathSet == 0) iClassPathSet = ++idx;
 		options[iClassPathSet].optionString = strdup(s->c_str());
-		std::cout << "configs: " << options[iClassPathSet].optionString << std::endl;
+		ErrHdl::error(ErrClass::PRIO_INFO, ErrClass::ERR_SYSTEM, 0, (CharString("Configs: ") + options[iClassPathSet].optionString).c_str());
 	}
 
 	// config file
 	CharString fileName = Resources::getConfigDir();
     if ((strlen(WCCOAJavaResources::getJvmConfigFile().c_str()) > 0)) {
 		fileName += WCCOAJavaResources::getJvmConfigFile();
-		std::cout << "config file: " << fileName << std::endl;
+		ErrHdl::error(ErrClass::PRIO_INFO, ErrClass::ERR_SYSTEM, 0, (CharString("Config file: ") + fileName).c_str());
 		std::ifstream is(fileName.c_str());
 		std::string line;
 		while (std::getline(is, line) && idx < 99)
 		{
-			std::cout << "config.java: " << line << std::endl;
+			ErrHdl::error(ErrClass::PRIO_INFO, ErrClass::ERR_SYSTEM, 0, (CharString(fileName.c_str()) + line.c_str()).c_str());
 			char * cstr = new char[line.length() + 1];
 			std::strcpy(cstr, line.c_str());
 
@@ -150,7 +150,7 @@ int main(int argc, char *argv[])
 			CharString *s = new CharString("-Duser.dir=" + CharString(argv[i]));
 			if (iUserDirSet == 0) iUserDirSet = ++idx;
 			options[iUserDirSet].optionString = strdup(s->c_str());
-			std::cout << "argument: " << options[iUserDirSet].optionString << std::endl;
+			ErrHdl::error(ErrClass::PRIO_INFO, ErrClass::ERR_SYSTEM, 0, (CharString("Argument: ") + options[iUserDirSet].optionString).c_str());
 		}
 
 		if (strcmp(argv[i], "-classpath") == 0 || strcmp(argv[i], "-cp") == 0) classPathIdx = i + 1;
@@ -159,7 +159,7 @@ int main(int argc, char *argv[])
 			//CharString *s = new CharString("-Djava.class.path=" + CharString(argv[i]));
 			if (iClassPathSet == 0) iClassPathSet = ++idx;
 			options[iClassPathSet].optionString = strdup(s->c_str());
-			std::cout << "argument: " << options[iClassPathSet].optionString << std::endl;
+			ErrHdl::error(ErrClass::PRIO_INFO, ErrClass::ERR_SYSTEM, 0, (CharString("Argument: ") + options[iClassPathSet].optionString).c_str());
 		}
 
         if (strcmp(argv[i], "-libpath") == 0 || strcmp(argv[i], "-lp") == 0) libPathIdx = i + 1;
@@ -167,7 +167,7 @@ int main(int argc, char *argv[])
 			CharString *s = new CharString(CharString(options[iLibPathSet].optionString) + CLASS_PATH_SEPARATOR + CharString(argv[i]));
 			if (iLibPathSet == 0) iLibPathSet = ++idx;
 			options[iLibPathSet].optionString = strdup(s->c_str());
-			std::cout << "argument: " << options[iLibPathSet].optionString << std::endl;
+			ErrHdl::error(ErrClass::PRIO_INFO, ErrClass::ERR_SYSTEM, 0, (CharString("Argument: ") + options[iLibPathSet].optionString).c_str());
 		}
 
         if (strcmp(argv[i], "-debug") == 0) debugFlag = 1;
@@ -186,9 +186,10 @@ int main(int argc, char *argv[])
 	}
 
 	//=============== Display JVM version =======================================
-	std::cout << "JVM Load Succeeded: Version ";
 	jint ver = env->GetVersion();
-	std::cout << ((ver >> 16) & 0x0f) << "." << (ver & 0x0f) << std::endl;
+	char verBuf[64];
+	sprintf(verBuf, "JVM Load Succeeded: Version %d.%d", ((ver >> 16) & 0x0f), (ver & 0x0f));
+	ErrHdl::error(ErrClass::PRIO_INFO, ErrClass::ERR_SYSTEM, 0, verBuf);
 
 	//=============== Arguments ===========================================   
 	int i;
@@ -256,19 +257,19 @@ int main(int argc, char *argv[])
 	//=============== Call Main Method ==========================================
 	// check if classname was given
 	if (className == NULL) {
-		std::cout << "class Main will be used (no parameter -class given)" << std::endl;
+		ErrHdl::error(ErrClass::PRIO_INFO, ErrClass::ERR_SYSTEM, 0, "class Main will be used (no parameter -class given)");
 		className = "Main";
 	}
 
 	jclass javaMainClass = env->FindClass(className);
 	if (javaMainClass == NULL) {
-		std::cout << "class " << className << " not found!" << std::endl;
+		ErrHdl::error(ErrClass::PRIO_SEVERE, ErrClass::ERR_CONTROL, ErrClass::UNEXPECTEDSTATE, "WCCOAjava", "main", (CharString("class ") + className + " not found!").c_str());
 		return -2;
 	}
 
 	jmethodID javaMainMethod = env->GetStaticMethodID(javaMainClass, "main", "([Ljava/lang/String;)V");
 	if (javaMainMethod == NULL) {
-		std::cout << "main method not found!" << std::endl;
+		ErrHdl::error(ErrClass::PRIO_SEVERE, ErrClass::ERR_CONTROL, ErrClass::UNEXPECTEDSTATE, "WCCOAjava", "main", "main method not found!");
 		return -3;
 	}
 

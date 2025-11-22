@@ -99,7 +99,8 @@ void WCCOAJavaManager::javaInitialize(JNIEnv *env, jobject obj){
 	//----------------------------------------------------------------------------
 	javaManagerClass = env->FindClass(ManagerClassName);
 	if (javaManagerClass == NULL) {
-		std::cout << "class " << ManagerClassName << " not found" << std::endl;
+		ErrHdl::error(ErrClass::PRIO_SEVERE, ErrClass::ERR_IMPL, ErrClass::UNEXPECTEDSTATE,
+			ManagerName, "javaInitialize", CharString("class ") + ManagerClassName + " not found");
 		return;
 	}
 
