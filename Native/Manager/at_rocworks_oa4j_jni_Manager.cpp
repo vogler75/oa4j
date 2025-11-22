@@ -27,7 +27,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 // JAVA JNI PVSS Version
 
 JNIEXPORT jstring JNICALL Java_at_rocworks_oa4j_jni_Manager_apiGetVersion
-(JNIEnv *env, jobject)
+(JNIEnv *env, jclass)
 {
 	return env->NewStringUTF(PVSS_VERSION);
 }
