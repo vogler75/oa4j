@@ -483,5 +483,31 @@ public class JManager extends Manager implements Runnable {
         apiProcessHotlinkGroup(id, ptrDpHlGroup);
         return 0;
     }
-    
+
+    /**
+     * Static convenience method to log a message
+     * @param prio Priority level
+     * @param code Error code/state
+     * @param text Message text to log
+     */
+    public static void log(ErrPrio prio, ErrCode code, String text) {
+        JManager instance = getInstance();
+        if (instance != null) {
+            instance.apiLog(prio, code, text);
+        }
+    }
+
+    /**
+     * Static convenience method to log a message (raw values)
+     * @param prio Priority level (0=PRIO_FATAL, 1=PRIO_SEVERE, 2=PRIO_WARNING, 3=PRIO_INFO)
+     * @param state Error code/state (0=no error, 54=UNEXPECTEDSTATE, see ErrClass constants)
+     * @param text Message text to log
+     */
+    public static void log(int prio, long state, String text) {
+        JManager instance = getInstance();
+        if (instance != null) {
+            instance.apiLog(prio, state, text);
+        }
+    }
+
 }

@@ -548,7 +548,18 @@ JNIEXPORT jboolean JNICALL Java_at_rocworks_oa4j_jni_Manager_setUserId
 	}
 
 	delete username;
-	if (jpassword != 0) 
+	if (jpassword != 0)
 		delete password;
-	return ret;	
+	return ret;
+}
+
+//------------------------------------------------------------------------------------------------
+// JAVA JNI logging
+
+JNIEXPORT void JNICALL Java_at_rocworks_oa4j_jni_Manager_apiLog
+(JNIEnv *env, jobject obj, jint jprio, jlong jstate, jstring jtext)
+{
+	CharString *text = Java::convertJString(env, jtext);
+	ErrHdl::error((ErrClass::ErrPrio)jprio, ErrClass::ERR_IMPL, (ErrClass::ErrCode)jstate, text->c_str());
+	delete text;
 }
