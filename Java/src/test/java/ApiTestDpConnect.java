@@ -20,16 +20,8 @@ import at.rocworks.oa4j.base.JDpConnect;
 import at.rocworks.oa4j.base.JDpHLGroup;
 import at.rocworks.oa4j.base.JDpMsgAnswer;
 import at.rocworks.oa4j.base.JManager;
-import at.rocworks.oa4j.base.JDebug;
 import at.rocworks.oa4j.jni.ErrCode;
 import at.rocworks.oa4j.jni.ErrPrio;
-import at.rocworks.oa4j.var.DpIdentifierVar;
-
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 
 /**
  *
