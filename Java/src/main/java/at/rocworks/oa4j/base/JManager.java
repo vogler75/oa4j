@@ -196,10 +196,7 @@ public class JManager extends Manager implements Runnable {
         if ( apiEnabled ) {
             // Set log file settings
             setDebugOutput();
-            JDebug.out.info("Manager API enabled");
-
             if (!isV3() && !isV4()) {
-                JDebug.out.info("Manager Version "+apiGetVersion()+" is not V3 and not V4!");
                 throw new Exception("Manager Version "+apiGetVersion()+" is not V3 and not V4!");
             }
         } else {
@@ -213,7 +210,6 @@ public class JManager extends Manager implements Runnable {
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             try {
                 Thread.sleep(200);
-                System.out.println("Shutdown...");
                 stop();
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
@@ -240,20 +236,20 @@ public class JManager extends Manager implements Runnable {
         start(true, true);
     }
     
-    public void start(boolean connectToData, boolean connectToEvent) {   
+    public void start(boolean connectToData, boolean connectToEvent) {
         if ( apiEnabled ) {
-            JDebug.out.log(Level.INFO, "api manager start...");
+            log(ErrPrio.PRIO_INFO, ErrCode.MANAGER_START, "Manager start...");
             this.connectToData=connectToData;
             this.connectToEvent=connectToEvent;
             new Thread(this).start();
             loopPaused.awaitFalse();
-            JDebug.out.log(Level.INFO, "api manager started.");
+            log(ErrPrio.PRIO_INFO, ErrCode.MANAGER_INITIALIZED, "Manager started.");
         }
     }
     
     public void stop() {
         if ( apiEnabled ) {
-            JDebug.out.log(Level.INFO, "api manager stop.");
+            log(ErrPrio.PRIO_INFO, ErrCode.MANAGER_STOP, "Manager stop.");
             apiConnected = false; // stop run loop
             pause();
             apiShutdown();
@@ -269,45 +265,41 @@ public class JManager extends Manager implements Runnable {
         loopPaused.sendFalse();
         apiConnected=true;
         while (apiConnected) {
-            JDebug.out.log(Level.INFO, "api manager loop waiting.");
+            log(ErrPrio.PRIO_INFO, ErrCode.NOERR, "Manager loop waiting.");
             loopPaused.awaitFalse();
-            JDebug.out.log(Level.INFO, "api manager loop started.");
-            while ( !loopBreak ) {                
+            log(ErrPrio.PRIO_INFO, ErrCode.NOERR, "Manager loop started.");
+            while ( !loopBreak ) {
                 synchronized ( this ) {
                     apiDispatch(0, loopWaitUSec);
                     queueWorker();
                 }
             }
             loopPaused.sendTrue();
-            JDebug.out.log(Level.INFO, "api manager loop stopped.");
+            log(ErrPrio.PRIO_INFO, ErrCode.NOERR, "Manager loop stopped.");
         }
     }   
 
     public void pause() {
-        //JDebug.out.finest("api manager pause ....");
         loopBreak=true;
         loopPaused.awaitTrue();
-        //JDebug.out.finest("api manager pause done");
     }
 
     public void resume() {
-        //JDebug.out.finest("api manager resume ....");
         loopBreak=false;
         loopPaused.sendFalse();
-        //JDebug.out.finest("api manager resume done");
     }    
     
     protected void enqueueHotlink(JHotLinkWaitForAnswer hl) {
         if ( taskQueue.size() >= MAX_ENQUEUE_SIZE_HIGH )  {
             maxEnqueueSizeReached++;
             if (maxEnqueueSizeReached % 100==1)
-                JDebug.out.log(Level.WARNING, "max enqueue size reached {0} discarding hotlink...", taskQueue.size());
+                log(ErrPrio.PRIO_WARNING, ErrCode.NOERR, "Max enqueue size reached " + taskQueue.size() + " discarding hotlink...");
         } else if ( maxEnqueueSizeReached == 0 ) {
             taskQueue.add(hl);
         } else if ( taskQueue.size() <= MAX_ENQUEUE_SIZE_LOW ) {
             taskQueue.add(hl);
-            maxEnqueueSizeReached=0;        
-            JDebug.out.log(Level.WARNING, "enqueue below threshold size {0} processing hotlink...", taskQueue.size());
+            maxEnqueueSizeReached=0;
+            log(ErrPrio.PRIO_WARNING, ErrCode.NOERR, "Enqueue below threshold size " + taskQueue.size() + " processing hotlink...");
         }
     }   
     
@@ -351,12 +343,8 @@ public class JManager extends Manager implements Runnable {
     
     @Override
     public int callbackAnswer(int id, int idx, DpIdentifierVar dpid, Variable var, long time) {
-        //JDebug.out.log(Level.INFO, "java got answer id={0} idx={1} dpid={2} var={3}", new Object[]{id, idx, dpid, var});
         JHotLinkWaitForAnswer hdl;
         hdl = hotlinkList.get(id);
- 
-        //JDebug.out.log(Level.INFO, "java found answer id={0} idx={1} dpid={2} var={3} hdl={4}", new Object[]{id, idx, dpid, var, hdl});
-
         if (hdl != null) {                      
             switch (idx) {
                 case -1:
@@ -386,12 +374,8 @@ public class JManager extends Manager implements Runnable {
 
     @Override
     public int callbackHotlink(int id, int idx, DpIdentifierVar dpid, Variable var) {
-        //JDebug.out.log(Level.INFO, "java got hotlink id={0} idx={1} dpid={2} var={3}", new Object[]{id, idx, dpid, var});
         JHotLinkWaitForAnswer hdl;
         hdl = hotlinkList.get(id);
-        
-        //JDebug.out.log(Level.INFO, "java found hotlink id={0} idx={1} dpid={2} var={3} hdl={4}", new Object[]{id, idx, dpid, var, hdl});
-
         if (hdl != null) {
             switch (idx) {
                 case -1:
@@ -493,21 +477,7 @@ public class JManager extends Manager implements Runnable {
     public static void log(ErrPrio prio, ErrCode code, String text) {
         JManager instance = getInstance();
         if (instance != null) {
-            instance.apiLog(prio, code, text);
-        }
+            instance.apiLog(prio.getValue(), code.getValue(), text);
+        }        
     }
-
-    /**
-     * Static convenience method to log a message (raw values)
-     * @param prio Priority level (0=PRIO_FATAL, 1=PRIO_SEVERE, 2=PRIO_WARNING, 3=PRIO_INFO)
-     * @param state Error code/state (0=no error, 54=UNEXPECTEDSTATE, see ErrClass constants)
-     * @param text Message text to log
-     */
-    public static void log(int prio, long state, String text) {
-        JManager instance = getInstance();
-        if (instance != null) {
-            instance.apiLog(prio, state, text);
-        }
-    }
-
 }

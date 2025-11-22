@@ -271,6 +271,14 @@ JNIEXPORT jint JNICALL Java_at_rocworks_oa4j_jni_Manager_apiGetConnectionState
 JNIEXPORT jint JNICALL Java_at_rocworks_oa4j_jni_Manager_apiIsActiveConnection
   (JNIEnv *, jobject);
 
+/*
+ * Class:     at_rocworks_oa4j_jni_Manager
+ * Method:    apiLog
+ * Signature: (IJLjava/lang/String;)V
+ */
+JNIEXPORT void JNICALL Java_at_rocworks_oa4j_jni_Manager_apiLog
+  (JNIEnv *, jobject, jint, jlong, jstring);
+
 #ifdef __cplusplus
 }
 #endif

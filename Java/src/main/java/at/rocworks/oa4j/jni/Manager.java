@@ -131,8 +131,4 @@ public abstract class Manager {
     public native int apiIsActiveConnection();
 
     public native void apiLog(int prio, long state, String text);
-
-    public void apiLog(ErrPrio prio, ErrCode code, String text) {
-        apiLog(prio.getValue(), code.getValue(), text);
-    }
 }
