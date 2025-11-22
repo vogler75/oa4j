@@ -354,11 +354,10 @@ jobject Java::convertToJava(JNIEnv *env, VariablePtr varptr, JDpIdentifierClass 
 		jobject jvar;
 		// gettimeofday(&tp, NULL); long int ms2 = tp.tv_usec;
 
-		int i = 0;
-		for (Variable *var = ((DynVar*)varptr)->getFirstVar(); var; var = ((DynVar*)varptr)->getNextVar())
+		for (int i = 0; i < size; i++)
 		{
-			i++;
-			if (DEBUG) std::cout << "i: " << i << ": " << var->getTypeName(var->isA()) << ": " << varptr->getTypeName(varptr->isA()) << std::endl;
+			Variable *var = ((DynVar*)varptr)->getAt(i);
+			if (DEBUG) std::cout << "i: " << (i+1) << ": " << var->getTypeName(var->isA()) << ": " << varptr->getTypeName(varptr->isA()) << std::endl;
 			switch (varptr->isA()) {
 			case DYNANYTYPE_VAR: {
 				Variable *ptr = ((AnyTypeVar*)var)->getVar(); // 17.07.2016: a new created datapoint element is NULL
@@ -400,11 +399,10 @@ jobject Java::convertToJava(JNIEnv *env, VariablePtr varptr, JDpIdentifierClass 
 		int size = ((DynVar*)varptr)->getArrayLength();
 		jobject jydyn = env->CallStaticObjectMethod(clsVariable, cvar->newDynVarSized(), size);
 		jobject jxdyn;
-		int y = 0;
-		for (Variable *yvar = ((DynVar*)varptr)->getFirstVar(); yvar; yvar = ((DynVar*)varptr)->getNextVar())
+		for (int y = 0; y < size; y++)
 		{
-			y++;
-			if (DEBUG) std::cout << "y: " << y << ": " << yvar->getTypeName(yvar->isA()) << std::endl;
+			Variable *yvar = ((DynVar*)varptr)->getAt(y);
+			if (DEBUG) std::cout << "y: " << (y+1) << ": " << yvar->getTypeName(yvar->isA()) << std::endl;
 
 			if (yvar->isA() != DYNANYTYPE_VAR)
 			{

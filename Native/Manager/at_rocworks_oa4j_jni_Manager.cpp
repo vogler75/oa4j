@@ -248,9 +248,10 @@ JNIEXPORT jint JNICALL Java_at_rocworks_oa4j_jni_Manager_apiSendArchivedDPs
 	}
 
 	//Append the other Elements with the valid DpIdentifications
-	int idx = 0;
-	for (Variable* varPtr = dynvar->getFirstVar(); varPtr; varPtr = dynvar->getNextVar())
+	int size = dynvar->getArrayLength();
+	for (int idx = 0; idx < size; idx++)
 	{
+		Variable* varPtr = dynvar->getAt(idx);
 		if (msg == NULL)
 		{
 			msg = new DpMsgHotLink();

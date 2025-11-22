@@ -111,5 +111,5 @@ JNIEXPORT jobject JNICALL Java_at_rocworks_oa4j_jni_DpMsgValueChange_getNextGrou
 JNIEXPORT void JNICALL Java_at_rocworks_oa4j_jni_DpMsgValueChange_free
 (JNIEnv *env, jobject obj, jlong cptr)
 {
-	if (cptr != NULL) delete (DpMsgValueChange*)cptr;
+	if (cptr != 0) delete (DpMsgValueChange*)cptr;
 }

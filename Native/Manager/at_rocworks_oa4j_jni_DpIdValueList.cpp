@@ -162,7 +162,7 @@ JNIEXPORT jlong JNICALL Java_at_rocworks_oa4j_jni_DpIdValueList_malloc
 JNIEXPORT void JNICALL Java_at_rocworks_oa4j_jni_DpIdValueList_free
 (JNIEnv *env, jobject, jlong cptr)
 {
-	if (cptr != NULL) delete (DpIdValueList*)cptr;
+	if (cptr != 0) delete (DpIdValueList*)cptr;
 }
 
 JNIEXPORT jstring JNICALL Java_at_rocworks_oa4j_jni_DpIdValueList_toDebug

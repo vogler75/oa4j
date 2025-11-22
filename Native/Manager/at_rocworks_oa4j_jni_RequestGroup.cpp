@@ -126,5 +126,5 @@ JNIEXPORT jlong JNICALL Java_at_rocworks_oa4j_jni_RequestGroup_malloc
 JNIEXPORT void JNICALL Java_at_rocworks_oa4j_jni_RequestGroup_free
 (JNIEnv *, jobject, jlong cptr)
 {
-	if (cptr != NULL) delete (RequestGroup*)cptr;
+	if (cptr != 0) delete (RequestGroup*)cptr;
 }

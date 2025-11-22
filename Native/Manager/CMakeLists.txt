@@ -3,16 +3,16 @@ cmake_minimum_required(VERSION 3.1)
 set(API_ROOT "$ENV{API_ROOT}" CACHE FILEPATH "directory of the WinCC_OA API installation")
 
 include(${API_ROOT}/CMakeDefines.txt)
-include_directories($ENV{API_INCL})
 
-set(MANAGER_LIBS
-    $ENV{API_LIB}
-    ${WCCOA_LIB_PREFIX}Basics${WCCOA_LIB_INFIX}
-    ${WCCOA_LIB_PREFIX}Configs${WCCOA_LIB_INFIX}
-    ${WCCOA_LIB_PREFIX}Datapoint${WCCOA_LIB_INFIX}
-    ${WCCOA_LIB_PREFIX}Messages${WCCOA_LIB_INFIX}
-    ${WCCOA_LIB_PREFIX}Manager${WCCOA_LIB_INFIX}
-)
+# Add Java include directories
+include_directories($ENV{JAVA_HOME}/include)
+include_directories($ENV{JAVA_HOME}/include/linux)
+
+# Find JVM library
+find_library(JVM_LIB jvm PATHS $ENV{JAVA_HOME}/lib $ENV{JAVA_HOME}/jre/lib NO_DEFAULT_PATH PATH_SUFFIXES server)
+if(NOT JVM_LIB)
+  message(FATAL_ERROR "Could not find libjvm.so in JAVA_HOME: $ENV{JAVA_HOME}")
+endif()
 
 project(Manager)
 
@@ -33,12 +33,13 @@ if ( WIN32 )
 endif()
 
 add_manager(${TARGET} ${SOURCES})
+target_link_libraries(${TARGET} ${JVM_LIB})
 
 #############################################################
 # WCCOAJavaLibrary (DLL) 
 #############################################################
 
-add_library(WCCOAJavaLibrary SHARED 
+add_library(WCCOAJavaLibrary SHARED
 WCCOAJavaMain.cxx
 WCCOAJavaManager.cxx
 WCCOAJavaResources.cxx
@@ -61,7 +62,8 @@ at_rocworks_oa4j_jni_RequestItem.cpp
 at_rocworks_oa4j_jni_SysMsg.cpp
 ../LibJava/Java.cpp
 )
-target_link_libraries(WCCOAJavaLibrary ${MANAGER_LIBS})
+
+target_link_libraries(WCCOAJavaLibrary ${MANAGER_LIBS} ${JVM_LIB})
 set_target_properties(WCCOAJavaLibrary PROPERTIES INSTALL_RPATH \$ORIGIN)
 add_dependencies(WCCOAJavaLibrary linkedAt_lib)
 set_target_properties(WCCOAJavaLibrary PROPERTIES OUTPUT_NAME WCCOAjava)

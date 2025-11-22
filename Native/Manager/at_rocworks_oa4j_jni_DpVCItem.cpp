@@ -40,7 +40,7 @@ JNIEXPORT jlong JNICALL Java_at_rocworks_oa4j_jni_DpVCItem_malloc
 JNIEXPORT void JNICALL Java_at_rocworks_oa4j_jni_DpVCItem_free
 (JNIEnv *env, jobject, jlong cptr)
 {
-	if (cptr != NULL) delete (DpVCItem*)cptr;
+	if (cptr != 0) delete (DpVCItem*)cptr;
 }
 
 /*

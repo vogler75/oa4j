@@ -128,7 +128,7 @@ JNIEXPORT void JNICALL Java_at_rocworks_oa4j_jni_Msg_free
 (JNIEnv *, jobject, jlong cptr)
 {
 	//std::cout << "free Msg" << std::endl;
-	if ( cptr != NULL ) delete (Msg*)cptr;
+	if ( cptr != 0 ) delete (Msg*)cptr;
 }
 
 /*

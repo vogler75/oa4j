@@ -180,7 +180,7 @@ int main(int argc, char *argv[])
 	vm_args.ignoreUnrecognized = true;     // invalid options make the JVM init fail 
 
 	jint rc = JNI_CreateJavaVM(&jvm, (void**)&env, &vm_args);
-	delete options;    // we then no longer need the initialisation options. 
+	delete[] options;    // we then no longer need the initialisation options. 
 	if (rc != JNI_OK) {
 		exit(EXIT_FAILURE);
 	}

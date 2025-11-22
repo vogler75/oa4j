@@ -28,5 +28,5 @@ JNIEXPORT jlong JNICALL Java_at_rocworks_oa4j_jni_DpMsgHotLink_malloc
 JNIEXPORT void JNICALL Java_at_rocworks_oa4j_jni_DpMsgHotLink_free
 (JNIEnv *, jobject, jlong cptr)
 {
-	if (cptr != NULL) delete (DpMsgHotLink*)cptr;
+	if (cptr != 0) delete (DpMsgHotLink*)cptr;
 }

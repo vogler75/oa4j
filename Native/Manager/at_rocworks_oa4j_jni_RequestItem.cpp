@@ -72,5 +72,5 @@ JNIEXPORT jstring JNICALL Java_at_rocworks_oa4j_jni_RequestItem_toDebug
 JNIEXPORT void JNICALL Java_at_rocworks_oa4j_jni_RequestItem_free
 (JNIEnv *, jobject, jlong cptr)
 {
-	if (cptr != NULL) delete (RequestItem*)cptr;
+	if (cptr != 0) delete (RequestItem*)cptr;
 }
