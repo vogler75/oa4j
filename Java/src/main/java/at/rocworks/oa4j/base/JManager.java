@@ -186,7 +186,7 @@ public class JManager extends Manager implements Runnable {
         } catch ( java.lang.UnsatisfiedLinkError ex1 ) {
             errmsg1=ex1.getMessage();
             try {
-                System.loadLibrary("WCCILjava");
+                System.loadLibrary("WCCILjava"); // this was for ManagerV4 (IOWA)
                 apiEnabled=true;
             } catch ( java.lang.UnsatisfiedLinkError ex2 ) {
                 errmsg2=ex2.getMessage();
@@ -213,7 +213,7 @@ public class JManager extends Manager implements Runnable {
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             try {
                 Thread.sleep(200);
-                System.out.println("ShutdownHook...");
+                System.out.println("Shutdown...");
                 stop();
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
@@ -233,7 +233,7 @@ public class JManager extends Manager implements Runnable {
     }
 
     public String getManName() {
-        return "WCCILjava"+manNum;
+        return "WCCOAjava"+manNum;
     }
     
     public void start() {
