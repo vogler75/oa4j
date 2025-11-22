@@ -24,6 +24,8 @@ import at.rocworks.oa4j.base.JDebug;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.logging.Level;
+import at.rocworks.oa4j.jni.ErrCode;
+import at.rocworks.oa4j.jni.ErrPrio;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -54,18 +56,18 @@ public class ApiTestDpSet {
         DynVar di = new DynVar(1.0, 2.0, 3.0);
         JClient.dpSet("test.dyn_int", di);
 
-        JDebug.out.info("--- DPSET BEG ---");
+        JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR, "--- DPSET BEG ---");
         ret = JClient.dpSet()
                 .add("System1:ExampleDP_Trend1.", new FloatVar(Math.random()))
                 .add("System1:ExampleDP_SumAlert.:_original.._value", "hello world")
                 .await()
                 .getRetCode();
         JDebug.out.log(Level.INFO, "retCode={0}", ret);
-        JDebug.out.info("--- DPSET END ---");
+        JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR, "--- DPSET END ---");
         
         Thread.sleep(1000);
         
-        JDebug.out.info("--- DPSETTIMED BEG ---");
+        JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR, "--- DPSETTIMED BEG ---");
         Date t = new Date(new Date().getTime()+10000);
         ret = JClient.dpSet()
                 .timed(t)
@@ -74,7 +76,7 @@ public class ApiTestDpSet {
                 .await()
                 .getRetCode();
         JDebug.out.log(Level.INFO, "retCode={0}", ret);
-        JDebug.out.info("--- DPSETTIMED END ---");
+        JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR, "--- DPSETTIMED END ---");
 
         Thread.sleep(1000);
     }    

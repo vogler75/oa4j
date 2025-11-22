@@ -27,6 +27,8 @@ import at.rocworks.oa4j.var.Variable;
 import at.rocworks.oa4j.base.JDebug;
 import java.util.Date;
 import java.util.logging.Level;
+import at.rocworks.oa4j.jni.ErrCode;
+import at.rocworks.oa4j.jni.ErrPrio;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -60,32 +62,32 @@ public class ApiTestDpQueryConnect {
     
     public void run() throws InterruptedException {
         JDpQueryConnect conn = doDpQueryConnect();
-        JDebug.out.info("sleep...");
+        JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR, "sleep...");
         Thread.sleep(1000*60*60*24);
-        JDebug.out.info("done");
+        JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR, "done");
         conn.disconnect();
-        JDebug.out.info("end");
+        JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR, "end");
         Thread.sleep(1000*10);        
     }
 
     private JDpQueryConnect doDpQueryConnect() {
-        JDebug.out.info("dpQueryConnect...");
+        JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR, "dpQueryConnect...");
         JDpQueryConnect conn = JClient.dpQueryConnectSingle("SELECT '_online.._value','_online.._stime' FROM 'Test_*.**'");
         conn.action((JDpMsgAnswer answer)->{
                 try {
-                    JDebug.out.info("--- ANSWER BEG --- "+answer.getErrorText());
+                    JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR, "--- ANSWER BEG --- "+answer.getErrorText());
                     Date tt1 = conn.getInitTimestamp();
                     Date tt2 = conn.getDoneTimestamp();
                     Double t = (tt2.getTime() - tt1.getTime()) / 1000.0;
-                    JDebug.out.info("t= " + t);
+                    JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR, "t= " + t);
                     if (answer.size() > 1) {
                         int count = answer.getItem(1).getVariable().getDynVar().size();
-                        JDebug.out.info("v/s=" + count / t);
-                        JDebug.out.info("err=" + answer.getErrorCode() + ": " + answer.getErrorText());
-                        JDebug.out.info("items=" + count);
+                        JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR, "v/s=" + count / t);
+                        JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR, "err=" + answer.getErrorCode() + ": " + answer.getErrorText());
+                        JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR, "items=" + count);
                         //JDebug.out.info(answer.toString());
                     }
-                    JDebug.out.info("--- ANSWER END ---");
+                    JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR, "--- ANSWER END ---");
                 } catch (Exception ex) {
                     JDebug.StackTrace(Level.SEVERE, ex);
                 }
@@ -137,9 +139,9 @@ public class ApiTestDpQueryConnect {
                 Variable value = row.get(1);          // column one is the first colum '_online.._value'
                 TimeVar stime = (TimeVar) row.get(2); // column two is the second colum '_online.._stime'
                 
-                JDebug.out.log(Level.INFO, "dp={0} value={1} stime={2}", new Object[]{dp, value.toString(), stime.toString()});
+                JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR, String.format("dp=%s value=%s stime=%s", dp, value.toString(), stime.toString()));
             }
         }
-        JDebug.out.log(Level.INFO, "--- HOTLINK END --- ");
+        JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR, "--- HOTLINK END --- ");
     }
 }

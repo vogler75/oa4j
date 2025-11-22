@@ -21,6 +21,8 @@ import at.rocworks.oa4j.jni.DpMsg;
 import at.rocworks.oa4j.jni.DpMsgManipDp;
 
 import java.util.logging.Level;
+import at.rocworks.oa4j.jni.ErrCode;
+import at.rocworks.oa4j.jni.ErrPrio;
 
 /**
  *
@@ -31,20 +33,20 @@ public class ApiTestManager extends JManager {
     @Override
     public boolean doReceiveDpMsg(long cPtrDpMsg) {
         DpMsg msg = new DpMsg(cPtrDpMsg);
-        JDebug.out.info("------------DPMSG DEBUG BEGIN-------------------------");
+        JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR, "------------DPMSG DEBUG BEGIN-------------------------");
         JDebug.out.log(Level.INFO, "isA => {0}", msg.getType());
         JDebug.out.info(msg.toDebug(99));
-        JDebug.out.info("------------DPMSG DEBUG END  -------------------------");
+        JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR, "------------DPMSG DEBUG END  -------------------------");
         try {
             if (msg.getType()== msg.getMsgTypes().DP_MSG_MANIP_DP()) {
                 DpMsgManipDp x = new DpMsgManipDp(msg);
-                JDebug.out.info("isDeleteDpMsg: " + x.isDeleteDpMsg());
-                JDebug.out.info("DpId: " + x.getDpId());
-                JDebug.out.info("DpName: " + x.getDpName());
-                JDebug.out.info("DpTypeId: " + x.getDpTypeId());
-                JDebug.out.info("DpTypeName: " + x.getDpTypeName());
+                JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR, "isDeleteDpMsg: " + x.isDeleteDpMsg());
+                JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR, "DpId: " + x.getDpId());
+                JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR, "DpName: " + x.getDpName());
+                JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR, "DpTypeId: " + x.getDpTypeId());
+                JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR, "DpTypeName: " + x.getDpTypeName());
             } else if (msg.getType() == msg.getMsgTypes().DP_MSG_IDENTIFICATION()) {
-                JDebug.out.info("It's a DP_MSG message...");
+                JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR, "It's a DP_MSG message...");
             }
         } catch (Exception ex) {
             JDebug.StackTrace(Level.SEVERE, ex);
@@ -55,13 +57,13 @@ public class ApiTestManager extends JManager {
 
     @Override
     protected void becameActive() {
-        JDebug.out.info("becameActive");
+        JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR, "becameActive");
         super.becameActive();
     }
 
     @Override
     protected void becamePassive() {
-        JDebug.out.info("becamePassive");
+        JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR, "becamePassive");
         super.becamePassive();
     }
 
@@ -72,7 +74,7 @@ public class ApiTestManager extends JManager {
         m.init(args).start();
         m.setDebugOutput();
         while (true) {
-            JDebug.out.info("isActive=" + m.isActive());
+            JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR, "isActive=" + m.isActive());
             Thread.sleep(3000);
         }
         //m.stop();

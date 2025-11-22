@@ -19,6 +19,8 @@ import at.rocworks.oa4j.base.JClient;
 import at.rocworks.oa4j.base.JDpMsgAnswer;
 import at.rocworks.oa4j.base.JManager;
 import at.rocworks.oa4j.base.JDebug;
+import at.rocworks.oa4j.jni.ErrCode;
+import at.rocworks.oa4j.jni.ErrPrio;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -37,17 +39,17 @@ public class ApiTestDpQuery {
         JManager m = new JManager();
         m.init(args).start();
         new ApiTestDpQuery().run();        
-        JDebug.out.info("done");
+        JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR, "done");
         m.stop();
     }    
     
     public void run() throws InterruptedException {        
-        JDebug.out.info("dpQuery...");
+        JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR, "dpQuery...");
         JClient.dpQuery("SELECT '_online.._value','_online.._stime' FROM 'Test*.**'")
                 .action((JDpMsgAnswer answer)->{
                     JDebug.out.info(answer.toString());
                 })
                 .await();
-        JDebug.out.info("dpQuery...done");
+        JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR, "dpQuery...done");
     }                  
 }

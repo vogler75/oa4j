@@ -19,6 +19,8 @@ import at.rocworks.oa4j.base.*;
 import at.rocworks.oa4j.var.TimeVar;
 
 import java.util.Date;
+import at.rocworks.oa4j.jni.ErrCode;
+import at.rocworks.oa4j.jni.ErrPrio;
 
 /**
  *
@@ -32,18 +34,18 @@ public class ApiTestDpGetPeriod {
         JManager m = new JManager();
         m.init(args).start();
         new ApiTestDpGetPeriod().run();
-        JDebug.out.info("done");
+        JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR, "done");
         m.stop();
     }
 
     public void run() throws InterruptedException {
-        JDebug.out.info("dpGetPeriod...");
+        JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR, "dpGetPeriod...");
         JClient.dpGetPeriod(new Date().getTime() - 1000 * 60, new Date().getTime(), 0)
             .add("ExampleDP_Trend1.")
             .action((JDpMsgAnswer answer) -> {
                 JDebug.out.info(answer.toString());
             })
             .await();
-        JDebug.out.info("dpGetPeriod...done");
+        JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR, "dpGetPeriod...done");
     }
 }

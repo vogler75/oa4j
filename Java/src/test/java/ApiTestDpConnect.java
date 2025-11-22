@@ -21,6 +21,8 @@ import at.rocworks.oa4j.base.JDpHLGroup;
 import at.rocworks.oa4j.base.JDpMsgAnswer;
 import at.rocworks.oa4j.base.JManager;
 import at.rocworks.oa4j.base.JDebug;
+import at.rocworks.oa4j.jni.ErrCode;
+import at.rocworks.oa4j.jni.ErrPrio;
 import at.rocworks.oa4j.var.DpIdentifierVar;
 
 /*
@@ -47,36 +49,36 @@ public class ApiTestDpConnect {
     }
     
     public void run() throws InterruptedException {
-        JDebug.out.info("dpConnect...");
+        JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR, "dpConnect...");
         JDpConnect conn = JClient.dpConnect()
                 .add("ExampleDP_Trend1.")
                 .add("ExampleDP_Trend2.")
                 .action((JDpMsgAnswer answer)->{
-                    JDebug.out.info("--- ANSWER BEG ---");
-                    JDebug.out.info(answer.toString());
-                    JDebug.out.info("--- ANSWER END ---");
-                })                
+                    JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR, "--- ANSWER BEG ---");
+                    JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR, answer.toString());
+                    JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR, "--- ANSWER END ---");
+                })
                 .action((JDpHLGroup hotlink)->{
-                    JDebug.out.info("--- HOTLINK BEG ---");
-                    JDebug.out.info(hotlink.toString());
-                    JDebug.out.info("getItemVar(0): "+hotlink.getItemVar(0));
-                    JDebug.out.info("getItemVar(1): "+hotlink.getItemVar(1));
-                    JDebug.out.info("getItemVar(2): "+hotlink.getItemVar(2).toDouble(0.0));
-                    JDebug.out.info("getItemVar(2).isNull: "+hotlink.getItemVar(2).isNull());
+                    JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR, "--- HOTLINK BEG ---");
+                    JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR, hotlink.toString());
+                    JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR, "getItemVar(0): "+hotlink.getItemVar(0));
+                    JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR, "getItemVar(1): "+hotlink.getItemVar(1));
+                    JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR, "getItemVar(2): "+hotlink.getItemVar(2).toDouble(0.0));
+                    JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR, "getItemVar(2).isNull: "+hotlink.getItemVar(2).isNull());
                     val=hotlink.getItemVar(0).toInt();
                     Double v1 = hotlink.getItemVar(0).toDouble();
                     Double v2 = hotlink.getItemVar(1).toDouble();
                     JClient.dpSet("ExampleDP_Trend3.", v1+v2).send();
-                    JDebug.out.info("--- HOTLINK END ---");
+                    JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR, "--- HOTLINK END ---");
                 })
                 .connect();
-        
-        JDebug.out.info("sleep...");
+
+        JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR, "sleep...");
         while (val>=0)
             Thread.sleep(1000);
-        JDebug.out.info("done");
+        JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR, "done");
         conn.disconnect();
-        JDebug.out.info("end");
+        JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR, "end");
     }          
 }
 

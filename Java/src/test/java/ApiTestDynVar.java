@@ -19,6 +19,8 @@ import at.rocworks.oa4j.var.DynVar;
 import at.rocworks.oa4j.var.IntegerVar;
 import at.rocworks.oa4j.var.TextVar;
 import at.rocworks.oa4j.var.Variable;
+import at.rocworks.oa4j.jni.ErrCode;
+import at.rocworks.oa4j.jni.ErrPrio;
 
 /**
  *

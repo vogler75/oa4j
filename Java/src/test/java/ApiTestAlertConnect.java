@@ -23,6 +23,8 @@ import at.rocworks.oa4j.base.JManager;
 import at.rocworks.oa4j.var.Variable;
 import at.rocworks.oa4j.base.JDebug;
 import java.util.logging.Level;
+import at.rocworks.oa4j.jni.ErrCode;
+import at.rocworks.oa4j.jni.ErrPrio;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -45,7 +47,7 @@ public class ApiTestAlertConnect {
     }
     
     public void run() throws InterruptedException {        
-        JDebug.out.info("alertConnect...");
+        JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR, "alertConnect...");
         
         JAlertConnect conn = JClient.alertConnect()
                 .add(":_alert_hdl.._system_time")
@@ -79,20 +81,20 @@ public class ApiTestAlertConnect {
                 .add(":_alert_hdl.._value")
                 .add(":_alert_hdl.._visible" )
                 .action((JDpHLGroup hotlink) -> {
-                    JDebug.out.info("--- HOTLINK BEG ---");
+                    JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR, "--- HOTLINK BEG ---");
                     hotlink.getItems().forEach((JDpVCItem vc)->{
                         Variable var = vc.getVariable();
-                        JDebug.out.log(Level.INFO, "{0}: {1} [{2}]", new Object[]{vc.getDpName(), var.formatValue(), var.isA()});
+                        JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR, String.format("%s: %s [%s]", vc.getDpName(), var.formatValue(), var.isA()));
                     });
                     //JDebug.out.info(hotlink.toString());
-                    JDebug.out.info("--- HOTLINK END ---");
+                    JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR, "--- HOTLINK END ---");
                 })
                 .connect();
         
-        JDebug.out.info("sleep...");
+        JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR, "sleep...");
         Thread.sleep(1000*60*60);
-        JDebug.out.info("done");
+        JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR, "done");
         conn.disconnect();
-        JDebug.out.info("end");
+        JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR, "end");
     }              
 }

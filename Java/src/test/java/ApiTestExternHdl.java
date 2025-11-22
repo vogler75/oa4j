@@ -17,11 +17,12 @@
 */
 import at.rocworks.oa4j.jni.ExternHdlFunction;
 import at.rocworks.oa4j.base.JDebug;
+import at.rocworks.oa4j.base.JManager;
 import at.rocworks.oa4j.var.DynVar;
 import at.rocworks.oa4j.var.IntegerVar;
 import at.rocworks.oa4j.var.TextVar;
-
-import java.util.logging.Level;
+import at.rocworks.oa4j.jni.ErrCode;
+import at.rocworks.oa4j.jni.ErrPrio;
 
 /**
  *
@@ -40,7 +41,7 @@ public class ApiTestExternHdl extends ExternHdlFunction {
      */
     @Override
     public DynVar execute(TextVar function, DynVar in) {
-        JDebug.out.log(Level.INFO, "execute function={0} parameter={1}", new Object[] { function, in.formatValue() });
+        JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR, String.format("execute function=%s parameter=%s",  function, in.formatValue() ));
         if (function.equals("TestDpTest")) {
             JDebug.out.info(function.toString());
             startFunc("jEvalScript",
@@ -57,7 +58,7 @@ public class ApiTestExternHdl extends ExternHdlFunction {
                         "}");
                 startFunc("jEvalScript", new DynVar(script, new DynVar(), new DynVar()));
         } else {
-            JDebug.out.info("unhandled: "+function.toString());
+            JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR, "unhandled: "+function.toString());
         }
 
 
