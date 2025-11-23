@@ -24,7 +24,6 @@ import at.rocworks.oa4j.jni.ErrPrio;
 import java.io.IOException;
 import java.net.*;
 import java.util.Enumeration;
-import java.util.logging.Level;
 
 /**
  *
@@ -54,7 +53,7 @@ public class ApiBroadcast {
                 }
             }
         }
-        JDebug.out.info("Broadcast PORT="+ PORT +" RequestDp="+DP_REQUEST+" ResponseDp="+DP_RESPONSE);
+        JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR, "Broadcast PORT="+ PORT +" RequestDp="+DP_REQUEST+" ResponseDp="+DP_RESPONSE);
 
         BroadcastClient client = new BroadcastClient();
         client.init();
@@ -75,7 +74,7 @@ public class ApiBroadcast {
             synchronized ( ApiBroadcast.this ) { ApiBroadcast.this.notifyAll(); }
         }));
         synchronized ( ApiBroadcast.this ) { ApiBroadcast.this.wait(); }
-        JDebug.out.info("Shutdown");
+        JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR, "Shutdown");
     }
 
     public static class BroadcastClient extends Thread {
@@ -121,7 +120,7 @@ public class ApiBroadcast {
 
                     //We have a response
                     String host = receivePacket.getAddress().getHostAddress().toString();
-                    JDebug.out.info("Broadcast response from server: " + host);
+                    JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR, "Broadcast response from server: " + host);
 
                     //Check if the message is correct
                     String message = new String(receivePacket.getData()).trim();
@@ -142,7 +141,7 @@ public class ApiBroadcast {
         }
 
         public void request() {
-            JDebug.out.info("Request...");
+            JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR, "Request...");
 
             // Find the server using UDP broadcast
             try {
@@ -176,10 +175,10 @@ public class ApiBroadcast {
                         DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, broadcast, PORT);
                         clientSocket.send(sendPacket);
 
-                        JDebug.out.info("Request packet sent to: " + broadcast.getHostAddress() + ":"+ PORT +"; Interface: " + networkInterface.getDisplayName());
+                        JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR, "Request packet sent to: " + broadcast.getHostAddress() + ":"+ PORT +"; Interface: " + networkInterface.getDisplayName());
                     }
                 }
-                JDebug.out.info("Done looping over all network interfaces.");
+                JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR, "Done looping over all network interfaces.");
 
             } catch (IOException ex) {
                 JManager.stackTrace(ErrPrio.PRIO_WARNING, ErrCode.UNEXPECTEDSTATE, ex);
@@ -194,7 +193,7 @@ public class ApiBroadcast {
         public void init() throws UnknownHostException {
             //Open a random PORT to send the package
             try {
-                JDebug.out.info("listen on PORT "+ PORT);
+                JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR, "listen on PORT "+ PORT);
                 serverSocket = new DatagramSocket(PORT, InetAddress.getByName("0.0.0.0"));
                 serverSocket.setBroadcast(true);
             } catch (SocketException e) {
@@ -211,7 +210,7 @@ public class ApiBroadcast {
             try {
                 //Keep a serverSocket open to listen to all the UDP traffic that is destined for this PORT
                 while (true) {
-                    JDebug.out.info("Ready to receive broadcast packets.");
+                    JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR, "Ready to receive broadcast packets.");
 
                     //Receive a packet
                     byte[] recvBuf = new byte[1024];
@@ -219,8 +218,7 @@ public class ApiBroadcast {
                     serverSocket.receive(packet);
 
                     //Packet received
-                    JDebug.out.info("Discovery packet received from: " + packet.getAddress().getHostAddress());
-                    //JDebug.out.info(">>>Packet received; data: " + new String(packet.getData()));
+                    JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR, "Discovery packet received from: " + packet.getAddress().getHostAddress());
 
                     //See if the packet holds the right command (message)
                     String message = new String(packet.getData()).trim();
@@ -231,7 +229,7 @@ public class ApiBroadcast {
                         DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, packet.getAddress(), packet.getPort());
                         serverSocket.send(sendPacket);
 
-                        JDebug.out.info("Sent packet to: " + sendPacket.getAddress().getHostAddress());
+                        JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR, "Sent packet to: " + sendPacket.getAddress().getHostAddress());
                     }
                 }
             } catch (IOException ex) {

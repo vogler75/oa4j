@@ -17,10 +17,8 @@
 */
 import at.rocworks.oa4j.base.JClient;
 import at.rocworks.oa4j.base.JManager;
-import at.rocworks.oa4j.base.JDebug;
 import java.util.Arrays;
 import java.util.List;
-import java.util.logging.Level;
 import at.rocworks.oa4j.jni.ErrCode;
 import at.rocworks.oa4j.jni.ErrPrio;
 
@@ -44,25 +42,25 @@ public class ApiTestDpNames {
         m.stop();
     }    
     
-    public void run() throws InterruptedException {               
+    public void run() throws InterruptedException {
         // variant 1
         JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR, "--- DPNAMES BEG ---");
         List<String> dps1 = Arrays.asList(JClient.dpNames("ExampleDP*"));
-        dps1.forEach((dp)->JDebug.out.info(dp));
+        dps1.forEach((dp)->JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR, dp));
         JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR, "--- DPNAMES END ---");
-        
+
         // variant 2
         JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR, "--- DPNAMES BEG ---");
         String[] dps2 = JClient.dpNames("*.**");
-        JDebug.out.log(Level.INFO, "found {0} datapoints.", dps2.length);
+        JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR, String.format("found %s datapoints.", dps2.length));
         JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR, "--- DPNAMES END ---");
 
         // variant 3 with dpType
         JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR, "--- DPNAMES BEG ---");
         String[] dps3 = JClient.dpNames("*", "ExampleDP_Float");
-        JDebug.out.log(Level.INFO, "found {0} datapoints.", (dps3==null ? "no" : dps3.length));
+        JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR, String.format("found %s datapoints.", (dps3==null ? "no" : dps3.length)));
         List<String> lst3 = Arrays.asList(dps3);
-        lst3.forEach((dp)->JDebug.out.info(dp));
+        lst3.forEach((dp)->JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR, dp));
         JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR, "--- DPNAMES END ---");
     }              
 }

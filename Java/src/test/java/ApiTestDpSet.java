@@ -18,12 +18,10 @@
 import at.rocworks.oa4j.base.JClient;
 import at.rocworks.oa4j.base.JManager;
 import at.rocworks.oa4j.var.*;
-import at.rocworks.oa4j.base.JDebug;
 //import javafx.util.Pair;
 
 import java.util.Arrays;
 import java.util.Date;
-import java.util.logging.Level;
 import at.rocworks.oa4j.jni.ErrCode;
 import at.rocworks.oa4j.jni.ErrPrio;
 
@@ -62,7 +60,7 @@ public class ApiTestDpSet {
                 .add("System1:ExampleDP_SumAlert.:_original.._value", "hello world")
                 .await()
                 .getRetCode();
-        JDebug.out.log(Level.INFO, "retCode={0}", ret);
+        JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR, String.format("retCode=%s", ret));
         JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR, "--- DPSET END ---");
         
         Thread.sleep(1000);
@@ -75,7 +73,7 @@ public class ApiTestDpSet {
                 .add("System1:ExampleDP_SumAlert.:_original.._value", new TextVar("hello timed world "+t.toString()))
                 .await()
                 .getRetCode();
-        JDebug.out.log(Level.INFO, "retCode={0}", ret);
+        JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR, String.format("retCode=%s", ret));
         JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR, "--- DPSETTIMED END ---");
 
         Thread.sleep(1000);

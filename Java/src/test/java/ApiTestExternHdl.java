@@ -16,7 +16,6 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 import at.rocworks.oa4j.jni.ExternHdlFunction;
-import at.rocworks.oa4j.base.JDebug;
 import at.rocworks.oa4j.base.JManager;
 import at.rocworks.oa4j.var.DynVar;
 import at.rocworks.oa4j.var.IntegerVar;
@@ -43,7 +42,7 @@ public class ApiTestExternHdl extends ExternHdlFunction {
     public DynVar execute(TextVar function, DynVar in) {
         JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR, String.format("execute function=%s parameter=%s",  function, in.formatValue() ));
         if (function.equals("TestDpTest")) {
-            JDebug.out.info(function.toString());
+            JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR, function.toString());
             startFunc("jEvalScript",
                     new DynVar(new TextVar("main() { dpSet($1, $2); }"),
                             new DynVar(
@@ -51,7 +50,7 @@ public class ApiTestExternHdl extends ExternHdlFunction {
                                     new TextVar("$2:0")),
                             new DynVar()));
         } else if (function.equals("NestedCall")) {
-                JDebug.out.info(function.toString());
+                JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR, function.toString());
                 TextVar script=new TextVar(
                         "main() { dyn_anytype out;"+
                         "int ret = javaCallAsync(\"ApiTestExternHdl\", \"Inside\", makeDynString(\"inside!\"), out);"+

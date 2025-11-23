@@ -16,7 +16,6 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 import at.rocworks.oa4j.jni.ExternHdlFunction;
-import at.rocworks.oa4j.base.JDebug;
 import at.rocworks.oa4j.base.JManager;
 import at.rocworks.oa4j.var.DynVar;
 import at.rocworks.oa4j.var.IntegerVar;
@@ -28,7 +27,6 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.util.logging.Level;
 
 /**
  *
@@ -47,7 +45,7 @@ public class CtrlExtScreenshot extends ExternHdlFunction {
      */
     @Override
     public DynVar execute(TextVar function, DynVar in) {
-       JDebug.out.log(Level.INFO, "execute function={0} parameter={1}", new Object[] { function, in.formatValue() });
+       JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR, String.format("execute function=%s parameter=%s", function, in.formatValue()));
        if (function.equals("Screenshot")) {
             Rectangle screenRect = new Rectangle(Toolkit.getDefaultToolkit().getScreenSize());
             BufferedImage capture = null;
@@ -61,7 +59,7 @@ public class CtrlExtScreenshot extends ExternHdlFunction {
                 JManager.stackTrace(ErrPrio.PRIO_SEVERE, ErrCode.UNEXPECTEDSTATE, e);
             }
         } else {
-            JDebug.out.info("unhandled: "+function.toString());
+            JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR, "unhandled: "+function.toString());
         }
         return new DynVar(new IntegerVar(0));
     }

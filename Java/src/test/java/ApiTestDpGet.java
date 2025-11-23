@@ -20,11 +20,9 @@ import at.rocworks.oa4j.base.JDpMsgAnswer;
 import at.rocworks.oa4j.base.JManager;
 import at.rocworks.oa4j.var.Variable;
 import at.rocworks.oa4j.var.VariablePtr;
-import at.rocworks.oa4j.base.JDebug;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.logging.Level;
 import at.rocworks.oa4j.jni.ErrCode;
 import at.rocworks.oa4j.jni.ErrPrio;
 
@@ -55,7 +53,7 @@ public class ApiTestDpGet {
                 .add("System1:ExampleDP_SumAlert.:_online.._value")
                 .action((JDpMsgAnswer answer)->{
                     JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR, "--- ANSWER BEG ---");
-                    JDebug.out.info(answer.toString());
+                    JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR, answer.toString());
                     JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR, "--- ANSWER END ---");
                 })       
                 .await();
@@ -65,12 +63,12 @@ public class ApiTestDpGet {
         JDpMsgAnswer answer = JClient.dpGet()
                 .add("System1:ExampleDP_Trend1.:_online.._value")
                 .add("System1:ExampleDP_SumAlert.:_online.._value")
-                .await();       
-        JDebug.out.log(Level.INFO, "ret={0}", answer.getRetCode());
-        answer.forEach((vc)->JDebug.out.info(vc.toString()));
+                .await();
+        JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR, String.format("ret=%s", answer.getRetCode()));
+        answer.forEach((vc)->JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR, vc.toString()));
         JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR, "toDouble:");
         try {
-            answer.forEach((vc) -> JDebug.out.info(vc.getVariable().toDouble().toString()));
+            answer.forEach((vc) -> JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR, vc.getVariable().toDouble().toString()));
         } catch ( Exception ex ) {
             JManager.stackTrace(ErrPrio.PRIO_INFO, ErrCode.NOERR, ex);
         }

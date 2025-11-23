@@ -43,7 +43,7 @@ public class ApiTestDpGetPeriod {
         JClient.dpGetPeriod(new Date().getTime() - 1000 * 60, new Date().getTime(), 0)
             .add("ExampleDP_Trend1.")
             .action((JDpMsgAnswer answer) -> {
-                JDebug.out.info(answer.toString());
+                JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR, answer.toString());
             })
             .await();
         JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR, "dpGetPeriod...done");

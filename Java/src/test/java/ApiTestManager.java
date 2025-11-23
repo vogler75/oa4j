@@ -15,12 +15,10 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-import at.rocworks.oa4j.base.JDebug;
 import at.rocworks.oa4j.base.JManager;
 import at.rocworks.oa4j.jni.DpMsg;
 import at.rocworks.oa4j.jni.DpMsgManipDp;
 
-import java.util.logging.Level;
 import at.rocworks.oa4j.jni.ErrCode;
 import at.rocworks.oa4j.jni.ErrPrio;
 
@@ -34,8 +32,8 @@ public class ApiTestManager extends JManager {
     public boolean doReceiveDpMsg(long cPtrDpMsg) {
         DpMsg msg = new DpMsg(cPtrDpMsg);
         JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR, "------------DPMSG DEBUG BEGIN-------------------------");
-        JDebug.out.log(Level.INFO, "isA => {0}", msg.getType());
-        JDebug.out.info(msg.toDebug(99));
+        JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR, String.format("isA => %s", msg.getType()));
+        JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR, msg.toDebug(99));
         JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR, "------------DPMSG DEBUG END  -------------------------");
         try {
             if (msg.getType()== msg.getMsgTypes().DP_MSG_MANIP_DP()) {

@@ -24,9 +24,7 @@ import at.rocworks.oa4j.base.JManager;
 import at.rocworks.oa4j.var.DynVar;
 import at.rocworks.oa4j.var.TimeVar;
 import at.rocworks.oa4j.var.Variable;
-import at.rocworks.oa4j.base.JDebug;
 import java.util.Date;
-import java.util.logging.Level;
 import at.rocworks.oa4j.jni.ErrCode;
 import at.rocworks.oa4j.jni.ErrPrio;
 
@@ -85,7 +83,6 @@ public class ApiTestDpQueryConnect {
                         JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR, "v/s=" + count / t);
                         JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR, "err=" + answer.getErrorCode() + ": " + answer.getErrorText());
                         JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR, "items=" + count);
-                        //JDebug.out.info(answer.toString());
                     }
                     JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR, "--- ANSWER END ---");
                 } catch (Exception ex) {
@@ -109,7 +106,7 @@ public class ApiTestDpQueryConnect {
             t2=new Date();
             long ms;
             if ( (ms=t2.getTime()-t1.getTime()) >= 1000 && c.value > 0) {
-                JDebug.out.log(Level.INFO, "v/s: {0}", c.value/(ms/1000));
+                JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR, String.format("v/s: %s", c.value/(ms/1000)));
                 t1=t2;
                 c.value=0;
             }
@@ -117,7 +114,7 @@ public class ApiTestDpQueryConnect {
     }
 
     private void printHotlink(JDpHLGroup hotlink) {
-        JDebug.out.log(Level.INFO, "--- HOTLINK BEG --- {0}", hotlink.getNumberOfItems());
+        JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR, String.format("--- HOTLINK BEG --- %s", hotlink.getNumberOfItems()));
         // first item is the header, it is a dyn of the selected attributes
         if ( hotlink.getNumberOfItems() > 0 ) {
             // second item contains the result data

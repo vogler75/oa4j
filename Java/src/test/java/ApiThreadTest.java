@@ -23,12 +23,13 @@ import at.rocworks.oa4j.base.JDpVCItem;
 import at.rocworks.oa4j.base.JManager;
 import at.rocworks.oa4j.var.DpIdentifierVar;
 import at.rocworks.oa4j.var.DynVar;
-import at.rocworks.oa4j.base.JDebug;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import at.rocworks.oa4j.jni.ErrCode;
+import at.rocworks.oa4j.jni.ErrPrio;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -68,8 +69,8 @@ public class ApiThreadTest {
         //new Thread(()->doDpGetComment(delay)).start();
         int k=5;
         while ( true ) {
-            JDebug.out.log(Level.INFO, "dpGet {0} dpNames {1} dpConnect {2} dpGetComment {3}",
-                    new Object[] {c_dpGet/k, c_dpNames/k, c_dpConnect/k, c_dpGetComment/k});
+            JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR, String.format("dpGet %s dpNames %s dpConnect %s dpGetComment %s",
+                    c_dpGet/k, c_dpNames/k, c_dpConnect/k, c_dpGetComment/k));
             c_dpGet=c_dpNames=c_dpConnect=c_dpGetComment=0;
             Thread.sleep(k*1000);
         }
@@ -127,7 +128,7 @@ public class ApiThreadTest {
 
     
     public void doDpQueryConnect() {
-        JDebug.out.info("dpQueryConnect...");
+        JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR, "dpQueryConnect...");
         JDpQueryConnect conn = JClient.dpQueryConnectSingle("SELECT '_online.._value','_online.._stime' FROM 'Test*.**'")
                 .action((JDpMsgAnswer answer)->{
 //                    JDebug.out.info("--- ANSWER BEG ---");

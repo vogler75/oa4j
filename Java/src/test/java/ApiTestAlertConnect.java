@@ -21,8 +21,6 @@ import at.rocworks.oa4j.base.JDpHLGroup;
 import at.rocworks.oa4j.base.JDpVCItem;
 import at.rocworks.oa4j.base.JManager;
 import at.rocworks.oa4j.var.Variable;
-import at.rocworks.oa4j.base.JDebug;
-import java.util.logging.Level;
 import at.rocworks.oa4j.jni.ErrCode;
 import at.rocworks.oa4j.jni.ErrPrio;
 
@@ -86,7 +84,6 @@ public class ApiTestAlertConnect {
                         Variable var = vc.getVariable();
                         JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR, String.format("%s: %s [%s]", vc.getDpName(), var.formatValue(), var.isA()));
                     });
-                    //JDebug.out.info(hotlink.toString());
                     JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR, "--- HOTLINK END ---");
                 })
                 .connect();
