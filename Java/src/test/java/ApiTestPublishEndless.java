@@ -18,6 +18,7 @@
 import at.rocworks.oa4j.base.JClient;
 import at.rocworks.oa4j.base.JDpConnect;
 import at.rocworks.oa4j.base.JDpHLGroup;
+import at.rocworks.oa4j.base.JDpMsgAnswer;
 import at.rocworks.oa4j.base.JManager;
 import at.rocworks.oa4j.var.FloatVar;
 import at.rocworks.oa4j.var.TextVar;
@@ -79,7 +80,18 @@ public class ApiTestPublishEndless {
         JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR, "Starting endless publisher...");
         JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR, "Verbose mode: " + (verbose ? "ON" : "OFF"));
 
-        // Connect to ExampleDP_Delay to get the delay value
+        // Get initial delay value with dpGet (gets immediate answer)
+        JDpMsgAnswer initialAnswer = JClient.dpGet()
+                .add("ExampleDP_Delay.")
+                .await();
+
+        if (initialAnswer.size() > 0) {
+            delayMs = initialAnswer.getItem(0).getVariable().toLong(1000L);
+            JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR,
+                String.format("Initial delay from dpGet: %d ms", delayMs));
+        }
+
+        // Connect to ExampleDP_Delay to get updates when delay changes
         JDpConnect delayConn = JClient.dpConnect()
                 .add("ExampleDP_Delay.")
                 .action((JDpHLGroup hotlink) -> {
@@ -94,10 +106,7 @@ public class ApiTestPublishEndless {
                 })
                 .connect();
 
-        JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR, "Connected to ExampleDP_Delay");
-
-        // Give the connection a moment to establish
-        Thread.sleep(500);
+        JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR, "Connected to ExampleDP_Delay for updates");
 
         // Main publishing loop
         long publishCount = 0;
