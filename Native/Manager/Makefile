@@ -11,6 +11,7 @@ MYOBJS = WCCOAJavaMain.o \
          WCCOAJavaManager.o \
          WCCOAJavaResources.o \
          ../LibJava/Java.o \
+         ../LibJava/JNIValidator.o \
          at_rocworks_oa4j_jni_AnswerGroup.o \
          at_rocworks_oa4j_jni_DpIdValueList.o \
          at_rocworks_oa4j_jni_DpMsgAnswer.o \

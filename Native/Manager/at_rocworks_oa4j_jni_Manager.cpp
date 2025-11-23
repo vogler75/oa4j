@@ -18,6 +18,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <WCCOAJavaManager.hxx>
 #include <WCCOAJavaResources.hxx>
 #include <../LibJava/Java.hxx>
+#include <../LibJava/JNIValidator.hxx>
 #include <at_rocworks_oa4j_jni_Manager.h>
 
 #include <DpIdentifierVar.hxx>
@@ -47,7 +48,7 @@ JNIEXPORT jint JNICALL Java_at_rocworks_oa4j_jni_Manager_apiStartup
 		env->DeleteLocalRef(jstr);
 	}
   
-  if (initResources) 
+  if (initResources)
     WCCOAJavaResources::init(len, argv);
 
 	if (jtype == API_MAN)
@@ -55,6 +56,11 @@ JNIEXPORT jint JNICALL Java_at_rocworks_oa4j_jni_Manager_apiStartup
 		//std::cout << "Startup Java/WinCCOA API connection..." << std::endl;
 		WCCOAJavaManager::startupManager(len, argv, env, jobj, API_MAN, connectToData, connectToEvent);
 		//std::cout << "Startup Java/WinCCOA API connection...done " << std::endl;
+		// Clean up argv strings and array
+		for (int i = 0; i < len; i++) {
+			free(argv[i]);
+		}
+		free(argv);
 		return 0;
 	}
 	else
@@ -62,11 +68,21 @@ JNIEXPORT jint JNICALL Java_at_rocworks_oa4j_jni_Manager_apiStartup
 		//std::cout << "Startup Java/WinCCOA DB connection..." << std::endl;
 		WCCOAJavaManager::startupManager(len, argv, env, jobj, DB_MAN, connectToData, connectToEvent);
 		//std::cout << "Startup Java/WinCCOA DB connection...done " << std::endl;
+		// Clean up argv strings and array
+		for (int i = 0; i < len; i++) {
+			free(argv[i]);
+		}
+		free(argv);
 		return 0;
 	}
 	else
 	{
 		std::cout << "Unknown ManagerType " << jtype << std::endl;
+		// Clean up argv strings and array
+		for (int i = 0; i < len; i++) {
+			free(argv[i]);
+		}
+		free(argv);
 		return -1;
 	}
 }
@@ -541,7 +557,23 @@ JNIEXPORT jboolean JNICALL Java_at_rocworks_oa4j_jni_Manager_setUserId
 JNIEXPORT void JNICALL Java_at_rocworks_oa4j_jni_Manager_apiLog
 (JNIEnv *env, jobject obj, jint jprio, jlong jstate, jstring jtext)
 {
+	// Validate parameters
+	if (!JNIValidator::validatePriority(jprio)) {
+		return;
+	}
+	if (!JNIValidator::validateErrorCode(jstate)) {
+		return;
+	}
+	if (!JNIValidator::validateJString(env, jtext, "jtext")) {
+		return;
+	}
+
+	// Convert and log
 	CharString *text = Java::convertJString(env, jtext);
-	ErrHdl::error((ErrClass::ErrPrio)jprio, ErrClass::ERR_IMPL, (ErrClass::ErrCode)jstate, text->c_str());
-	delete text;
+	if (text != NULL) {
+		ErrHdl::error((ErrClass::ErrPrio)jprio, ErrClass::ERR_IMPL, (ErrClass::ErrCode)jstate, text->c_str());
+		delete text;
+	} else {
+		JNIValidator::reportValidationError("jtext", "Failed to convert jstring");
+	}
 }

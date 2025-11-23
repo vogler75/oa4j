@@ -168,11 +168,17 @@ int Java::CheckException(JNIEnv *env, const char *msg)
 
 void Java::copyJavaStringToString(JNIEnv *env, jstring s, char **d)
 {
-	CharString *cs;
 	const char *js = env->GetStringUTFChars(s, 0);
-	cs = new CharString(js);
-	*d = (char *)malloc((cs)->len() + 1);
-	strcpy(*d, *cs);
+	if (js == NULL) {
+		*d = NULL;
+		return;
+	}
+
+	size_t len = strlen(js);
+	*d = (char *)malloc(len + 1);
+	if (*d != NULL) {
+		strcpy(*d, js);
+	}
 	env->ReleaseStringUTFChars(s, js);
 }
 

@@ -8,6 +8,7 @@ LIBS = $(COMDRV_LIBS) $(LINKLIB) $(JAVA_HOME)/jre/lib/$(ARCH)/server/libjvm.so
 OBJS = $(COMDRV_OBJS)
 
 MYOBJS = ../LibJava/Java.o \
+         ../LibJava/JNIValidator.o \
          at_rocworks_oa4j_jni_Driver.o \
          WCCOAJavaAlertService.o \
          WCCOAJavaConnection.o \

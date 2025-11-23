@@ -61,6 +61,7 @@ at_rocworks_oa4j_jni_RequestGroup.cpp
 at_rocworks_oa4j_jni_RequestItem.cpp
 at_rocworks_oa4j_jni_SysMsg.cpp
 ../LibJava/Java.cpp
+../LibJava/JNIValidator.cpp
 )
 
 target_link_libraries(WCCOAJavaLibrary ${MANAGER_LIBS} ${JVM_LIB})

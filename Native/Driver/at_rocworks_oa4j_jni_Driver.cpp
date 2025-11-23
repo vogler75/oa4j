@@ -63,5 +63,11 @@ JNIEXPORT void JNICALL Java_at_rocworks_oa4j_jni_Driver_apiStartup
 		std::cout << "MainProcedure..." << std::endl;
 		WCCOAJavaDrv::thisManager->mainProcedure(argc, argv);
 	}
+
+	// Clean up argv strings and array
+	for (int i = 0; i < argc; i++) {
+		free(argv[i]);
+	}
+	free(argv);
 }
 
