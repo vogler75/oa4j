@@ -49,7 +49,7 @@ public class ApiTestManager extends JManager {
                 JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR, "It's a DP_MSG message...");
             }
         } catch (Exception ex) {
-            JDebug.StackTrace(Level.SEVERE, ex);
+            JManager.stackTrace(ErrPrio.PRIO_SEVERE, ErrCode.UNEXPECTEDSTATE, ex);
             return false;
         }
         return false;

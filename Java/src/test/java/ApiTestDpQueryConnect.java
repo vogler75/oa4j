@@ -89,7 +89,7 @@ public class ApiTestDpQueryConnect {
                     }
                     JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR, "--- ANSWER END ---");
                 } catch (Exception ex) {
-                    JDebug.StackTrace(Level.SEVERE, ex);
+                    JManager.stackTrace(ErrPrio.PRIO_SEVERE, ErrCode.UNEXPECTEDSTATE, ex);
                 }
                 })
                 .action((JDpHLGroup hotlink)->{

@@ -18,6 +18,8 @@
 import at.rocworks.oa4j.base.*;
 import at.rocworks.oa4j.var.DynVar;
 import at.rocworks.oa4j.var.TextVar;
+import at.rocworks.oa4j.jni.ErrCode;
+import at.rocworks.oa4j.jni.ErrPrio;
 
 import java.io.IOException;
 import java.net.*;
@@ -152,7 +154,7 @@ public class ApiBroadcast {
 //                    clientSocket.send(sendPacket);
 //                    JDebug.out.info(">>> Request packet sent to: 255.255.255.255 (DEFAULT):"+PORT);
 //                } catch (Exception ex) {
-//                    JDebug.StackTrace(Level.WARNING, ex);
+//                    JManager.stackTrace(ErrPrio.PRIO_WARNING, ErrCode.UNEXPECTEDSTATE, ex);
 //                }
 
                 // Broadcast the message over all the network interfaces
@@ -180,7 +182,7 @@ public class ApiBroadcast {
                 JDebug.out.info("Done looping over all network interfaces.");
 
             } catch (IOException ex) {
-                JDebug.StackTrace(Level.WARNING, ex);
+                JManager.stackTrace(ErrPrio.PRIO_WARNING, ErrCode.UNEXPECTEDSTATE, ex);
             }
         }
     }
@@ -233,7 +235,7 @@ public class ApiBroadcast {
                     }
                 }
             } catch (IOException ex) {
-                JDebug.StackTrace(Level.SEVERE, ex);
+                JManager.stackTrace(ErrPrio.PRIO_SEVERE, ErrCode.UNEXPECTEDSTATE, ex);
             }
         }
     }

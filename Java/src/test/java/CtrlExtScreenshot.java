@@ -17,9 +17,12 @@
 */
 import at.rocworks.oa4j.jni.ExternHdlFunction;
 import at.rocworks.oa4j.base.JDebug;
+import at.rocworks.oa4j.base.JManager;
 import at.rocworks.oa4j.var.DynVar;
 import at.rocworks.oa4j.var.IntegerVar;
 import at.rocworks.oa4j.var.TextVar;
+import at.rocworks.oa4j.jni.ErrCode;
+import at.rocworks.oa4j.jni.ErrPrio;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -55,7 +58,7 @@ public class CtrlExtScreenshot extends ExternHdlFunction {
                 ImageIO.write(capture, ftype, new File(fname));
                 return new DynVar(new IntegerVar(0), new TextVar(fname+"["+ftype+"]"));
             } catch (Exception e) {
-                JDebug.StackTrace(Level.SEVERE, e);
+                JManager.stackTrace(ErrPrio.PRIO_SEVERE, ErrCode.UNEXPECTEDSTATE, e);
             }
         } else {
             JDebug.out.info("unhandled: "+function.toString());

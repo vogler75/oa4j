@@ -17,6 +17,8 @@
 */
 package at.rocworks.oa4j.base;
 
+import at.rocworks.oa4j.jni.ErrCode;
+import at.rocworks.oa4j.jni.ErrPrio;
 import java.util.Date;
 import java.util.concurrent.Callable;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -208,8 +210,8 @@ public abstract class JHotLinkWaitForAnswer implements Runnable, Callable<Intege
         try {
             msgQueue.add(this.message);
         } catch ( IllegalStateException ex ) { // Queue Full
-            JDebug.StackTrace(Level.SEVERE, ex);
-        }    
+            JManager.stackTrace(ErrPrio.PRIO_SEVERE, ErrCode.UNEXPECTEDSTATE, ex);
+        }
     }
     
     @Override
@@ -227,7 +229,7 @@ public abstract class JHotLinkWaitForAnswer implements Runnable, Callable<Intege
                         try {
                             hotlink((JDpHLGroup) msg);
                         } catch (Exception ex) {
-                            JDebug.StackTrace(Level.SEVERE, ex);
+                            JManager.stackTrace(ErrPrio.PRIO_SEVERE, ErrCode.UNEXPECTEDSTATE, ex);
                         }
                     }                
             }

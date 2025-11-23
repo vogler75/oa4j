@@ -72,7 +72,7 @@ public class ApiTestDpGet {
         try {
             answer.forEach((vc) -> JDebug.out.info(vc.getVariable().toDouble().toString()));
         } catch ( Exception ex ) {
-            JDebug.StackTrace(Level.INFO, ex);
+            JManager.stackTrace(ErrPrio.PRIO_INFO, ErrCode.NOERR, ex);
         }
         JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR, "--- DPGET END ---");
         

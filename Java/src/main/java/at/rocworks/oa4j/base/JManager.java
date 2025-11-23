@@ -213,7 +213,7 @@ public class JManager extends Manager implements Runnable {
                 stop();
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
-                e.printStackTrace();
+                stackTrace(ErrPrio.PRIO_WARNING, ErrCode.UNEXPECTEDSTATE, e);
             }
         }));
 
@@ -314,14 +314,14 @@ public class JManager extends Manager implements Runnable {
     private void queueWorker() {        
         int k;
         try {
-            // Maximum of loop, otherwise it could happen that we are in this 
+            // Maximum of loop, otherwise it could happen that we are in this
             // loop forever, if concurrently hotlink-requests are added...
             Callable task;
             for ( k=0; k<=100 && (task=taskQueue.poll()) != null; k++ ) {
                 task.call();
             }
         } catch (Exception ex) {
-            JDebug.StackTrace(Level.SEVERE, ex);
+            stackTrace(ErrPrio.PRIO_SEVERE, ErrCode.UNEXPECTEDSTATE, ex);
         }                        
     }
     
@@ -478,6 +478,41 @@ public class JManager extends Manager implements Runnable {
         JManager instance = getInstance();
         if (instance != null) {
             instance.apiLog(prio.getValue(), code.getValue(), text);
-        }        
+        }
+    }
+
+    /**
+     * Static convenience method to log exception stack traces
+     * @param prio Priority level
+     * @param code Error code/state
+     * @param exception The exception to log
+     */
+    public static void stackTrace(ErrPrio prio, ErrCode code, Throwable exception) {
+        if (exception == null) {
+            return;
+        }
+
+        // Get the stack trace as a string
+        StringBuilder sb = new StringBuilder();
+        sb.append(exception.getClass().getName()).append(": ").append(exception.getMessage()).append("\n");
+
+        for (StackTraceElement element : exception.getStackTrace()) {
+            sb.append("  at ").append(element).append("\n");
+        }
+
+        // Remove trailing newline
+        if (sb.length() > 0 && sb.charAt(sb.length() - 1) == '\n') {
+            sb.setLength(sb.length() - 1);
+        }
+
+        log(prio, code, sb.toString());
+    }
+
+    /**
+     * Convenience method to log exception stack traces with WARNING priority
+     * @param exception The exception to log
+     */
+    public static void stackTrace(Throwable exception) {
+        stackTrace(ErrPrio.PRIO_WARNING, ErrCode.UNEXPECTEDSTATE, exception);
     }
 }
