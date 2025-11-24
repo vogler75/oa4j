@@ -104,7 +104,11 @@ Configuration is done in the WinCC OA project config file (config or config.leve
 ```ini
 [java]
 # JVM options (e.g., -Xmx512m for max heap size, --enable-native-access=ALL-UNNAMED for Java 17+)
-# Multiple options can be separated with spaces
+# Multiple options MUST be separated with spaces (each option becomes a separate JVM parameter)
+# Examples:
+#   Single option: jvmOption = "-Xmx512m"
+#   Multiple options: jvmOption = "-Xmx512m -Xms256m --enable-native-access=ALL-UNNAMED"
+#   Complex example: jvmOption = "--enable-native-access=ALL-UNNAMED -Xmx256m -XX:UseSVE=0"
 #jvmOption = "-Xmx512m -Xms256m"
 #jvmOption = "--enable-native-access=ALL-UNNAMED"
 

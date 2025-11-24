@@ -23,12 +23,27 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <signal.h>
 #include <cstring>
 #include <fstream>
+#include <sstream>
+#include <vector>
 
-#ifdef WIN32 
+#ifdef WIN32
 #define CLASS_PATH_SEPARATOR ";"
-#else 
+#else
 #define CLASS_PATH_SEPARATOR ":"
 #endif
+
+//------------------------------------------------------------------------------------------------
+// Split space-separated JVM options into individual options
+// This allows options like "-Xmx256m -Xms128m" to be properly parsed
+std::vector<std::string> splitJvmOptions(const std::string& optionsString) {
+	std::vector<std::string> options;
+	std::istringstream iss(optionsString);
+	std::string option;
+	while (iss >> option) {
+		options.push_back(option);
+	}
+	return options;
+}
 
 //------------------------------------------------------------------------------------------------
 
@@ -79,13 +94,18 @@ int main(int argc, char *argv[])
 		std::cout << "default: " << options[idx].optionString << std::endl;
 	}
 
-	// config 
+	// config
 
-	// jvmOption e.g. -Xmx512m
+	// jvmOption e.g. -Xmx512m or multiple options like "-Xmx512m -Xms256m"
 	if (strlen(WCCOAJavaResources::getJvmOption().c_str()) > 0)
 	{
-		options[++idx].optionString = strdup(WCCOAJavaResources::getJvmOption().c_str());
-		std::cout << "configs: " << options[idx].optionString << "'" << std::endl;
+		std::vector<std::string> jvmOpts = splitJvmOptions(WCCOAJavaResources::getJvmOption().c_str());
+		for (const auto& opt : jvmOpts) {
+			if (idx < 98) {  // Ensure we don't exceed the options array size
+				options[++idx].optionString = strdup(opt.c_str());
+				std::cout << "configs: " << options[idx].optionString << std::endl;
+			}
+		}
 	}
 
 	// user.dir
