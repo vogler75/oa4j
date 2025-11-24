@@ -110,6 +110,8 @@ public class ApiTestPublishEndless {
 
         // Main publishing loop
         long publishCount = 0;
+        long loopCount = 0;
+        long batchSize = 1;  // Sleep every N loops
         while (running) {
             try {
                 // Generate random values for trends
@@ -134,6 +136,7 @@ public class ApiTestPublishEndless {
 
                 publishCount++;
                 totalPublishCount++;
+                loopCount++;
 
                 // Print summary every 1 second in quiet mode
                 if (!verbose) {
@@ -146,9 +149,19 @@ public class ApiTestPublishEndless {
                     }
                 }
 
-                // Wait for the configured delay (only if delay > 0)
+                // Wait for the configured delay
                 if (delayMs > 0) {
-                    Thread.sleep(delayMs);
+                    // For small delays (< 1ms), batch sleep calls to reduce overhead
+                    if (delayMs < 1) {
+                        // Calculate batch size: how many loops before we sleep?
+                        batchSize = Math.max(1, (long)(1.0 / delayMs));
+                        if (loopCount % batchSize == 0) {
+                            Thread.sleep(1);  // Sleep 1ms every N loops
+                        }
+                    } else {
+                        // For delays >= 1ms, sleep on every loop
+                        Thread.sleep(delayMs);
+                    }
                 }
 
             } catch (InterruptedException e) {
