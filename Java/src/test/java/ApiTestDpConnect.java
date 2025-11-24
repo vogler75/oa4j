@@ -59,6 +59,25 @@ public class ApiTestDpConnect {
     }
 
     public void run() throws InterruptedException {
+        // Get initial values with dpGet (gets immediate answer)
+        JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR, "Getting initial values with dpGet...");
+        JDpMsgAnswer initialAnswer = JClient.dpGet()
+                .add("ExampleDP_Trend1.")
+                .add("ExampleDP_Trend2.")
+                .add("ExampleDP_Text.")
+                .await();
+
+        if (initialAnswer.size() > 0) {
+            JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR, "Initial values received:");
+            Double v1 = initialAnswer.getItem(0).getVariable().toDouble(0.0);
+            Double v2 = initialAnswer.getItem(1).getVariable().toDouble(0.0);
+            String text = initialAnswer.getItem(2).getVariable().toString();
+            JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR,
+                String.format("  Trend1: %.2f, Trend2: %.2f, Text: %s", v1, v2, text));
+            valueCount += 3;
+            totalValueCount += 3;
+        }
+
         JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR, "dpConnect...");
         JDpConnect conn = JClient.dpConnect()
                 .add("ExampleDP_Trend1.")
@@ -88,14 +107,14 @@ public class ApiTestDpConnect {
                     Double v2 = hotlink.getItemVar(1).toDouble();
                     JClient.dpSet("ExampleDP_Trend3.", v1+v2).send();
 
-                    valueCount++;
-                    totalValueCount++;
+                    valueCount += 3;  // 3 datapoints per hotlink event
+                    totalValueCount += 3;
 
                     // Print summary every 1 second
                     long currentTime = System.currentTimeMillis();
                     if (currentTime - lastPrintTime >= 1000) {
                         JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR,
-                            String.format("Received %d values", valueCount));
+                            String.format("Received %d datapoint values (%d hotlinks)", valueCount, valueCount / 3));
                         valueCount = 0;
                         lastPrintTime = currentTime;
                     }

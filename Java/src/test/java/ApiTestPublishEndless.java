@@ -39,7 +39,7 @@ import java.util.Random;
  */
 public class ApiTestPublishEndless {
 
-    private double delayMs = 1000.0; // Default delay in milliseconds
+    private double delayMs = 0.0; // Default delay in milliseconds (0 = wait 1000ms)
     private volatile boolean running = true;
     private final Random random = new Random();
     private volatile boolean verbose = false;
@@ -80,22 +80,20 @@ public class ApiTestPublishEndless {
         JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR, "Starting endless publisher...");
         JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR, "Verbose mode: " + (verbose ? "ON" : "OFF"));
 
-        // Get initial delay value with dpGet (gets immediate answer)
-        JDpMsgAnswer initialAnswer = JClient.dpGet()
-                .add("ExampleDP_Delay.")
-                .await();
-
-        if (initialAnswer.size() > 0) {
-            delayMs = initialAnswer.getItem(0).getVariable().toDouble(1000.0);
-            JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR,
-                String.format("Initial delay from dpGet: %.3f ms", delayMs));
-        }
-
-        // Connect to ExampleDP_Delay to get updates when delay changes
+        // Connect to ExampleDP_Delay with initial callback and hotlink updates
         JDpConnect delayConn = JClient.dpConnect()
                 .add("ExampleDP_Delay.")
+                .action((JDpMsgAnswer answer) -> {
+                    // Initial callback - gets current value when connection is established
+                    if (answer.size() > 0) {
+                        delayMs = answer.getItem(0).getVariable().toDouble(0.0);
+                        JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR,
+                            String.format("Initial delay from dpConnect: %.3f ms", delayMs));
+                    }
+                })
                 .action((JDpHLGroup hotlink) -> {
-                    double newDelay = hotlink.getItemVar(0).toDouble(1000.0);
+                    // Hotlink callback - gets updates when value changes
+                    double newDelay = hotlink.getItemVar(0).toDouble(0.0);
                     if (newDelay >= 0) {
                         delayMs = newDelay;
                         if (verbose) {
@@ -114,6 +112,12 @@ public class ApiTestPublishEndless {
         long batchSize = 1;  // Sleep every N loops
         while (running) {
             try {
+                // If delay is 0, do nothing and wait 1000ms
+                if (delayMs == 0) {
+                    Thread.sleep(1000);
+                    continue;
+                }
+
                 // Generate random values for trends
                 double trend1Value = Math.random() * 100.0;
                 double trend2Value = Math.random() * 100.0;
@@ -143,25 +147,23 @@ public class ApiTestPublishEndless {
                     long currentTime = System.currentTimeMillis();
                     if (currentTime - lastPrintTime >= 1000) {
                         JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR,
-                            String.format("Published %d values", publishCount));
+                            String.format("Published %d datapoint values (%d cycles)", publishCount * 3, publishCount));
                         publishCount = 0;
                         lastPrintTime = currentTime;
                     }
                 }
 
                 // Wait for the configured delay
-                if (delayMs > 0) {
+                if (delayMs < 1) {
                     // For small delays (< 1ms), batch sleep calls to reduce overhead
-                    if (delayMs < 1) {
-                        // Calculate batch size: how many loops before we sleep?
-                        batchSize = Math.max(1, (long)(1.0 / delayMs));
-                        if (loopCount % batchSize == 0) {
-                            Thread.sleep(1);  // Sleep 1ms every N loops
-                        }
-                    } else {
-                        // For delays >= 1ms, sleep on every loop
-                        Thread.sleep((long)delayMs);
+                    // Calculate batch size: how many loops before we sleep?
+                    batchSize = Math.max(1, (long)(1.0 / delayMs));
+                    if (loopCount % batchSize == 0) {
+                        Thread.sleep(1);  // Sleep 1ms every N loops
                     }
+                } else {
+                    // For delays >= 1ms, sleep on every loop
+                    Thread.sleep((long)delayMs);
                 }
 
             } catch (InterruptedException e) {
@@ -179,7 +181,7 @@ public class ApiTestPublishEndless {
         // Cleanup
         delayConn.disconnect();
         JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR,
-            String.format("Publisher stopped. Total publishes: %d", totalPublishCount));
+            String.format("Publisher stopped. Total datapoint values: %d (%d cycles)", totalPublishCount * 3, totalPublishCount));
     }
 
     /**
