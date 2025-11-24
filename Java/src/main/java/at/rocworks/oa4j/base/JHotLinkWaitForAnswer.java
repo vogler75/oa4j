@@ -55,11 +55,16 @@ public abstract class JHotLinkWaitForAnswer implements Runnable, Callable<Intege
     protected final JSemaphore gotAnswer = new JSemaphore(false);
     
     // async
-    private boolean async = false;    
+    private boolean async = false;
     private LinkedBlockingQueue<JDpVCGroup> msgQueue;
-    //private SemaphoreAnalog msgWait;    
+    //private SemaphoreAnalog msgWait;
     private final int MAX_QUEUE_SIZE = JManager.MAX_DEQUEUE_SIZE;
     private Thread thread;
+
+    // Queue overflow handling with once-per-second logging
+    private volatile int msgQueueFullReached = 0;
+    private volatile long lastMsgQueueFullLogTime = 0;
+    private static final long LOG_INTERVAL_MS = 1000;
     
     protected void setAsync() {
         setAsync(true);
@@ -209,8 +214,22 @@ public abstract class JHotLinkWaitForAnswer implements Runnable, Callable<Intege
     private void callbackDoneAsync() {
         try {
             msgQueue.add(this.message);
-        } catch ( IllegalStateException ex ) { // Queue Full
-            JManager.stackTrace(ErrPrio.PRIO_SEVERE, ErrCode.UNEXPECTEDSTATE, ex);
+            // If we were in overflow state, check if we've recovered
+            if (msgQueueFullReached > 0 && msgQueue.size() <= MAX_QUEUE_SIZE / 2) {
+                msgQueueFullReached = 0;
+                lastMsgQueueFullLogTime = 0;
+                JManager.getInstance().log(ErrPrio.PRIO_WARNING, ErrCode.NOERR,
+                    "Message queue recovered, size: " + msgQueue.size());
+            }
+        } catch (IllegalStateException ex) { // Queue Full
+            msgQueueFullReached++;
+            long currentTime = System.currentTimeMillis();
+            // Log once per second
+            if (currentTime - lastMsgQueueFullLogTime >= LOG_INTERVAL_MS) {
+                JManager.getInstance().log(ErrPrio.PRIO_WARNING, ErrCode.NOERR,
+                    "Message queue full (" + msgQueue.size() + "/" + MAX_QUEUE_SIZE + "), discarding message...");
+                lastMsgQueueFullLogTime = currentTime;
+            }
         }
     }
     

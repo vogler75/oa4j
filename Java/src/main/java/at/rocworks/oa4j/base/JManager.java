@@ -44,8 +44,10 @@ public class JManager extends Manager implements Runnable {
     private boolean connectToData = true;
     private boolean connectToEvent = true;
 
-    private int maxEnqueueSizeReached=0;
-    
+    private volatile int maxEnqueueSizeReached = 0;
+    private volatile long lastEnqueueFullLogTime = 0;
+    private static final long ENQUEUE_LOG_INTERVAL_MS = 1000;
+
     private static JManager instance = null; // Singleton
     
     protected JSemaphore loopPaused = new JSemaphore(true);
@@ -290,17 +292,27 @@ public class JManager extends Manager implements Runnable {
     }    
     
     protected void enqueueHotlink(JHotLinkWaitForAnswer hl) {
-        if ( taskQueue.size() >= MAX_ENQUEUE_SIZE_HIGH )  {
+        if (taskQueue.size() >= MAX_ENQUEUE_SIZE_HIGH) {
+            // OVERLOAD: Discard hotlink, log once per second
             maxEnqueueSizeReached++;
-            if (maxEnqueueSizeReached % 100==1)
-                log(ErrPrio.PRIO_WARNING, ErrCode.NOERR, "Max enqueue size reached " + taskQueue.size() + " discarding hotlink...");
-        } else if ( maxEnqueueSizeReached == 0 ) {
+            long currentTime = System.currentTimeMillis();
+            if (currentTime - lastEnqueueFullLogTime >= ENQUEUE_LOG_INTERVAL_MS) {
+                log(ErrPrio.PRIO_WARNING, ErrCode.NOERR,
+                    "Max enqueue size reached " + taskQueue.size() + " discarding hotlink...");
+                lastEnqueueFullLogTime = currentTime;
+            }
+        } else if (maxEnqueueSizeReached > 0 && taskQueue.size() <= MAX_ENQUEUE_SIZE_LOW) {
+            // RECOVERY: Below threshold, add hotlink and report recovery
             taskQueue.add(hl);
-        } else if ( taskQueue.size() <= MAX_ENQUEUE_SIZE_LOW ) {
+            maxEnqueueSizeReached = 0;
+            lastEnqueueFullLogTime = 0;
+            log(ErrPrio.PRIO_WARNING, ErrCode.NOERR,
+                "Enqueue below threshold size " + taskQueue.size() + " processing hotlink...");
+        } else if (maxEnqueueSizeReached == 0) {
+            // NORMAL: Not in overload, add hotlink
             taskQueue.add(hl);
-            maxEnqueueSizeReached=0;
-            log(ErrPrio.PRIO_WARNING, ErrCode.NOERR, "Enqueue below threshold size " + taskQueue.size() + " processing hotlink...");
         }
+        // IMPLICIT: else {} when overload && size > LOW - hotlink silently discarded during recovery phase
     }   
     
     protected void register(JHotLinkWaitForAnswer hl) {
