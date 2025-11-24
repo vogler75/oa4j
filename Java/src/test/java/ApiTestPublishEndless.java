@@ -39,7 +39,7 @@ import java.util.Random;
  */
 public class ApiTestPublishEndless {
 
-    private long delayMs = 1000; // Default delay in milliseconds
+    private double delayMs = 1000.0; // Default delay in milliseconds
     private volatile boolean running = true;
     private final Random random = new Random();
     private volatile boolean verbose = false;
@@ -86,21 +86,21 @@ public class ApiTestPublishEndless {
                 .await();
 
         if (initialAnswer.size() > 0) {
-            delayMs = initialAnswer.getItem(0).getVariable().toLong(1000L);
+            delayMs = initialAnswer.getItem(0).getVariable().toDouble(1000.0);
             JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR,
-                String.format("Initial delay from dpGet: %d ms", delayMs));
+                String.format("Initial delay from dpGet: %.3f ms", delayMs));
         }
 
         // Connect to ExampleDP_Delay to get updates when delay changes
         JDpConnect delayConn = JClient.dpConnect()
                 .add("ExampleDP_Delay.")
                 .action((JDpHLGroup hotlink) -> {
-                    long newDelay = hotlink.getItemVar(0).toLong(1000L);
+                    double newDelay = hotlink.getItemVar(0).toDouble(1000.0);
                     if (newDelay >= 0) {
                         delayMs = newDelay;
                         if (verbose) {
                             JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR,
-                                String.format("Delay updated to: %d ms", delayMs));
+                                String.format("Delay updated to: %.3f ms", delayMs));
                         }
                     }
                 })
@@ -160,7 +160,7 @@ public class ApiTestPublishEndless {
                         }
                     } else {
                         // For delays >= 1ms, sleep on every loop
-                        Thread.sleep(delayMs);
+                        Thread.sleep((long)delayMs);
                     }
                 }
 
