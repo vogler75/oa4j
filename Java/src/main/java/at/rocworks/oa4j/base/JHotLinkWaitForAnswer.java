@@ -58,7 +58,6 @@ public abstract class JHotLinkWaitForAnswer implements Runnable, Callable<Intege
     private boolean async = false;
     private LinkedBlockingQueue<JDpVCGroup> msgQueue;
     //private SemaphoreAnalog msgWait;
-    private final int MAX_QUEUE_SIZE = JManager.MAX_DEQUEUE_SIZE;
     private Thread thread;
 
     // Queue overflow handling with once-per-second logging
@@ -73,7 +72,7 @@ public abstract class JHotLinkWaitForAnswer implements Runnable, Callable<Intege
     protected void setAsync(boolean async) {
         if ( async && !this.async ) {
             if ( msgQueue == null ) 
-                msgQueue = new LinkedBlockingQueue<>(MAX_QUEUE_SIZE);
+                msgQueue = new LinkedBlockingQueue<>(JManager.MAX_DEQUEUE_SIZE_HIGH);
             (thread=new Thread(this)).start();
         }
         if ( !async && this.async ) {
@@ -214,20 +213,20 @@ public abstract class JHotLinkWaitForAnswer implements Runnable, Callable<Intege
     private void callbackDoneAsync() {
         try {
             msgQueue.add(this.message);
-            // If we were in overflow state, check if we've recovered
-            if (msgQueueFullReached > 0 && msgQueue.size() <= MAX_QUEUE_SIZE / 2) {
+            // RECOVERY: If we were in overflow state and queue dropped below LOW threshold
+            if (msgQueueFullReached > 0 && msgQueue.size() <= JManager.MAX_DEQUEUE_SIZE_LOW) {
                 msgQueueFullReached = 0;
                 lastMsgQueueFullLogTime = 0;
                 JManager.getInstance().log(ErrPrio.PRIO_WARNING, ErrCode.NOERR,
                     "Message queue recovered, size: " + msgQueue.size());
             }
-        } catch (IllegalStateException ex) { // Queue Full
+        } catch (IllegalStateException ex) { // OVERLOAD: Queue Full
             msgQueueFullReached++;
             long currentTime = System.currentTimeMillis();
             // Log once per second
             if (currentTime - lastMsgQueueFullLogTime >= LOG_INTERVAL_MS) {
                 JManager.getInstance().log(ErrPrio.PRIO_WARNING, ErrCode.NOERR,
-                    "Message queue full (" + msgQueue.size() + "/" + MAX_QUEUE_SIZE + "), discarding message...");
+                    "Message queue full (" + msgQueue.size() + "/" + JManager.MAX_DEQUEUE_SIZE_HIGH + "), discarding message...");
                 lastMsgQueueFullLogTime = currentTime;
             }
         }

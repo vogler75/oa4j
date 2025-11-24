@@ -37,9 +37,10 @@ public class JManager extends Manager implements Runnable {
     public static final int DB_MAN = 3;        
     public static final int API_MAN = 7;
 
-    public static int MAX_ENQUEUE_SIZE_HIGH = 10000;
-    public static int MAX_ENQUEUE_SIZE_LOW = 5000;
-    public static int MAX_DEQUEUE_SIZE = 1000; // used in JHotLinkWaitForAnswer
+    public static int MAX_ENQUEUE_SIZE_HIGH = 100000;
+    public static int MAX_ENQUEUE_SIZE_LOW = 50000;
+    public static int MAX_DEQUEUE_SIZE_HIGH = 10000;  // Message queue high threshold (full capacity)
+    public static int MAX_DEQUEUE_SIZE_LOW = 50000;    // Message queue low threshold (recovery point)
 
     private boolean connectToData = true;
     private boolean connectToEvent = true;
@@ -79,8 +80,9 @@ public class JManager extends Manager implements Runnable {
         return this;
     }
 
-    public JManager setMaxDequeueSize(int size) {
-        this.MAX_DEQUEUE_SIZE = size;
+    public JManager setMaxDequeueSize(int high, int low) {
+        this.MAX_DEQUEUE_SIZE_HIGH = high;
+        this.MAX_DEQUEUE_SIZE_LOW = low;
         return this;
     }
 
