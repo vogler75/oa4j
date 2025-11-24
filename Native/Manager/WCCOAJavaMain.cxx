@@ -24,6 +24,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <fstream>
 #include <sstream>
 #include <vector>
+#include <glob.h>
+#include <sys/stat.h>
 
 #ifdef WIN32
 #define CLASS_PATH_SEPARATOR ";"
@@ -42,6 +44,147 @@ std::vector<std::string> splitJvmOptions(const std::string& optionsString) {
 		options.push_back(option);
 	}
 	return options;
+}
+
+//------------------------------------------------------------------------------------------------
+// Strip leading and trailing quotes from a string
+std::string stripQuotes(const std::string& str) {
+	std::string result = str;
+	// Remove leading quote
+	if (!result.empty() && (result[0] == '"' || result[0] == '\'')) {
+		result = result.substr(1);
+	}
+	// Remove trailing quote
+	if (!result.empty() && (result.back() == '"' || result.back() == '\'')) {
+		result.pop_back();
+	}
+	return result;
+}
+
+//------------------------------------------------------------------------------------------------
+// Remove any trailing whitespace/newlines from a string
+std::string trimTrailing(const std::string& str) {
+	std::string result = str;
+	while (!result.empty() && (result.back() == '\n' || result.back() == '\r' || result.back() == ' ' || result.back() == '\t')) {
+		result.pop_back();
+	}
+	return result;
+}
+
+//------------------------------------------------------------------------------------------------
+// Check if a file is a valid classpath entry (must be a regular file)
+bool isValidClasspathFile(const std::string& path) {
+	struct stat st;
+	if (stat(path.c_str(), &st) != 0) {
+		return false; // File doesn't exist
+	}
+	// Only accept regular files (not directories, symlinks, etc.)
+	return S_ISREG(st.st_mode);
+}
+
+//------------------------------------------------------------------------------------------------
+// Expand wildcard patterns in a single path entry
+// Handles patterns like "lib/*.jar" and expands them to individual jar files
+// Returns a string with expanded paths separated by the platform-specific separator
+// Also returns the count of expanded files via the count parameter
+std::string expandGlobPattern(const std::string& pattern, int& count) {
+	glob_t glob_result;
+	std::string result;
+	count = 0;
+
+	// Strip quotes if present
+	std::string cleanPattern = stripQuotes(pattern);
+
+	// Only attempt glob expansion if the pattern contains wildcard characters
+	if (cleanPattern.find('*') == std::string::npos &&
+		cleanPattern.find('?') == std::string::npos &&
+		cleanPattern.find('[') == std::string::npos) {
+		// No wildcards, return the pattern as-is
+		result = cleanPattern;
+		count = 1;
+		return result;
+	}
+
+	// Try to expand the pattern using glob()
+	// Use GLOB_MARK to append '/' to directory entries so we can filter them out
+	int ret = glob(cleanPattern.c_str(), GLOB_NOSORT | GLOB_MARK, NULL, &glob_result);
+
+	if (ret == 0 && glob_result.gl_pathc > 0) {
+		// Pattern matched, filter and add valid classpath files
+		int validCount = 0;
+		for (size_t i = 0; i < glob_result.gl_pathc; i++) {
+			std::string path = glob_result.gl_pathv[i];
+
+			// Skip directories (marked with trailing slash by GLOB_MARK)
+			if (!path.empty() && path.back() == '/') {
+				continue;
+			}
+
+			// Only add regular files to classpath (skip symlinks, etc.)
+			if (isValidClasspathFile(path)) {
+				if (validCount > 0) {
+					result += CLASS_PATH_SEPARATOR;
+				}
+				result += path;
+				validCount++;
+			}
+		}
+		count = validCount;
+		globfree(&glob_result);
+	} else {
+		// Pattern didn't match, return the original pattern as-is
+		result = cleanPattern;
+		count = 1;
+		if (glob_result.gl_pathc > 0) {
+			globfree(&glob_result);
+		}
+	}
+
+	return result;
+}
+
+//------------------------------------------------------------------------------------------------
+// Expand wildcard patterns in a classpath string
+// Handles multiple entries separated by CLASS_PATH_SEPARATOR
+// Each entry can be expanded individually
+std::string expandClassPathEntries(const std::string& classPath, int& totalCount) {
+	std::string result;
+	std::string separator(CLASS_PATH_SEPARATOR);
+	size_t start = 0;
+	size_t pos = 0;
+	totalCount = 0;
+
+	// Process each path entry separated by CLASS_PATH_SEPARATOR
+	while ((pos = classPath.find(separator, start)) != std::string::npos) {
+		std::string entry = classPath.substr(start, pos - start);
+		entry = trimTrailing(entry);  // Trim trailing whitespace
+		int count = 0;
+		std::string expanded = expandGlobPattern(entry, count);
+		totalCount += (count > 0) ? count : 1; // Count as 1 if no glob expansion
+
+		if (!result.empty()) {
+			result += separator;
+		}
+		result += expanded;
+
+		start = pos + separator.length();
+	}
+
+	// Process the last entry
+	std::string lastEntry = classPath.substr(start);
+	if (!lastEntry.empty()) {
+		// Trim the last entry to remove any trailing whitespace
+		lastEntry = trimTrailing(lastEntry);
+		int count = 0;
+		std::string expanded = expandGlobPattern(lastEntry, count);
+		totalCount += (count > 0) ? count : 1; // Count as 1 if no glob expansion
+		if (!result.empty()) {
+			result += separator;
+		}
+		result += expanded;
+	}
+
+	return result;
 }
 
 //------------------------------------------------------------------------------------------------
@@ -128,10 +271,12 @@ int main(int argc, char *argv[])
 	// java.class.path
 	if (strlen(WCCOAJavaResources::getJvmClassPath().c_str()) > 0)
 	{
-		CharString *s = new CharString("-Djava.class.path=" + WCCOAJavaResources::getJvmClassPath());
+		int fileCount = 0;
+		std::string expandedPath = expandClassPathEntries(WCCOAJavaResources::getJvmClassPath().c_str(), fileCount);
+		CharString *s = new CharString("-Djava.class.path=" + expandedPath);
 		if (iClassPathSet == 0) iClassPathSet = ++idx;
 		options[iClassPathSet].optionString = strdup(s->c_str());
-		ErrHdl::error(ErrClass::PRIO_INFO, ErrClass::ERR_SYSTEM, 0, (CharString("Configs: ") + options[iClassPathSet].optionString).c_str());
+		ErrHdl::error(ErrClass::PRIO_INFO, ErrClass::ERR_SYSTEM, 0, (CharString("Configs: classpath has ") + CharString(fileCount) + CharString(" entries")).c_str());
 	}
 
 	// config file
@@ -143,17 +288,28 @@ int main(int argc, char *argv[])
 		std::string line;
 		while (std::getline(is, line) && idx < 99)
 		{
+			// Trim trailing whitespace and newlines from config file line
+			line = trimTrailing(line);
+
 			ErrHdl::error(ErrClass::PRIO_INFO, ErrClass::ERR_SYSTEM, 0, (CharString(fileName.c_str()) + line.c_str()).c_str());
 			char * cstr = new char[line.length() + 1];
 			std::strcpy(cstr, line.c_str());
 
-			if (line.find("-Duser.dir") == 0) 
+			if (line.find("-Duser.dir") == 0)
 				options[iUserDirSet].optionString = cstr;
-			else if (line.find("-Djava.class.path") == 0) 
-				options[iClassPathSet].optionString = cstr;
+			else if (line.find("-Djava.class.path") == 0) {
+				// Expand glob patterns in config file classpath
+				std::string pathPart = line.substr(18); // Skip "-Djava.class.path="
+				pathPart = trimTrailing(pathPart);  // Remove any trailing whitespace
+				int fileCount = 0;
+				std::string expandedPath = expandClassPathEntries(pathPart, fileCount);
+				std::string expanded = "-Djava.class.path=" + expandedPath;
+				options[iClassPathSet].optionString = strdup(expanded.c_str());
+				ErrHdl::error(ErrClass::PRIO_INFO, ErrClass::ERR_SYSTEM, 0, (CharString("Config file: classpath has ") + CharString(fileCount) + CharString(" entries")).c_str());
+			}
 			else if (line.find("-Djava.library.path") == 0)
 				options[iLibPathSet].optionString = cstr;
-			else 
+			else
 				options[++idx].optionString = cstr;
 		}
 	}
@@ -175,11 +331,14 @@ int main(int argc, char *argv[])
 
 		if (strcmp(argv[i], "-classpath") == 0 || strcmp(argv[i], "-cp") == 0) classPathIdx = i + 1;
 		if (classPathIdx == i) {
-			CharString *s = new CharString(CharString(options[iClassPathSet].optionString) + CLASS_PATH_SEPARATOR + CharString(argv[i]));
+			// Expand glob patterns in command-line classpath
+			int fileCount = 0;
+			std::string expandedArg = expandClassPathEntries(argv[i], fileCount);
+			CharString *s = new CharString(CharString(options[iClassPathSet].optionString) + CLASS_PATH_SEPARATOR + expandedArg);
 			//CharString *s = new CharString("-Djava.class.path=" + CharString(argv[i]));
 			if (iClassPathSet == 0) iClassPathSet = ++idx;
 			options[iClassPathSet].optionString = strdup(s->c_str());
-			ErrHdl::error(ErrClass::PRIO_INFO, ErrClass::ERR_SYSTEM, 0, (CharString("Argument: ") + options[iClassPathSet].optionString).c_str());
+			ErrHdl::error(ErrClass::PRIO_INFO, ErrClass::ERR_SYSTEM, 0, (CharString("Argument: classpath has ") + CharString(fileCount) + CharString(" entries")).c_str());
 		}
 
         if (strcmp(argv[i], "-libpath") == 0 || strcmp(argv[i], "-lp") == 0) libPathIdx = i + 1;
@@ -191,6 +350,29 @@ int main(int argc, char *argv[])
 		}
 
         if (strcmp(argv[i], "-debug") == 0) debugFlag = 1;
+	}
+
+	//=============== Debug: Print final classpath option ========================
+	if (iClassPathSet >= 0 && iClassPathSet < idx + 1) {
+		std::string cpOption = options[iClassPathSet].optionString;
+		size_t eqPos = cpOption.find('=');
+		if (eqPos != std::string::npos) {
+			std::string pathPart = cpOption.substr(eqPos + 1);
+			// Count separators to see how many entries we have
+			int sepCount = 0;
+			for (char c : pathPart) {
+				if (c == ':' || c == ';') sepCount++;
+			}
+			ErrHdl::error(ErrClass::PRIO_INFO, ErrClass::ERR_SYSTEM, 0, (CharString("Final classpath option length: ") + CharString((int)cpOption.length()) + CharString(" bytes, ") + CharString(sepCount + 1) + CharString(" paths")).c_str());
+
+			// Write classpath to file for debugging
+			std::ofstream debugFile("/tmp/oa4j_classpath_debug.txt");
+			if (debugFile.is_open()) {
+				debugFile << "Full classpath option:\n" << cpOption << "\n\n";
+				debugFile << "Path part only:\n" << pathPart << "\n";
+				debugFile.close();
+			}
+		}
 	}
 
 	//=============== load and initialize Java VM and JNI interface =============
