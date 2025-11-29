@@ -9,7 +9,9 @@
 # WinCC OA (Open Architecture) for Java
 WinCC Open Architecture for Java is an API to connect WinCC OA to Java.<br>
 It is based on the WinCC OA native API+JNI and works on Windows and Linux.<br>
-Because it's using the WinCC OA API you need to have a valid WinCC OA API license.<br>
+
+**⚠️ IMPORTANT: You need a valid WinCC OA API license to use this library!**<br>
+
 An example WinCC OA project is available in the examples directory.<br>
 An example for Scala and Clojure can be found in the examples directory.<br>
 * Java: the java library for WinCC OA (winccoa-java-x.x.jar)
