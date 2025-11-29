@@ -194,7 +194,34 @@ int main(int argc, char *argv[])
 	JavaVM *jvm;                      // Pointer to the JVM (Java Virtual Machine)
 	JNIEnv *env;                      // Pointer to native interface
 
-	WCCOAJavaResources::init(argc, argv);
+	// Find "--" separator: arguments before go to WinCC OA, arguments after go to Java
+	// Must be done BEFORE WCCOAJavaResources::init() which modifies argv
+	int separatorIdx = -1;
+	for (int i = 1; i < argc; i++) {
+		if (strcmp(argv[i], "--") == 0) {
+			separatorIdx = i;
+			break;
+		}
+	}
+
+	// Save Java arguments before WCCOAJavaResources::init() modifies argv
+	int javaArgStart = (separatorIdx > 0) ? separatorIdx + 1 : argc;
+	std::vector<std::string> javaArgs;
+	for (int i = javaArgStart; i < argc; i++) {
+		javaArgs.push_back(argv[i]);
+	}
+
+	// Also save -class argument from WinCC OA args (before "--")
+	int oaArgc = (separatorIdx > 0) ? separatorIdx : argc;
+	const char* className = nullptr;
+	for (int i = 1; i < oaArgc; i++) {
+		if ((strcmp(argv[i], "-class") == 0 || strcmp(argv[i], "-c") == 0) && i + 1 < oaArgc) {
+			className = strdup(argv[i + 1]);
+			break;
+		}
+	}
+
+	WCCOAJavaResources::init(oaArgc, argv);
 
 	ErrHdl::error(ErrClass::PRIO_INFO, ErrClass::ERR_SYSTEM, 0, (CharString("Runtime Version ") + PVSS_VERSION).c_str());
 
@@ -314,12 +341,12 @@ int main(int argc, char *argv[])
 		}
 	}
 
-	//=============== Arguments ===========================================
+	//=============== Arguments (only process args before "--") ===================
 	int userDirIdx = -1;
 	int classPathIdx = -1;
     int libPathIdx = -1;
     int debugFlag = 0; // off
-	for (int i = 0; i<argc; i++)
+	for (int i = 0; i < oaArgc; i++)
 	{
 		if (strcmp(argv[i], "-userdir") == 0 || strcmp(argv[i], "-ud") == 0) userDirIdx = i + 1;
 		if (userDirIdx == i) {
@@ -393,21 +420,21 @@ int main(int argc, char *argv[])
 	sprintf(verBuf, "JVM Load Succeeded: Version %d.%d", ((ver >> 16) & 0x0f), (ver & 0x0f));
 	ErrHdl::error(ErrClass::PRIO_INFO, ErrClass::ERR_SYSTEM, 0, verBuf);
 
-	//=============== Arguments ===========================================   
+	//=============== Arguments for Java (only args after "--") ====================
 	int i;
 	jstring str;
-	jobjectArray jargv = env->NewObjectArray(argc + 8, env->FindClass("java/lang/String"), 0);
-	int classIdx = -1;
-	const char *className = 0;
 
-	// pass arguments through
-	for (i = 0; i<argc; i++)
-	{
-		str = env->NewStringUTF(argv[i]);
+	// Use saved javaArgs (captured before WCCOAJavaResources::init modified argv)
+	int totalJavaArgs = (int)javaArgs.size() + 8;  // Plus our 8 extra args (-proj, -path, -num, -noinit, -debug)
+
+	jobjectArray jargv = env->NewObjectArray(totalJavaArgs, env->FindClass("java/lang/String"), 0);
+
+	// Pass saved Java arguments (from after "--")
+	i = 0;
+	for (const auto& arg : javaArgs) {
+		str = env->NewStringUTF(arg.c_str());
 		env->SetObjectArrayElement(jargv, i, str);
-
-		if (strcmp(argv[i], "-class") == 0 || strcmp(argv[i], "-c") == 0) classIdx = i + 1;
-		if (classIdx == i) className = argv[i];
+		i++;
 	}
 
 	// [1] add project name to argument list
@@ -415,7 +442,7 @@ int main(int argc, char *argv[])
 	env->SetObjectArrayElement(jargv, i, str);
 	i++;
 
-    // [2] 
+    // [2]
 	CharString projName = Resources::getProjectName();
 	str = env->NewStringUTF(projName);
 	env->SetObjectArrayElement(jargv, i, str);
@@ -426,7 +453,7 @@ int main(int argc, char *argv[])
 	env->SetObjectArrayElement(jargv, i, str);
 	i++;
 
-    // [4] 
+    // [4]
 	CharString projDir = Resources::getProjDir();
 	str = env->NewStringUTF(projDir);
 	env->SetObjectArrayElement(jargv, i, str);
@@ -437,7 +464,7 @@ int main(int argc, char *argv[])
 	env->SetObjectArrayElement(jargv, i, str);
 	i++;
 
-    // [6] 
+    // [6]
 	CharString manNum = CharString(Resources::getManNum());
 	str = env->NewStringUTF(manNum);
 	env->SetObjectArrayElement(jargv, i, str);
@@ -453,12 +480,12 @@ int main(int argc, char *argv[])
     env->SetObjectArrayElement(jargv, i, str);
     i++;
 
-    // Increase java array size (jargv) if new elements are added here!
+    // Increase totalJavaArgs if new elements are added here!
 
 
 	//=============== Call Main Method ==========================================
-	// check if classname was given
-	if (className == NULL) {
+	// check if classname was given (className was saved before init)
+	if (className == nullptr) {
 		ErrHdl::error(ErrClass::PRIO_INFO, ErrClass::ERR_SYSTEM, 0, "class Main will be used (no parameter -class given)");
 		className = "Main";
 	}
