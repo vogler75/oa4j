@@ -75,14 +75,14 @@ public class JManager extends Manager implements Runnable {
     private Map<String, String> initSysMsgData;
 
     public JManager setMaxEnqueueSize(int high, int low) {
-        this.MAX_ENQUEUE_SIZE_HIGH = high;
-        this.MAX_ENQUEUE_SIZE_LOW = low;
+        MAX_ENQUEUE_SIZE_HIGH = high;
+        MAX_ENQUEUE_SIZE_LOW = low;
         return this;
     }
 
     public JManager setMaxDequeueSize(int high, int low) {
-        this.MAX_DEQUEUE_SIZE_HIGH = high;
-        this.MAX_DEQUEUE_SIZE_LOW = low;
+        MAX_DEQUEUE_SIZE_HIGH = high;
+        MAX_DEQUEUE_SIZE_LOW = low;
         return this;
     }
 
