@@ -30,35 +30,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
- * Main manager class for connecting Java applications to WinCC OA.
- * <p>
- * JManager is a singleton that handles the connection lifecycle, message dispatching,
- * and task queue management for WinCC OA communication. It runs the main event loop
- * in a separate thread and processes callbacks from the native API.
- * </p>
- *
- * <h3>Basic Usage:</h3>
- * <pre>{@code
- * public static void main(String[] args) throws Exception {
- *     JManager m = new JManager();
- *     m.init(args).start();
- *     // Your code here - use JClient for datapoint operations
- *     m.stop();
- * }
- * }</pre>
- *
- * <h3>Command Line Arguments:</h3>
- * <ul>
- *   <li>{@code -proj <name>} - WinCC OA project name (required)</li>
- *   <li>{@code -num <number>} - Manager number (default: 1)</li>
- *   <li>{@code -path <dir>} - Project directory path</li>
- *   <li>{@code -db} - Connect as database manager type</li>
- *   <li>{@code -noinit} - Skip resource initialization</li>
- *   <li>{@code -debug} - Enable debug output</li>
- * </ul>
  *
  * @author vogler
- * @see JClient
  */
 public class JManager extends Manager implements Runnable {
     public static final int DB_MAN = 3;        
@@ -101,209 +74,65 @@ public class JManager extends Manager implements Runnable {
 
     private Map<String, String> initSysMsgData;
 
-    /**
-     * Sets the maximum enqueue size thresholds for the task queue.
-     * <p>
-     * When the queue reaches the high threshold, new hotlinks are discarded.
-     * When it drops below the low threshold, processing resumes normally.
-     * </p>
-     *
-     * @param high Upper threshold - queue rejects new items above this size (default: 100000)
-     * @param low  Lower threshold - queue recovers when size drops below this (default: 50000)
-     * @return this manager instance for method chaining
-     */
     public JManager setMaxEnqueueSize(int high, int low) {
         MAX_ENQUEUE_SIZE_HIGH = high;
         MAX_ENQUEUE_SIZE_LOW = low;
         return this;
     }
 
-    /**
-     * Sets the maximum dequeue size thresholds for message processing.
-     *
-     * @param high Upper threshold for dequeue operations (default: 10000)
-     * @param low  Lower threshold for dequeue operations (default: 50000)
-     * @return this manager instance for method chaining
-     */
     public JManager setMaxDequeueSize(int high, int low) {
         MAX_DEQUEUE_SIZE_HIGH = high;
         MAX_DEQUEUE_SIZE_LOW = low;
         return this;
     }
 
-    /**
-     * Returns the current number of tasks waiting in the queue.
-     *
-     * @return number of pending tasks in the task queue
-     */
     public int getEnqueueSize() {
         return taskQueue.size();
     }
 
-    /**
-     * Returns the singleton instance of the manager.
-     * <p>
-     * The instance is created when {@link #init(String[])} is first called.
-     * Returns null if the manager has not been initialized.
-     * </p>
-     *
-     * @return the JManager singleton instance, or null if not initialized
-     */
     public static JManager getInstance() {
         return JManager.instance;
     }
     
-    /**
-     * Returns the project directory path.
-     *
-     * @return absolute path to the WinCC OA project directory
-     */
     public String getProjPath() { return projDir; }
-
-    private JManager setProjPath(String projDir) {
-        this.projDir=projDir;
-        this.confDir=this.projDir+"/config";
-        return this;
-    }
-
-    /**
-     * Sets the WinCC OA project name.
-     *
-     * @param projName the project name/identifier
-     * @return this manager instance for method chaining
-     */
+    private JManager setProjPath(String projDir) { 
+        this.projDir=projDir; 
+        this.confDir=this.projDir+"/config";                 
+        return this; 
+    }        
+    
     public JManager setProjName(String projName) {
         this.projName=projName;
         return this;
     }
-
-    /**
-     * Returns the project configuration directory path.
-     *
-     * @return absolute path to the project's config directory
-     */
+    
     public String getConfigDir() { return confDir; }
-
-    /**
-     * Returns the log directory path from the WinCC OA API.
-     *
-     * @return absolute path to the log directory
-     */
     public String getLogDir() { return apiGetLogPath(); }
-
-    /**
-     * Returns the full path for this manager's log file.
-     *
-     * @return log directory path combined with manager name
-     */
     public String getLogFile() { return getLogDir()+getManName(); }
-
-    /**
-     * Retrieves a configuration value from the WinCC OA config file.
-     *
-     * @param key the configuration key (e.g., "general.managerStartMode")
-     * @return the configuration value, or null if not found
-     */
     public String getConfigValue(String key) { return apiGetConfigValue(key); }
-
-    /**
-     * Retrieves a configuration value with a default fallback.
-     *
-     * @param key the configuration key
-     * @param def default value to return if key is not found or empty
-     * @return the configuration value, or the default if not found/empty
-     */
     public String getConfigValueOrDefault(String key, String def) {
         String val = apiGetConfigValue(key);
         return (val==null || val.isEmpty()) ? def : val;
     }
-
-    /**
-     * Checks if the native WinCC OA library was successfully loaded.
-     *
-     * @return true if the native library is loaded and API is enabled
-     */
+    
     public boolean isEnabled() { return apiEnabled; }
-
-    /**
-     * Checks if the manager is currently connected to WinCC OA.
-     *
-     * @return true if connected and the event loop is running
-     */
     public boolean isConnected() { return apiConnected; }
-
-    /**
-     * Returns the manager type.
-     *
-     * @return manager type constant ({@link #API_MAN} or {@link #DB_MAN})
-     */
-    public int getManType() { return manType; }
-
+    
+    public int getManType() { return manType; }   
     private JManager setManType(int manType) { this.manType=manType; return this; }
-
-    /**
-     * Returns the manager number.
-     *
-     * @return the manager instance number (default: 1)
-     */
+    
     public int getManNum() { return manNum; }
-
-    /**
-     * Sets the manager number.
-     * <p>
-     * Multiple Java managers can run simultaneously with different numbers.
-     * </p>
-     *
-     * @param manNum the manager instance number
-     * @return this manager instance for method chaining
-     */
     public JManager setManNum(int manNum) { this.manNum=manNum; return this; }
-
-    /**
-     * Sets the event loop wait time in microseconds.
-     * <p>
-     * This controls how long the manager waits between dispatch cycles.
-     * Lower values increase responsiveness but use more CPU.
-     * </p>
-     *
-     * @param usec wait time in microseconds (default: 10000 = 10ms)
-     * @return this manager instance for method chaining
-     */
+    
     public JManager setLoopWaitUSec(int usec) {
         this.loopWaitUSec=usec;
         return this;
     }
-
-    /**
-     * Returns the event loop wait time in microseconds.
-     *
-     * @return current loop wait time in microseconds
-     */
+    
     public int getLoopWaitUSec() {
         return this.loopWaitUSec;
     }
-
-    /**
-     * Initializes the manager by parsing command line arguments.
-     * <p>
-     * This method parses WinCC OA standard arguments and loads the native library.
-     * It must be called before {@link #start()}.
-     * </p>
-     *
-     * <h4>Supported arguments:</h4>
-     * <ul>
-     *   <li>{@code -proj <name>} - Project name (required)</li>
-     *   <li>{@code -num <n>} - Manager number</li>
-     *   <li>{@code -path <dir>} - Project directory</li>
-     *   <li>{@code -db} - Use database manager type</li>
-     *   <li>{@code -noinit} - Skip resource initialization</li>
-     *   <li>{@code -debug} - Enable debug output</li>
-     * </ul>
-     *
-     * @param args command line arguments
-     * @return this manager instance for method chaining
-     * @throws Exception if native library cannot be loaded or version mismatch
-     */
+        
     public JManager init(String args[]) throws Exception {
         for ( int i=0; i<args.length; i++ ) {
             // projDir & configDir
@@ -317,7 +146,7 @@ public class JManager extends Manager implements Runnable {
                         
             // managerNum
             if ( args[i].equals("-num") && args.length>i+1 ) {
-                setManNum(Integer.valueOf(args[i+1]));
+                setManNum(Integer.parseInt(args[i+1]));
             }
             
             // managerType
@@ -337,19 +166,7 @@ public class JManager extends Manager implements Runnable {
         }        
         return init();
     }
-
-    /**
-     * Initializes the manager with explicit parameters.
-     * <p>
-     * Alternative to {@link #init(String[])} when not using command line arguments.
-     * </p>
-     *
-     * @param projName WinCC OA project name
-     * @param manType  manager type ({@link #API_MAN} or {@link #DB_MAN})
-     * @param manNum   manager instance number
-     * @return this manager instance for method chaining
-     * @throws Exception if native library cannot be loaded or version mismatch
-     */
+    
     public JManager init(String projName, int manType, int manNum) throws Exception {
         setProjName(projName);        
         setManType(manType);
@@ -362,9 +179,9 @@ public class JManager extends Manager implements Runnable {
             JManager.instance = this;
         } else {
             throw new IllegalStateException("There can only be one manager!");
-        }   
-        
-        apiEnabled=false;        
+        }
+
+        apiEnabled=false;
         String errmsg1="";
         String errmsg2="";
         try {
@@ -382,21 +199,20 @@ public class JManager extends Manager implements Runnable {
 
         if ( apiEnabled ) {
             // Set log file settings
-            setDebugOutput();
             if (!isV3() && !isV4()) {
                 throw new Exception("Manager Version "+apiGetVersion()+" is not V3 and not V4!");
             }
         } else {
-            setDebugConsole();
-            if (!errmsg1.equals(""))
-                JDebug.out.warning(errmsg1);
-            if (!errmsg2.equals(""))
-                JDebug.out.warning(errmsg2);                
+            if (!errmsg1.isEmpty())
+                throw new Exception(errmsg1);
+            if (!errmsg2.isEmpty())
+                throw new Exception(errmsg2);
         }
 
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             try {
-                Thread.sleep(200);
+                JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR, "Shutdown in one second...");
+                Thread.sleep(1000);
                 stop();
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
@@ -407,55 +223,14 @@ public class JManager extends Manager implements Runnable {
         return this;
     }
 
-    /**
-     * Configures debug output to write to log files.
-     * <p>
-     * Log files are written to the project's log directory.
-     * </p>
-     */
-    public void setDebugOutput() {
-        JDebug.setOutput(getLogDir(), getManName());
-    }
-
-    /**
-     * Configures debug output to write to the console (stdout/stderr).
-     */
-    public void setDebugConsole() {
-        JDebug.setConsole();
-    }
-
-    /**
-     * Returns the manager name used for logging and identification.
-     *
-     * @return manager name in format "WCCOAjava{num}" (e.g., "WCCOAjava1")
-     */
     public String getManName() {
         return "WCCOAjava"+manNum;
     }
-
-    /**
-     * Starts the manager and connects to both Data and Event managers.
-     * <p>
-     * This is equivalent to calling {@code start(true, true)}.
-     * The method blocks until the connection is established.
-     * </p>
-     *
-     * @see #start(boolean, boolean)
-     */
+    
     public void start() {
         start(true, true);
     }
-
-    /**
-     * Starts the manager with specific connection options.
-     * <p>
-     * Starts the event loop in a separate thread and connects to WinCC OA.
-     * The method blocks until the connection is established.
-     * </p>
-     *
-     * @param connectToData  true to connect to the Data manager
-     * @param connectToEvent true to connect to the Event manager
-     */
+    
     public void start(boolean connectToData, boolean connectToEvent) {
         if ( apiEnabled ) {
             log(ErrPrio.PRIO_INFO, ErrCode.MANAGER_START, "Manager start...");
@@ -466,14 +241,7 @@ public class JManager extends Manager implements Runnable {
             log(ErrPrio.PRIO_INFO, ErrCode.MANAGER_INITIALIZED, "Manager started.");
         }
     }
-
-    /**
-     * Stops the manager and disconnects from WinCC OA.
-     * <p>
-     * Gracefully shuts down the event loop and releases native resources.
-     * This method should be called before application exit.
-     * </p>
-     */
+    
     public void stop() {
         if ( apiEnabled ) {
             log(ErrPrio.PRIO_INFO, ErrCode.MANAGER_STOP, "Manager stop.");
@@ -481,16 +249,8 @@ public class JManager extends Manager implements Runnable {
             pause();
             apiShutdown();
         }
-    }
+    }        
 
-    /**
-     * Main event loop - runs in a separate thread.
-     * <p>
-     * This method is called internally by {@link #start()} and should not
-     * be called directly. It dispatches WinCC OA messages and processes
-     * the task queue.
-     * </p>
-     */
     @Override
     public void run() {
         apiStartup(manType,
@@ -512,30 +272,18 @@ public class JManager extends Manager implements Runnable {
             loopPaused.sendTrue();
             log(ErrPrio.PRIO_INFO, ErrCode.NOERR, "Manager loop stopped.");
         }
-    }
+    }   
 
-    /**
-     * Pauses the event loop.
-     * <p>
-     * The manager remains connected but stops processing messages.
-     * Use {@link #resume()} to continue processing.
-     * </p>
-     */
     public void pause() {
         loopBreak=true;
         loopPaused.awaitTrue();
     }
 
-    /**
-     * Resumes the event loop after a pause.
-     *
-     * @see #pause()
-     */
     public void resume() {
         loopBreak=false;
         loopPaused.sendFalse();
-    }
-
+    }    
+    
     protected void enqueueHotlink(JHotLinkWaitForAnswer hl) {
         if (taskQueue.size() >= MAX_ENQUEUE_SIZE_HIGH) {
             // OVERLOAD: Discard hotlink, log once per second
@@ -579,36 +327,13 @@ public class JManager extends Manager implements Runnable {
             }
         } catch (Exception ex) {
             stackTrace(ErrPrio.PRIO_SEVERE, ErrCode.UNEXPECTEDSTATE, ex);
-        }
+        }                        
     }
-
-    /**
-     * Adds a task to the asynchronous task queue.
-     * <p>
-     * The task will be executed in the manager's event loop thread.
-     * Use this for fire-and-forget operations.
-     * </p>
-     *
-     * @param task the callable to execute
-     * @return true if the task was successfully added to the queue
-     * @see #executeTask(Callable)
-     */
+    
     public boolean enqueueTask(Callable task) {
         return taskQueue.add(task);
     }
-
-    /**
-     * Executes a task synchronously in the manager's event loop thread.
-     * <p>
-     * The calling thread blocks until the task completes and returns the result.
-     * Use this when you need the result of an operation that must run in the
-     * manager thread context.
-     * </p>
-     *
-     * @param task the callable to execute
-     * @return the result of the callable, or null if the task returned nothing
-     * @see #enqueueTask(Callable)
-     */
+    
     public Object executeTask(Callable task) {
         ArrayList<Object> res = new ArrayList<>();
         JSemaphore sem = new JSemaphore(false);
@@ -793,6 +518,6 @@ public class JManager extends Manager implements Runnable {
      * @param exception The exception to log
      */
     public static void stackTrace(Throwable exception) {
-        stackTrace(ErrPrio.PRIO_WARNING, ErrCode.UNEXPECTEDSTATE, exception);
+        stackTrace(ErrPrio.PRIO_SEVERE, ErrCode.UNEXPECTEDSTATE, exception);
     }
 }

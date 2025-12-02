@@ -70,7 +70,6 @@ public class ApiTestManager extends JManager {
         // logs are printed to WCCOAjava<num>.0.log and WCCOAjava10.err
         JManager m = new ApiTestManager();
         m.init(args).start();
-        m.setDebugOutput();
         while (true) {
             JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR, "isActive=" + m.isActive());
             Thread.sleep(3000);
