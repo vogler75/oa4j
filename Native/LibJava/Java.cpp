@@ -64,6 +64,29 @@ bool Java::DEBUG = false;
 #define JNullVar 0xFFFFFFFF
 
 //---------------------------------------------------------------------------------------------------------
+// Convert Java type number to native VariableType for DynVar element type
+static VariableType javaTypeToNativeType(jint jType) {
+	switch (jType) {
+		case JBitVar:          return BIT_VAR;
+		case JBit32Var:        return BIT32_VAR;
+		case JBit64Var:        return BIT64_VAR;
+		case JFloatVar:        return FLOAT_VAR;
+		case JIntegerVar:      return INTEGER_VAR;
+		case JUIntegerVar:     return UINTEGER_VAR;
+		case JLongVar:         return LONG_VAR;
+		case JULongVar:        return ULONG_VAR;
+		case JCharVar:         return CHAR_VAR;
+		case JTextVar:         return TEXT_VAR;
+		case JLangTextVar:     return LANGTEXT_VAR;
+		case JTimeVar:         return TIME_VAR;
+		case JDpIdentifierVar: return DPIDENTIFIER_VAR;
+		case JDynVar:          return DYNANYTYPE_VAR;
+		case JAnyTypeVar:
+		default:               return ANYTYPE_VAR;
+	}
+}
+
+//---------------------------------------------------------------------------------------------------------
 JDpIdentifierClass::JDpIdentifierClass(JNIEnv *p_env)
 {
 	env = p_env;
@@ -561,13 +584,15 @@ VariablePtr Java::convertJVariable(JNIEnv *env, jobject jVariable)
 		jint size = env->CallIntMethod(jVariable, jm);
 		if (DEBUG) std::cout << "convertJVariable:13:DynVar size=" << size << std::endl;
 
-		// get type of dyn
+		// get type of dyn (Java type number)
 		jm = env->GetMethodID(cls, "getElementsTypeAsNr", "()I");
-		jint type = env->CallIntMethod(jVariable, jm);
-		if (DEBUG) std::cout << "convertJVariable:13:DynVar type=" << type<< std::endl;
-				
-		if (type==0/*unknown/undefined*/) type=ANYTYPE_VAR;
-		DynVar *var = new DynVar((VariableType)type);
+		jint jType = env->CallIntMethod(jVariable, jm);
+		if (DEBUG) std::cout << "convertJVariable:13:DynVar jType=" << jType << std::endl;
+
+		// Convert Java type number to native VariableType
+		VariableType nativeType = javaTypeToNativeType(jType);
+		if (DEBUG) std::cout << "convertJVariable:13:DynVar nativeType=" << nativeType << std::endl;
+		DynVar *var = new DynVar(nativeType);
 
 		jobject jValue;
 		VariablePtr varPtrTmp;
@@ -575,7 +600,7 @@ VariablePtr Java::convertJVariable(JNIEnv *env, jobject jVariable)
 		for (jint i = 0; i < size; i++) {
 			jValue = env->CallObjectMethod(jVariable, jm, i);
 			varPtrTmp = Java::convertJVariable(env, jValue);
-			var->append(type == ANYTYPE_VAR ? new AnyTypeVar(varPtrTmp) : varPtrTmp);
+			var->append(nativeType == ANYTYPE_VAR ? new AnyTypeVar(varPtrTmp) : varPtrTmp);
 			env->DeleteLocalRef(jValue);
 		}
 
