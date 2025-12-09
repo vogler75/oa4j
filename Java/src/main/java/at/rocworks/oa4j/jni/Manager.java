@@ -20,6 +20,8 @@ package at.rocworks.oa4j.jni;
 import at.rocworks.oa4j.base.JDpVCItem;
 import at.rocworks.oa4j.base.JHotLinkWaitForAnswer;
 import at.rocworks.oa4j.var.DpIdentifierVar;
+import at.rocworks.oa4j.var.DpTypeElement;
+import at.rocworks.oa4j.var.DpTypeResult;
 import at.rocworks.oa4j.var.DynVar;
 import at.rocworks.oa4j.var.LangTextVar;
 import at.rocworks.oa4j.var.TimeVar;
@@ -80,6 +82,28 @@ public abstract class Manager {
     public native String[] apiGetIdSetOfType(String pattern, String type);    
     
     public native LangTextVar apiDpGetComment(DpIdentifierVar dp);
+
+    /**
+     * Get the type definition of a datapoint type by type name as a tree structure.
+     * Returns the complete type structure including all elements and their types.
+     *
+     * @param typeName The name of the datapoint type
+     * @param includeTypeRef If true, include elements from referenced types
+     * @return The root element of the type definition tree, or null if the type does not exist
+     */
+    public native DpTypeElement apiDpTypeGet(String typeName, boolean includeTypeRef);
+
+    /**
+     * Get the type definition of a datapoint type by type name.
+     * Returns element names and types organized by hierarchy level, matching the
+     * WinCC OA Control script function:
+     * int dpTypeGet(string name, dyn_dyn_string &elements, dyn_dyn_int &types, bool includeSubTypes)
+     *
+     * @param typeName The name of the datapoint type
+     * @param includeSubTypes If true, include elements from referenced sub-types
+     * @return DpTypeResult containing elements and types by level, or null if the type does not exist
+     */
+    public native DpTypeResult apiDpTypeGetFlat(String typeName, boolean includeSubTypes);
 
     /**
      * Verfiy password. Check if the given passwd is valid for the requested user id

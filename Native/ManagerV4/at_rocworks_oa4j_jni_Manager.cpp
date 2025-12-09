@@ -27,6 +27,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #include <DpIdentifierVar.hxx>
 #include <MsgItcDispatcher.hxx>
+#include <DpTypeDefinition.hxx>
+
+#include <vector>
 
 
 //------------------------------------------------------------------------------------------------
@@ -594,4 +597,297 @@ JNIEXPORT void JNICALL Java_at_rocworks_oa4j_jni_Manager_apiLog
 	} else {
 		JNIValidator::reportValidationError("jtext", "Failed to convert jstring");
 	}
+}
+
+//------------------------------------------------------------------------------------------------
+// JAVA JNI apiDpTypeGet
+
+/*
+* Class:     at_rocworks_oa4j_jni_Manager
+* Method:    apiDpTypeGet
+* Signature: (Ljava/lang/String;Z)Lat/rocworks/oa4j/var/DpTypeElement;
+*/
+JNIEXPORT jobject JNICALL Java_at_rocworks_oa4j_jni_Manager_apiDpTypeGet
+(JNIEnv *env, jobject obj, jstring jtypeName, jboolean includeTypeRef)
+{
+	if (jtypeName == NULL) {
+		return NULL;
+	}
+
+	// Convert Java string to CharString
+	CharString *typeName = Java::convertJString(env, jtypeName);
+	if (typeName == NULL) {
+		return NULL;
+	}
+
+	// Get the type ID from the type name
+	DpTypeId typeId;
+	if (!Manager::getTypeId(typeName->c_str(), typeId)) {
+		delete typeName;
+		return NULL;
+	}
+	delete typeName;
+
+	// Get the DpTypeDefinition
+	DpTypeDefinition *typeDef = Manager::dpTypeGet(typeId, includeTypeRef);
+	if (typeDef == NULL) {
+		return NULL;
+	}
+
+	// Find the DpTypeElement class and its constructor
+	jclass clsDpTypeElement = env->FindClass("at/rocworks/oa4j/var/DpTypeElement");
+	if (clsDpTypeElement == NULL) {
+		delete typeDef;
+		return NULL;
+	}
+
+	// Get the constructor: DpTypeElement(String name, int elementId, DpElementType type, int refTypeId)
+	jmethodID midInit = env->GetMethodID(clsDpTypeElement, "<init>", "(Ljava/lang/String;ILat/rocworks/oa4j/var/DpElementType;I)V");
+	if (midInit == NULL) {
+		env->ExceptionClear();
+		delete typeDef;
+		env->DeleteLocalRef(clsDpTypeElement);
+		return NULL;
+	}
+
+	// Get the addChild method
+	jmethodID midAddChild = env->GetMethodID(clsDpTypeElement, "addChild", "(Lat/rocworks/oa4j/var/DpTypeElement;)V");
+	if (midAddChild == NULL) {
+		delete typeDef;
+		env->DeleteLocalRef(clsDpTypeElement);
+		return NULL;
+	}
+
+	// Get DpElementType class and fromValue method
+	jclass clsDpElementType = env->FindClass("at/rocworks/oa4j/var/DpElementType");
+	if (clsDpElementType == NULL) {
+		delete typeDef;
+		env->DeleteLocalRef(clsDpTypeElement);
+		return NULL;
+	}
+
+	jmethodID midFromValue = env->GetStaticMethodID(clsDpElementType, "fromValue", "(I)Lat/rocworks/oa4j/var/DpElementType;");
+	if (midFromValue == NULL) {
+		delete typeDef;
+		env->DeleteLocalRef(clsDpTypeElement);
+		env->DeleteLocalRef(clsDpElementType);
+		return NULL;
+	}
+
+	// Helper struct to convert recursively
+	struct Converter {
+		JNIEnv *env;
+		jclass clsDpTypeElement;
+		jclass clsDpElementType;
+		jmethodID midInit;
+		jmethodID midAddChild;
+		jmethodID midFromValue;
+
+		jobject convert(const DpTypeDefinition *def) {
+			if (def == NULL) return NULL;
+
+			// Get element properties
+			const CharString& name = def->getName();
+			DpElementId elementId = def->getId();
+			DpElementType elementType = def->getType();
+			DpTypeId refTypeId = def->getReference();
+
+			// Create Java String for the name
+			jstring jname = env->NewStringUTF(name.c_str());
+
+			// Create DpElementType enum value from int
+			jobject jElementType = env->CallStaticObjectMethod(clsDpElementType, midFromValue, (jint)elementType);
+			if (jElementType == NULL) {
+				env->DeleteLocalRef(jname);
+				return NULL;
+			}
+
+			// Create the DpTypeElement object
+			jobject jElement = env->NewObject(clsDpTypeElement, midInit,
+				jname, (jint)elementId, jElementType, (jint)refTypeId);
+
+			env->DeleteLocalRef(jname);
+			env->DeleteLocalRef(jElementType);
+
+			if (jElement == NULL) {
+				return NULL;
+			}
+
+			// Recursively add children
+			const DpTypeDefinition::DpTypeDefinitions& children = def->getChildren();
+			for (size_t i = 0; i < children.size(); i++) {
+				jobject jChild = convert(children[i]);
+				if (jChild != NULL) {
+					env->CallVoidMethod(jElement, midAddChild, jChild);
+					env->DeleteLocalRef(jChild);
+				}
+			}
+
+			return jElement;
+		}
+	};
+
+	Converter converter = {env, clsDpTypeElement, clsDpElementType, midInit, midAddChild, midFromValue};
+	jobject result = converter.convert(typeDef);
+
+	// Cleanup
+	delete typeDef;
+	env->DeleteLocalRef(clsDpTypeElement);
+	env->DeleteLocalRef(clsDpElementType);
+
+	return result;
+}
+
+//------------------------------------------------------------------------------------------------
+// JAVA JNI apiDpTypeGetFlat
+// Returns element names and types organized by hierarchy level (dyn_dyn_string, dyn_dyn_int)
+
+/*
+* Class:     at_rocworks_oa4j_jni_Manager
+* Method:    apiDpTypeGetFlat
+* Signature: (Ljava/lang/String;Z)Lat/rocworks/oa4j/var/DpTypeResult;
+*/
+JNIEXPORT jobject JNICALL Java_at_rocworks_oa4j_jni_Manager_apiDpTypeGetFlat
+(JNIEnv *env, jobject obj, jstring jtypeName, jboolean includeSubTypes)
+{
+	if (jtypeName == NULL) {
+		return NULL;
+	}
+
+	// Convert Java string to CharString
+	CharString *typeName = Java::convertJString(env, jtypeName);
+	if (typeName == NULL) {
+		return NULL;
+	}
+
+	// Get the type ID from the type name
+	DpTypeId typeId;
+	if (!Manager::getTypeId(typeName->c_str(), typeId)) {
+		delete typeName;
+		return NULL;
+	}
+	delete typeName;
+
+	// Get the DpTypeDefinition
+	DpTypeDefinition *typeDef = Manager::dpTypeGet(typeId, includeSubTypes);
+	if (typeDef == NULL) {
+		return NULL;
+	}
+
+	// Find the DpTypeResult class and its constructor
+	jclass clsDpTypeResult = env->FindClass("at/rocworks/oa4j/var/DpTypeResult");
+	if (clsDpTypeResult == NULL) {
+		delete typeDef;
+		return NULL;
+	}
+
+	// Get the default constructor
+	jmethodID midResultInit = env->GetMethodID(clsDpTypeResult, "<init>", "()V");
+	if (midResultInit == NULL) {
+		delete typeDef;
+		env->DeleteLocalRef(clsDpTypeResult);
+		return NULL;
+	}
+
+	// Get the addLevel method
+	jmethodID midAddLevel = env->GetMethodID(clsDpTypeResult, "addLevel", "(Ljava/util/List;Ljava/util/List;)V");
+	if (midAddLevel == NULL) {
+		delete typeDef;
+		env->DeleteLocalRef(clsDpTypeResult);
+		return NULL;
+	}
+
+	// Get ArrayList class and methods
+	jclass clsArrayList = env->FindClass("java/util/ArrayList");
+	if (clsArrayList == NULL) {
+		delete typeDef;
+		env->DeleteLocalRef(clsDpTypeResult);
+		return NULL;
+	}
+
+	jmethodID midArrayListInit = env->GetMethodID(clsArrayList, "<init>", "()V");
+	jmethodID midArrayListAdd = env->GetMethodID(clsArrayList, "add", "(Ljava/lang/Object;)Z");
+	if (midArrayListInit == NULL || midArrayListAdd == NULL) {
+		delete typeDef;
+		env->DeleteLocalRef(clsDpTypeResult);
+		env->DeleteLocalRef(clsArrayList);
+		return NULL;
+	}
+
+	// Get Integer class for boxing
+	jclass clsInteger = env->FindClass("java/lang/Integer");
+	jmethodID midIntegerValueOf = env->GetStaticMethodID(clsInteger, "valueOf", "(I)Ljava/lang/Integer;");
+	if (clsInteger == NULL || midIntegerValueOf == NULL) {
+		delete typeDef;
+		env->DeleteLocalRef(clsDpTypeResult);
+		env->DeleteLocalRef(clsArrayList);
+		return NULL;
+	}
+
+	// Create the DpTypeResult object
+	jobject jResult = env->NewObject(clsDpTypeResult, midResultInit);
+	if (jResult == NULL) {
+		delete typeDef;
+		env->DeleteLocalRef(clsDpTypeResult);
+		env->DeleteLocalRef(clsArrayList);
+		env->DeleteLocalRef(clsInteger);
+		return NULL;
+	}
+
+	// Traverse the type definition tree level by level using BFS
+	std::vector<const DpTypeDefinition*> currentLevel;
+	std::vector<const DpTypeDefinition*> nextLevel;
+	CharString prefix;
+
+	// Start with root
+	currentLevel.push_back(typeDef);
+
+	while (!currentLevel.empty()) {
+		// Create lists for this level
+		jobject jElementList = env->NewObject(clsArrayList, midArrayListInit);
+		jobject jTypeList = env->NewObject(clsArrayList, midArrayListInit);
+
+		for (size_t i = 0; i < currentLevel.size(); i++) {
+			const DpTypeDefinition *node = currentLevel[i];
+
+			// Build element path
+			CharString elementPath;
+			// For root level, just use the name
+			// For other levels, we need to build the full path
+			elementPath = node->getName();
+
+			// Add element name
+			jstring jElementName = env->NewStringUTF(elementPath.c_str());
+			env->CallBooleanMethod(jElementList, midArrayListAdd, jElementName);
+			env->DeleteLocalRef(jElementName);
+
+			// Add element type
+			jobject jType = env->CallStaticObjectMethod(clsInteger, midIntegerValueOf, (jint)node->getType());
+			env->CallBooleanMethod(jTypeList, midArrayListAdd, jType);
+			env->DeleteLocalRef(jType);
+
+			// Add children to next level
+			const DpTypeDefinition::DpTypeDefinitions& children = node->getChildren();
+			for (size_t j = 0; j < children.size(); j++) {
+				nextLevel.push_back(children[j]);
+			}
+		}
+
+		// Add this level to result
+		env->CallVoidMethod(jResult, midAddLevel, jElementList, jTypeList);
+		env->DeleteLocalRef(jElementList);
+		env->DeleteLocalRef(jTypeList);
+
+		// Move to next level
+		currentLevel = nextLevel;
+		nextLevel.clear();
+	}
+
+	// Cleanup
+	delete typeDef;
+	env->DeleteLocalRef(clsDpTypeResult);
+	env->DeleteLocalRef(clsArrayList);
+	env->DeleteLocalRef(clsInteger);
+
+	return jResult;
 }

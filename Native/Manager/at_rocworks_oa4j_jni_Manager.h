@@ -279,6 +279,22 @@ JNIEXPORT jint JNICALL Java_at_rocworks_oa4j_jni_Manager_apiIsActiveConnection
 JNIEXPORT void JNICALL Java_at_rocworks_oa4j_jni_Manager_apiLog
   (JNIEnv *, jobject, jint, jlong, jstring);
 
+/*
+ * Class:     at_rocworks_oa4j_jni_Manager
+ * Method:    apiDpTypeGet
+ * Signature: (Ljava/lang/String;Z)Lat/rocworks/oa4j/var/DpTypeElement;
+ */
+JNIEXPORT jobject JNICALL Java_at_rocworks_oa4j_jni_Manager_apiDpTypeGet
+  (JNIEnv *, jobject, jstring, jboolean);
+
+/*
+ * Class:     at_rocworks_oa4j_jni_Manager
+ * Method:    apiDpTypeGetFlat
+ * Signature: (Ljava/lang/String;Z)Lat/rocworks/oa4j/var/DpTypeResult;
+ */
+JNIEXPORT jobject JNICALL Java_at_rocworks_oa4j_jni_Manager_apiDpTypeGetFlat
+  (JNIEnv *, jobject, jstring, jboolean);
+
 #ifdef __cplusplus
 }
 #endif

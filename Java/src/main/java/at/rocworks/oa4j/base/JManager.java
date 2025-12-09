@@ -19,6 +19,8 @@ package at.rocworks.oa4j.base;
 
 import at.rocworks.oa4j.jni.*;
 import at.rocworks.oa4j.var.DpIdentifierVar;
+import at.rocworks.oa4j.var.DpTypeElement;
+import at.rocworks.oa4j.var.DpTypeResult;
 import at.rocworks.oa4j.var.Variable;
 
 import java.util.HashMap;
@@ -727,5 +729,55 @@ public class JManager extends Manager implements Runnable {
      */
     public static void stackTrace(Throwable exception) {
         stackTrace(ErrPrio.PRIO_SEVERE, ErrCode.UNEXPECTEDSTATE, exception);
+    }
+
+    /**
+     * Gets the type definition for a datapoint type as a tree structure.
+     * Returns the complete type structure including all elements and their types.
+     *
+     * @param typeName The name of the datapoint type
+     * @return The root element of the type definition tree, or null if the type does not exist
+     */
+    public DpTypeElement dpTypeGetTree(String typeName) {
+        return dpTypeGetTree(typeName, true);
+    }
+
+    /**
+     * Gets the type definition for a datapoint type as a tree structure.
+     * Returns the complete type structure including all elements and their types.
+     *
+     * @param typeName The name of the datapoint type
+     * @param includeTypeRef If true, include elements from referenced types
+     * @return The root element of the type definition tree, or null if the type does not exist
+     */
+    public DpTypeElement dpTypeGetTree(String typeName, boolean includeTypeRef) {
+        return apiDpTypeGet(typeName, includeTypeRef);
+    }
+
+    /**
+     * Gets the type definition for a datapoint type.
+     * Returns element names and types organized by hierarchy level, matching the
+     * WinCC OA Control script function:
+     * int dpTypeGet(string name, dyn_dyn_string &elements, dyn_dyn_int &types, bool includeSubTypes)
+     *
+     * @param typeName The name of the datapoint type
+     * @return DpTypeResult containing elements and types by level, or null if the type does not exist
+     */
+    public DpTypeResult dpTypeGet(String typeName) {
+        return dpTypeGet(typeName, false);
+    }
+
+    /**
+     * Gets the type definition for a datapoint type.
+     * Returns element names and types organized by hierarchy level, matching the
+     * WinCC OA Control script function:
+     * int dpTypeGet(string name, dyn_dyn_string &elements, dyn_dyn_int &types, bool includeSubTypes)
+     *
+     * @param typeName The name of the datapoint type
+     * @param includeSubTypes If true, include elements from referenced sub-types
+     * @return DpTypeResult containing elements and types by level, or null if the type does not exist
+     */
+    public DpTypeResult dpTypeGet(String typeName, boolean includeSubTypes) {
+        return apiDpTypeGetFlat(typeName, includeSubTypes);
     }
 }
