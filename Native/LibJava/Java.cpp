@@ -658,7 +658,7 @@ VariablePtr Java::convertJVariable(JNIEnv *env, jobject jVariable)
 			ErrHdl::error(ErrClass::PRIO_SEVERE,ErrClass::ERR_PARAM,ErrClass::UNEXPECTEDSTATE, NAME,              
 				"convertJVariable::DpIdentifierVar", CharString("Unknown Datapoint ") + (*dpName));
 		}
-		std::cout << "DpIdentifierVar=" << dpId << std::endl;
+		if (DEBUG) std::cout << "DpIdentifierVar=" << dpId << std::endl;
 		//env->DeleteLocalRef(cls);
 		delete dpName;
 		varPtr = new DpIdentifierVar(dpId);

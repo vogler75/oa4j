@@ -127,7 +127,7 @@ public class ApiTestWinCCOA {
 
             // Step 11: Cleanup
             WinCCOA.log("--- Final cleanup ---");
-            //cleanup();
+            cleanup();
 
         } catch (Exception e) {
             WinCCOA.logError("Test failed with exception:");
@@ -476,24 +476,28 @@ public class ApiTestWinCCOA {
         // Set all archive config attributes in one dpSet call
         int result = oa.dpSet()
             .add(testDp + ":_archive.._type", 45)
-            .add(testDp + ":_archive.._archive", true).await().getRetCode();
+            .add(testDp + ":_archive.._archive", true)
+            .await().getRetCode();
         WinCCOA.log("Archive config set: result=" + result);
+
+        Thread.sleep(1000);
 
         result = oa.dpSet()
             .add(testDp + ":_archive.1._type", 15)
-            .add(testDp + ":_archive.1._class", "_NGA_G_EVENT")
+            .add(testDp + ":_archive.1._class", Variable.newDpIdentifierVar("_NGA_G_EVENT"))
             .await().getRetCode();
         WinCCOA.log("Archive config set: result=" + result);
 
         // Wait for archive config to be applied
-        Thread.sleep(2000);
+        WinCCOA.log("Waiting 1 seconds for configuration...");
+        Thread.sleep(1000);
 
         // Step 8b: Write 10 values to generate history
         WinCCOA.log("Writing 10 values to generate history...");
         long startTime = System.currentTimeMillis();
 
         for (int i = 1; i <= 10; i++) {
-            double value = i * 100.0 + Math.random() * 10;
+            double value = i * 100.0; //+ Math.random() * 10;
             result = oa.dpSetWait(testDp, value);
             WinCCOA.log("  Write #" + i + ": " + value + " (result=" + result + ")");
             Thread.sleep(500);  // Small delay between writes
@@ -502,13 +506,13 @@ public class ApiTestWinCCOA {
         long endTime = System.currentTimeMillis();
 
         // Wait a bit for values to be archived
-        WinCCOA.log("Waiting 2 seconds for values to be archived...");
-        Thread.sleep(2000);
+        WinCCOA.log("Waiting 1 seconds for values to be archived...");
+        Thread.sleep(1000);
 
         // Step 8c: Query historical data
         WinCCOA.log("Querying historical data from " + testDp + "...");
 
-        oa.dpGetPeriod(startTime - 1000, endTime + 1000, 100)
+        oa.dpGetPeriod(startTime, endTime, 0)
             .add(testDp)
             .action(answer -> {
                 WinCCOA.log("dpGetPeriod returned " + answer.size() + " values:");
