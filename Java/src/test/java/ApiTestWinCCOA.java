@@ -19,6 +19,7 @@
 import at.rocworks.oa4j.WinCCOA;
 import at.rocworks.oa4j.base.IHotLink;
 import at.rocworks.oa4j.base.JDpConnect;
+import at.rocworks.oa4j.base.JDpMsgAnswer;
 import at.rocworks.oa4j.base.JDpQueryConnect;
 import at.rocworks.oa4j.var.*;
 
@@ -126,7 +127,7 @@ public class ApiTestWinCCOA {
 
             // Step 11: Cleanup
             WinCCOA.log("--- Final cleanup ---");
-            cleanup();
+            //cleanup();
 
         } catch (Exception e) {
             WinCCOA.logError("Test failed with exception:");
@@ -459,26 +460,61 @@ public class ApiTestWinCCOA {
 
     /**
      * Test dpGetPeriod for historical data
+     * First we need to configure archiving, then write values, then read history
      */
-    private void testDpGetPeriod() {
+    private void testDpGetPeriod() throws InterruptedException {
         WinCCOA.log("--- Step 8: Query historical data with dpGetPeriod ---");
 
-        long now = System.currentTimeMillis();
-        long fiveMinutesAgo = now - (5 * 60 * 1000);
-
         String testDp = TEST_DP_PREFIX + "001.primitives.floatVal";
-        WinCCOA.log("Querying last 5 minutes of " + testDp + "...");
 
-        oa.dpGetPeriod(fiveMinutesAgo, now, 10)
+        // Step 8a: Configure archiving for the datapoint
+        // _archive.._type = 45 (DPCONFIG_DB_ARCHIVEINFO)
+        // _archive.._archive = 1 (enable archiving)
+        // _archive.1._class = "_NGA_G_EVENT" (archive on value change)
+        WinCCOA.log("Configuring archive for " + testDp + "...");
+
+        // Set all archive config attributes in one dpSet call
+        int result = oa.dpSet()
+            .add(testDp + ":_archive.._type", 45)
+            .add(testDp + ":_archive.._archive", true).await().getRetCode();
+        WinCCOA.log("Archive config set: result=" + result);
+
+        result = oa.dpSet()
+            .add(testDp + ":_archive.1._type", 15)
+            .add(testDp + ":_archive.1._class", "_NGA_G_EVENT")
+            .await().getRetCode();
+        WinCCOA.log("Archive config set: result=" + result);
+
+        // Wait for archive config to be applied
+        Thread.sleep(2000);
+
+        // Step 8b: Write 10 values to generate history
+        WinCCOA.log("Writing 10 values to generate history...");
+        long startTime = System.currentTimeMillis();
+
+        for (int i = 1; i <= 10; i++) {
+            double value = i * 100.0 + Math.random() * 10;
+            result = oa.dpSetWait(testDp, value);
+            WinCCOA.log("  Write #" + i + ": " + value + " (result=" + result + ")");
+            Thread.sleep(500);  // Small delay between writes
+        }
+
+        long endTime = System.currentTimeMillis();
+
+        // Wait a bit for values to be archived
+        WinCCOA.log("Waiting 2 seconds for values to be archived...");
+        Thread.sleep(2000);
+
+        // Step 8c: Query historical data
+        WinCCOA.log("Querying historical data from " + testDp + "...");
+
+        oa.dpGetPeriod(startTime - 1000, endTime + 1000, 100)
             .add(testDp)
             .action(answer -> {
                 WinCCOA.log("dpGetPeriod returned " + answer.size() + " values:");
-                for (int i = 0; i < Math.min(5, answer.size()); i++) {
+                for (int i = 0; i < answer.size(); i++) {
                     var item = answer.getItem(i);
                     WinCCOA.log("  " + item.getTime() + ": " + item.getVariable());
-                }
-                if (answer.size() > 5) {
-                    WinCCOA.log("  ... and " + (answer.size() - 5) + " more");
                 }
             })
             .await();

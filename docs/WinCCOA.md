@@ -206,6 +206,19 @@ oa.dpQueryConnectAll("SELECT '_online.._value' FROM 'ExampleDP_*'")
 
 ## Historical Data
 
+**Note:** To query historical data, the datapoint must have archiving enabled. Configure archiving attributes before using `dpGetPeriod`:
+
+```java
+// Configure archiving for a datapoint element (all settings in one call)
+oa.dpSet()
+    .add("MyDP.value:_archive.._type", 45)           // DPCONFIG_DB_ARCHIVEINFO
+    .add("MyDP.value:_archive.._archive", true)      // Enable archiving
+    .add("MyDP.value:_archive.1._class", "_NGA_G_EVENT")  // Archive on change
+    .await();
+```
+
+### Querying Historical Data
+
 ```java
 // Using timestamps (milliseconds)
 long now = System.currentTimeMillis();
@@ -215,6 +228,10 @@ oa.dpGetPeriod(oneHourAgo, now, 100)
     .add("ExampleDP_Trend1.:_offline.._value")
     .action(answer -> {
         // Process historical values
+        for (int i = 0; i < answer.size(); i++) {
+            var item = answer.getItem(i);
+            System.out.println(item.getTime() + ": " + item.getVariable());
+        }
     })
     .await();
 
