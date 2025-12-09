@@ -18,11 +18,12 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #ifndef _Java_H_
 #define _Java_H_
 
-#include <DpIdentifier.hxx>   
+#include <DpIdentifier.hxx>
 #include <DpIdentification.hxx>
 #include <DpIdentList.hxx>
 #include <Variable.hxx>
 #include <Mutex.hxx>
+#include <LangText.hxx>
 
 #include <jni.h>
 
@@ -137,10 +138,13 @@ public:
 	static jobject			convertToJava(JNIEnv *env, VariablePtr varptr, JDpIdentifierClass *jdpid=0, JVariableClass *jvar=0);
 	static jstring			convertToJava(JNIEnv *env, CharString *str);
 	static jstring          convertToJava(JNIEnv *env, const CharString &str);
+	static jobject			convertToJava(JNIEnv *env, const LangText &langText);
 
 	static VariablePtr		convertJVariable(JNIEnv *env, jobject jVariable);
 	static CharString*		convertJString(JNIEnv *env, jstring jString);
 	static bool	    		convertJDpIdentifierToDpIdentifier(JNIEnv *env, jobject dp, DpIdentifier &dpid);
+	static LangText			convertJavaToLangText(JNIEnv *env, jobject jLangText);
+	static SystemNumType	parseSystemNum(JNIEnv *env, jstring jSystem);
 
 	static DpIdentList*		convertJArrayOfStringToDpIdentList(JNIEnv *env, jobjectArray dps);
 	static DpIdentList*		convertJArrayOfDpIdentifierToDpIdentList(JNIEnv *env, jobjectArray dps);

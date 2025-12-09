@@ -49,6 +49,13 @@ public abstract class Manager {
     public native String apiGetDataPath();
     public native String apiGetConfigValue(String key);
 
+    /**
+     * Get the system number for a system name.
+     * @param systemName System name (e.g., "System1" or "System1:"), or null for default system
+     * @return System number, or default system number if name is null/empty
+     */
+    public native int apiGetSystemNum(String systemName);
+
     public int apiStartup(int manType, String[] argv) {
         return apiStartup(manType, argv, true, true, true, false);
     }
@@ -155,4 +162,274 @@ public abstract class Manager {
     public native int apiIsActiveConnection();
 
     public native void apiLog(int prio, long state, String text);
+
+    // ========== CNS - View Management ==========
+
+    /**
+     * Create a new CNS view.
+     * @param system System name (e.g., "System1:") or null for default system
+     * @param viewId The unique identifier for the view
+     * @param separator The separator character for display paths
+     * @param displayNames Display names for the view (LangTextVar), or null
+     * @return 0 on success, -1 on failure
+     */
+    public native int apiCnsCreateView(String system, String viewId, String separator, LangTextVar displayNames);
+
+    /**
+     * Delete a CNS view.
+     * @param system System name or null for default system
+     * @param viewId The view identifier to delete
+     * @return 0 on success, -1 on failure
+     */
+    public native int apiCnsDeleteView(String system, String viewId);
+
+    /**
+     * Get all views in a system.
+     * @param system System name or null for default system
+     * @return Array of view identifiers, or null on failure
+     */
+    public native String[] apiCnsGetViews(String system);
+
+    /**
+     * Get display names of a view.
+     * @param system System name or null for default system
+     * @param viewId The view identifier
+     * @return LangTextVar with display names, or null on failure
+     */
+    public native LangTextVar apiCnsGetViewDisplayNames(String system, String viewId);
+
+    /**
+     * Change display names of a view.
+     * @param system System name or null for default system
+     * @param viewId The view identifier
+     * @param displayNames New display names
+     * @return 0 on success, -1 on failure
+     */
+    public native int apiCnsChangeViewDisplayNames(String system, String viewId, LangTextVar displayNames);
+
+    /**
+     * Get separators of a view.
+     * @param system System name or null for default system
+     * @param viewId The view identifier
+     * @return Separator string, or null on failure
+     */
+    public native String apiCnsGetViewSeparators(String system, String viewId);
+
+    /**
+     * Change separators of a view.
+     * @param system System name or null for default system
+     * @param viewId The view identifier
+     * @param separator New separator string
+     * @return 0 on success, -1 on failure
+     */
+    public native int apiCnsChangeViewSeparators(String system, String viewId, String separator);
+
+    // ========== CNS - Tree Management ==========
+
+    /**
+     * Add a tree to a view.
+     * @param system System name or null for default system
+     * @param viewId The view identifier
+     * @param nodeId The tree root node identifier
+     * @param nodeType Node type (CNSDataIdentifier.Types value)
+     * @param dpId Datapoint identifier to link, or null
+     * @param displayNames Display names for the tree root
+     * @return 0 on success, -1 on failure
+     */
+    public native int apiCnsAddTree(String system, String viewId, String nodeId, int nodeType,
+                                    DpIdentifierVar dpId, LangTextVar displayNames);
+
+    /**
+     * Delete a tree or node from CNS.
+     * @param cnsPath Full CNS path to the tree/node
+     * @return 0 on success, -1 on failure
+     */
+    public native int apiCnsDeleteTree(String cnsPath);
+
+    /**
+     * Get all trees in a view.
+     * @param system System name or null for default system
+     * @param viewId The view identifier
+     * @return Array of tree root paths, or null on failure
+     */
+    public native String[] apiCnsGetTrees(String system, String viewId);
+
+    /**
+     * Get the root node of a tree.
+     * @param cnsPath Any CNS path within the tree
+     * @return Path to root node, or null on failure
+     */
+    public native String apiCnsGetRoot(String cnsPath);
+
+    // ========== CNS - Node Management ==========
+
+    /**
+     * Add a node to a parent node.
+     * @param parentPath CNS path to the parent node
+     * @param nodeId The new node identifier
+     * @param nodeType Node type (CNSDataIdentifier.Types value)
+     * @param dpId Datapoint identifier to link, or null
+     * @param displayNames Display names for the node
+     * @return 0 on success, -1 on failure
+     */
+    public native int apiCnsAddNode(String parentPath, String nodeId, int nodeType,
+                                    DpIdentifierVar dpId, LangTextVar displayNames);
+
+    /**
+     * Get children of a node.
+     * @param cnsPath CNS path to the parent node
+     * @return Array of child node paths, or null on failure
+     */
+    public native String[] apiCnsGetChildren(String cnsPath);
+
+    /**
+     * Get parent of a node.
+     * @param cnsPath CNS path to the node
+     * @return Path to parent node, or null on failure
+     */
+    public native String apiCnsGetParent(String cnsPath);
+
+    /**
+     * Change node data (datapoint and type).
+     * @param cnsPath CNS path to the node
+     * @param dpId New datapoint identifier, or null
+     * @param nodeType New node type
+     * @return 0 on success, -1 on failure
+     */
+    public native int apiCnsChangeNodeData(String cnsPath, DpIdentifierVar dpId, int nodeType);
+
+    /**
+     * Change node display names.
+     * @param cnsPath CNS path to the node
+     * @param displayNames New display names
+     * @return 0 on success, -1 on failure
+     */
+    public native int apiCnsChangeNodeDisplayNames(String cnsPath, LangTextVar displayNames);
+
+    // ========== CNS - Query & Navigation ==========
+
+    /**
+     * Get a CNS node by path.
+     * @param cnsPath Full CNS path
+     * @return CnsNode object, or null if not found
+     */
+    public native Object apiCnsGetNode(String cnsPath);
+
+    /**
+     * Get datapoint identifier for a CNS path.
+     * @param cnsPath Full CNS path
+     * @return CnsDataIdentifier object, or null if not found
+     */
+    public native Object apiCnsGetId(String cnsPath);
+
+    /**
+     * Search nodes by name pattern.
+     * @param system System name or null for default system
+     * @param viewId The view identifier
+     * @param pattern Name pattern to search
+     * @param searchMode Search mode (0=NAME, 1=DISPLAY_NAME, 2=ALL_NAMES)
+     * @param langIdx Language index for display name search
+     * @return Array of matching node paths, or null on failure
+     */
+    public native String[] apiCnsGetNodesByName(String system, String viewId, String pattern,
+                                                 int searchMode, int langIdx);
+
+    /**
+     * Find nodes by datapoint.
+     * @param system System name or null for default system
+     * @param viewId The view identifier
+     * @param dpId Datapoint identifier to search for
+     * @return Array of matching node paths, or null on failure
+     */
+    public native String[] apiCnsGetNodesByData(String system, String viewId, DpIdentifierVar dpId);
+
+    /**
+     * Extract parts of a CNS path.
+     * @param cnsPath Full CNS path
+     * @param mask Bitmask for parts to extract
+     * @param resolve Whether to resolve display names
+     * @return Extracted path substring, or null on failure
+     */
+    public native String apiCnsSubStr(String cnsPath, int mask, boolean resolve);
+
+    // ========== CNS - System Names ==========
+
+    /**
+     * Get system display names.
+     * @param system System name or null for default system
+     * @return LangTextVar with system display names, or null on failure
+     */
+    public native LangTextVar apiCnsGetSystemNames(String system);
+
+    /**
+     * Set system display names.
+     * @param system System name or null for default system
+     * @param displayNames New display names
+     * @return 0 on success, -1 on failure
+     */
+    public native int apiCnsSetSystemNames(String system, LangTextVar displayNames);
+
+    // ========== CNS - Validation ==========
+
+    /**
+     * Check if a node ID is valid.
+     * @param id Node ID to validate
+     * @return true if valid
+     */
+    public native boolean apiCnsCheckId(String id);
+
+    /**
+     * Check if a display name is valid.
+     * @param displayName Display name to validate
+     * @return true if valid
+     */
+    public native boolean apiCnsCheckName(String displayName);
+
+    /**
+     * Check if a separator character is valid.
+     * @param separator Separator character to validate
+     * @return true if valid
+     */
+    public native boolean apiCnsCheckSeparator(char separator);
+
+    // ========== CNS - getIdSet ==========
+
+    /**
+     * Get datapoint identifiers matching a pattern.
+     * This is more efficient than getNodesByName + getId when you only need the DpIdentifiers.
+     * @param system System name or null for default system
+     * @param viewId The view identifier
+     * @param pattern Name pattern to search
+     * @param searchMode Search mode (0=NAME, 1=DISPLAY_NAME, 2=ALL_NAMES)
+     * @param langIdx Language index for display name search
+     * @return Array of DpIdentifierVar objects, or null on failure
+     */
+    public native DpIdentifierVar[] apiCnsGetIdSet(String system, String viewId, String pattern,
+                                                    int searchMode, int langIdx);
+
+    // ========== CNS - Observer ==========
+
+    /**
+     * CNS change types for observer notifications.
+     */
+    public static final int CNS_STRUCTURE_CHANGED = 0;
+    public static final int CNS_NAMES_CHANGED = 1;
+    public static final int CNS_DATA_CHANGED = 2;
+    public static final int CNS_VIEW_SEPARATOR_CHANGED = 3;
+    public static final int CNS_SYSTEM_NAMES_CHANGED = 4;
+
+    /**
+     * Add an observer to receive CNS change notifications.
+     * The observer object must implement a method: void onCnsChange(String path, int changeType)
+     * @param observer Object with onCnsChange(String, int) method
+     * @return Observer ID (for removal), or -1 on failure
+     */
+    public native int apiCnsAddObserver(Object observer);
+
+    /**
+     * Remove a CNS observer.
+     * @param observerId The observer ID returned by apiCnsAddObserver
+     * @return 0 on success, -1 on failure
+     */
+    public native int apiCnsRemoveObserver(int observerId);
 }

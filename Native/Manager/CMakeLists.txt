@@ -60,6 +60,7 @@ at_rocworks_oa4j_jni_Msg.cpp
 at_rocworks_oa4j_jni_RequestGroup.cpp
 at_rocworks_oa4j_jni_RequestItem.cpp
 at_rocworks_oa4j_jni_SysMsg.cpp
+at_rocworks_oa4j_jni_Cns.cpp
 ../LibJava/Java.cpp
 ../LibJava/JNIValidator.cpp
 )

@@ -243,6 +243,12 @@ JNIEXPORT jstring JNICALL Java_at_rocworks_oa4j_jni_Manager_apiGetConfigValue
 	return js;
 }
 
+JNIEXPORT jint JNICALL Java_at_rocworks_oa4j_jni_Manager_apiGetSystemNum
+(JNIEnv *env, jobject obj, jstring jSystemName)
+{
+	return (jint)Java::parseSystemNum(env, jSystemName);
+}
+
 //------------------------------------------------------------------------------------------------
 // JAVA JNI SendArchivedDPs
 

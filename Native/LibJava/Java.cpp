@@ -481,6 +481,95 @@ jstring Java::convertToJava(JNIEnv *env, const CharString &str)
 	return env->NewStringUTF(str.c_str());
 }
 
+jobject Java::convertToJava(JNIEnv *env, const LangText &langText)
+{
+	// Create a new LangTextVar using the Variable factory
+	jclass clsVariable = env->FindClass(VariableClassName);
+	if (clsVariable == nullptr) return nullptr;
+
+	jmethodID midNewLangText = env->GetStaticMethodID(clsVariable, "newLangTextVar", "()Lat/rocworks/oa4j/var/Variable;");
+	jobject jLangText = env->CallStaticObjectMethod(clsVariable, midNewLangText);
+	env->DeleteLocalRef(clsVariable);
+
+	if (jLangText == nullptr) return nullptr;
+
+	// Get the setValue method
+	jclass cls = env->GetObjectClass(jLangText);
+	jmethodID midSetValue = env->GetMethodID(cls, "setValue", "(ILjava/lang/String;)V");
+	env->DeleteLocalRef(cls);
+
+	// Set text for each language
+	int count = langText.getNoOfLanguages();
+	for (int langId = 0; langId < count; langId++) {
+		const char *text = langText.getText(langId);
+		if (text != nullptr) {
+			jstring jText = env->NewStringUTF(text);
+			env->CallVoidMethod(jLangText, midSetValue, langId, jText);
+			env->DeleteLocalRef(jText);
+		}
+	}
+
+	return jLangText;
+}
+
+LangText Java::convertJavaToLangText(JNIEnv *env, jobject jLangText)
+{
+	LangText langText;
+
+	if (jLangText == nullptr) {
+		return langText;
+	}
+
+	jclass cls = env->GetObjectClass(jLangText);
+	jmethodID midGetValue = env->GetMethodID(cls, "getValue", "(I)Ljava/lang/String;");
+	jmethodID midGetNoOfLangs = env->GetMethodID(cls, "getNoOfLangs", "()I");
+	env->DeleteLocalRef(cls);
+
+	jint noOfLangs = env->CallIntMethod(jLangText, midGetNoOfLangs);
+
+	for (int i = 0; i < noOfLangs; i++) {
+		jstring jText = (jstring)env->CallObjectMethod(jLangText, midGetValue, i);
+		if (jText != nullptr) {
+			const char *text = env->GetStringUTFChars(jText, nullptr);
+			langText.setText(i, text);
+			env->ReleaseStringUTFChars(jText, text);
+			env->DeleteLocalRef(jText);
+		}
+	}
+
+	return langText;
+}
+
+SystemNumType Java::parseSystemNum(JNIEnv *env, jstring jSystem)
+{
+	if (jSystem == nullptr) {
+		return DpIdentification::getDefaultSystem();
+	}
+
+	const char *sysStr = env->GetStringUTFChars(jSystem, nullptr);
+	if (sysStr == nullptr || strlen(sysStr) == 0) {
+		if (sysStr) env->ReleaseStringUTFChars(jSystem, sysStr);
+		return DpIdentification::getDefaultSystem();
+	}
+
+	// Try to get system number from system name
+	CharString sysName(sysStr);
+	SystemNumType sysNum = DpIdentification::getDefaultSystem();
+
+	// Remove trailing colon if present
+	if (sysName.len() > 0 && sysName[sysName.len()-1] == ':') {
+		sysName = sysName.left(sysName.len() - 1);
+	}
+
+	// Get system number by name using Manager
+	if (sysName.len() > 0) {
+		Manager::getSystemId(sysName, sysNum);
+	}
+
+	env->ReleaseStringUTFChars(jSystem, sysStr);
+	return sysNum;
+}
+
 VariablePtr Java::convertJVariable(JNIEnv *env, jobject jVariable)
 {
 	jmethodID jm;

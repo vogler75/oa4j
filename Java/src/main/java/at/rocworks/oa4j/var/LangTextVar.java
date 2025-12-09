@@ -23,9 +23,35 @@ public class LangTextVar extends Variable {
     public void setValue(int langId, String text) {
         this.value.put(Integer.toString(langId), text);
     }
-    
+
     public String getValue(int langId) {
         return this.value.get(Integer.toString(langId));
+    }
+
+    /**
+     * Set text for a language (alias for setValue, used by JNI).
+     * @param langId Language index
+     * @param text Text value
+     */
+    public void setText(int langId, String text) {
+        setValue(langId, text);
+    }
+
+    /**
+     * Get text for a language (alias for getValue, used by JNI).
+     * @param langId Language index
+     * @return Text value or null
+     */
+    public String getText(int langId) {
+        return getValue(langId);
+    }
+
+    /**
+     * Get the number of languages with text values.
+     * @return Number of language entries
+     */
+    public int getNoOfLangs() {
+        return value.size();
     }
     
     @Override

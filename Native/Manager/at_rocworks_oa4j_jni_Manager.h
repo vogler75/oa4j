@@ -41,6 +41,14 @@ JNIEXPORT jstring JNICALL Java_at_rocworks_oa4j_jni_Manager_apiGetConfigValue
 
 /*
  * Class:     at_rocworks_oa4j_jni_Manager
+ * Method:    apiGetSystemNum
+ * Signature: (Ljava/lang/String;)I
+ */
+JNIEXPORT jint JNICALL Java_at_rocworks_oa4j_jni_Manager_apiGetSystemNum
+  (JNIEnv *, jobject, jstring);
+
+/*
+ * Class:     at_rocworks_oa4j_jni_Manager
  * Method:    apiStartup
  * Signature: (I[Ljava/lang/String;ZZZZ)I
  */
@@ -294,6 +302,238 @@ JNIEXPORT jobject JNICALL Java_at_rocworks_oa4j_jni_Manager_apiDpTypeGet
  */
 JNIEXPORT jobject JNICALL Java_at_rocworks_oa4j_jni_Manager_apiDpTypeGetFlat
   (JNIEnv *, jobject, jstring, jboolean);
+
+/*
+ * Class:     at_rocworks_oa4j_jni_Manager
+ * Method:    apiCnsCreateView
+ * Signature: (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lat/rocworks/oa4j/var/LangTextVar;)I
+ */
+JNIEXPORT jint JNICALL Java_at_rocworks_oa4j_jni_Manager_apiCnsCreateView
+  (JNIEnv *, jobject, jstring, jstring, jstring, jobject);
+
+/*
+ * Class:     at_rocworks_oa4j_jni_Manager
+ * Method:    apiCnsDeleteView
+ * Signature: (Ljava/lang/String;Ljava/lang/String;)I
+ */
+JNIEXPORT jint JNICALL Java_at_rocworks_oa4j_jni_Manager_apiCnsDeleteView
+  (JNIEnv *, jobject, jstring, jstring);
+
+/*
+ * Class:     at_rocworks_oa4j_jni_Manager
+ * Method:    apiCnsGetViews
+ * Signature: (Ljava/lang/String;)[Ljava/lang/String;
+ */
+JNIEXPORT jobjectArray JNICALL Java_at_rocworks_oa4j_jni_Manager_apiCnsGetViews
+  (JNIEnv *, jobject, jstring);
+
+/*
+ * Class:     at_rocworks_oa4j_jni_Manager
+ * Method:    apiCnsGetViewDisplayNames
+ * Signature: (Ljava/lang/String;Ljava/lang/String;)Lat/rocworks/oa4j/var/LangTextVar;
+ */
+JNIEXPORT jobject JNICALL Java_at_rocworks_oa4j_jni_Manager_apiCnsGetViewDisplayNames
+  (JNIEnv *, jobject, jstring, jstring);
+
+/*
+ * Class:     at_rocworks_oa4j_jni_Manager
+ * Method:    apiCnsChangeViewDisplayNames
+ * Signature: (Ljava/lang/String;Ljava/lang/String;Lat/rocworks/oa4j/var/LangTextVar;)I
+ */
+JNIEXPORT jint JNICALL Java_at_rocworks_oa4j_jni_Manager_apiCnsChangeViewDisplayNames
+  (JNIEnv *, jobject, jstring, jstring, jobject);
+
+/*
+ * Class:     at_rocworks_oa4j_jni_Manager
+ * Method:    apiCnsGetViewSeparators
+ * Signature: (Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+ */
+JNIEXPORT jstring JNICALL Java_at_rocworks_oa4j_jni_Manager_apiCnsGetViewSeparators
+  (JNIEnv *, jobject, jstring, jstring);
+
+/*
+ * Class:     at_rocworks_oa4j_jni_Manager
+ * Method:    apiCnsChangeViewSeparators
+ * Signature: (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)I
+ */
+JNIEXPORT jint JNICALL Java_at_rocworks_oa4j_jni_Manager_apiCnsChangeViewSeparators
+  (JNIEnv *, jobject, jstring, jstring, jstring);
+
+/*
+ * Class:     at_rocworks_oa4j_jni_Manager
+ * Method:    apiCnsAddTree
+ * Signature: (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILat/rocworks/oa4j/var/DpIdentifierVar;Lat/rocworks/oa4j/var/LangTextVar;)I
+ */
+JNIEXPORT jint JNICALL Java_at_rocworks_oa4j_jni_Manager_apiCnsAddTree
+  (JNIEnv *, jobject, jstring, jstring, jstring, jint, jobject, jobject);
+
+/*
+ * Class:     at_rocworks_oa4j_jni_Manager
+ * Method:    apiCnsDeleteTree
+ * Signature: (Ljava/lang/String;)I
+ */
+JNIEXPORT jint JNICALL Java_at_rocworks_oa4j_jni_Manager_apiCnsDeleteTree
+  (JNIEnv *, jobject, jstring);
+
+/*
+ * Class:     at_rocworks_oa4j_jni_Manager
+ * Method:    apiCnsGetTrees
+ * Signature: (Ljava/lang/String;Ljava/lang/String;)[Ljava/lang/String;
+ */
+JNIEXPORT jobjectArray JNICALL Java_at_rocworks_oa4j_jni_Manager_apiCnsGetTrees
+  (JNIEnv *, jobject, jstring, jstring);
+
+/*
+ * Class:     at_rocworks_oa4j_jni_Manager
+ * Method:    apiCnsGetRoot
+ * Signature: (Ljava/lang/String;)Ljava/lang/String;
+ */
+JNIEXPORT jstring JNICALL Java_at_rocworks_oa4j_jni_Manager_apiCnsGetRoot
+  (JNIEnv *, jobject, jstring);
+
+/*
+ * Class:     at_rocworks_oa4j_jni_Manager
+ * Method:    apiCnsAddNode
+ * Signature: (Ljava/lang/String;Ljava/lang/String;ILat/rocworks/oa4j/var/DpIdentifierVar;Lat/rocworks/oa4j/var/LangTextVar;)I
+ */
+JNIEXPORT jint JNICALL Java_at_rocworks_oa4j_jni_Manager_apiCnsAddNode
+  (JNIEnv *, jobject, jstring, jstring, jint, jobject, jobject);
+
+/*
+ * Class:     at_rocworks_oa4j_jni_Manager
+ * Method:    apiCnsGetChildren
+ * Signature: (Ljava/lang/String;)[Ljava/lang/String;
+ */
+JNIEXPORT jobjectArray JNICALL Java_at_rocworks_oa4j_jni_Manager_apiCnsGetChildren
+  (JNIEnv *, jobject, jstring);
+
+/*
+ * Class:     at_rocworks_oa4j_jni_Manager
+ * Method:    apiCnsGetParent
+ * Signature: (Ljava/lang/String;)Ljava/lang/String;
+ */
+JNIEXPORT jstring JNICALL Java_at_rocworks_oa4j_jni_Manager_apiCnsGetParent
+  (JNIEnv *, jobject, jstring);
+
+/*
+ * Class:     at_rocworks_oa4j_jni_Manager
+ * Method:    apiCnsChangeNodeData
+ * Signature: (Ljava/lang/String;Lat/rocworks/oa4j/var/DpIdentifierVar;I)I
+ */
+JNIEXPORT jint JNICALL Java_at_rocworks_oa4j_jni_Manager_apiCnsChangeNodeData
+  (JNIEnv *, jobject, jstring, jobject, jint);
+
+/*
+ * Class:     at_rocworks_oa4j_jni_Manager
+ * Method:    apiCnsChangeNodeDisplayNames
+ * Signature: (Ljava/lang/String;Lat/rocworks/oa4j/var/LangTextVar;)I
+ */
+JNIEXPORT jint JNICALL Java_at_rocworks_oa4j_jni_Manager_apiCnsChangeNodeDisplayNames
+  (JNIEnv *, jobject, jstring, jobject);
+
+/*
+ * Class:     at_rocworks_oa4j_jni_Manager
+ * Method:    apiCnsGetNode
+ * Signature: (Ljava/lang/String;)Ljava/lang/Object;
+ */
+JNIEXPORT jobject JNICALL Java_at_rocworks_oa4j_jni_Manager_apiCnsGetNode
+  (JNIEnv *, jobject, jstring);
+
+/*
+ * Class:     at_rocworks_oa4j_jni_Manager
+ * Method:    apiCnsGetId
+ * Signature: (Ljava/lang/String;)Ljava/lang/Object;
+ */
+JNIEXPORT jobject JNICALL Java_at_rocworks_oa4j_jni_Manager_apiCnsGetId
+  (JNIEnv *, jobject, jstring);
+
+/*
+ * Class:     at_rocworks_oa4j_jni_Manager
+ * Method:    apiCnsGetNodesByName
+ * Signature: (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;II)[Ljava/lang/String;
+ */
+JNIEXPORT jobjectArray JNICALL Java_at_rocworks_oa4j_jni_Manager_apiCnsGetNodesByName
+  (JNIEnv *, jobject, jstring, jstring, jstring, jint, jint);
+
+/*
+ * Class:     at_rocworks_oa4j_jni_Manager
+ * Method:    apiCnsGetNodesByData
+ * Signature: (Ljava/lang/String;Ljava/lang/String;Lat/rocworks/oa4j/var/DpIdentifierVar;)[Ljava/lang/String;
+ */
+JNIEXPORT jobjectArray JNICALL Java_at_rocworks_oa4j_jni_Manager_apiCnsGetNodesByData
+  (JNIEnv *, jobject, jstring, jstring, jobject);
+
+/*
+ * Class:     at_rocworks_oa4j_jni_Manager
+ * Method:    apiCnsSubStr
+ * Signature: (Ljava/lang/String;IZ)Ljava/lang/String;
+ */
+JNIEXPORT jstring JNICALL Java_at_rocworks_oa4j_jni_Manager_apiCnsSubStr
+  (JNIEnv *, jobject, jstring, jint, jboolean);
+
+/*
+ * Class:     at_rocworks_oa4j_jni_Manager
+ * Method:    apiCnsGetSystemNames
+ * Signature: (Ljava/lang/String;)Lat/rocworks/oa4j/var/LangTextVar;
+ */
+JNIEXPORT jobject JNICALL Java_at_rocworks_oa4j_jni_Manager_apiCnsGetSystemNames
+  (JNIEnv *, jobject, jstring);
+
+/*
+ * Class:     at_rocworks_oa4j_jni_Manager
+ * Method:    apiCnsSetSystemNames
+ * Signature: (Ljava/lang/String;Lat/rocworks/oa4j/var/LangTextVar;)I
+ */
+JNIEXPORT jint JNICALL Java_at_rocworks_oa4j_jni_Manager_apiCnsSetSystemNames
+  (JNIEnv *, jobject, jstring, jobject);
+
+/*
+ * Class:     at_rocworks_oa4j_jni_Manager
+ * Method:    apiCnsCheckId
+ * Signature: (Ljava/lang/String;)Z
+ */
+JNIEXPORT jboolean JNICALL Java_at_rocworks_oa4j_jni_Manager_apiCnsCheckId
+  (JNIEnv *, jobject, jstring);
+
+/*
+ * Class:     at_rocworks_oa4j_jni_Manager
+ * Method:    apiCnsCheckName
+ * Signature: (Ljava/lang/String;)Z
+ */
+JNIEXPORT jboolean JNICALL Java_at_rocworks_oa4j_jni_Manager_apiCnsCheckName
+  (JNIEnv *, jobject, jstring);
+
+/*
+ * Class:     at_rocworks_oa4j_jni_Manager
+ * Method:    apiCnsCheckSeparator
+ * Signature: (C)Z
+ */
+JNIEXPORT jboolean JNICALL Java_at_rocworks_oa4j_jni_Manager_apiCnsCheckSeparator
+  (JNIEnv *, jobject, jchar);
+
+/*
+ * Class:     at_rocworks_oa4j_jni_Manager
+ * Method:    apiCnsGetIdSet
+ * Signature: (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;II)[Lat/rocworks/oa4j/var/DpIdentifierVar;
+ */
+JNIEXPORT jobjectArray JNICALL Java_at_rocworks_oa4j_jni_Manager_apiCnsGetIdSet
+  (JNIEnv *, jobject, jstring, jstring, jstring, jint, jint);
+
+/*
+ * Class:     at_rocworks_oa4j_jni_Manager
+ * Method:    apiCnsAddObserver
+ * Signature: (Ljava/lang/Object;)I
+ */
+JNIEXPORT jint JNICALL Java_at_rocworks_oa4j_jni_Manager_apiCnsAddObserver
+  (JNIEnv *, jobject, jobject);
+
+/*
+ * Class:     at_rocworks_oa4j_jni_Manager
+ * Method:    apiCnsRemoveObserver
+ * Signature: (I)I
+ */
+JNIEXPORT jint JNICALL Java_at_rocworks_oa4j_jni_Manager_apiCnsRemoveObserver
+  (JNIEnv *, jobject, jint);
 
 #ifdef __cplusplus
 }
