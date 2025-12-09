@@ -41,13 +41,13 @@ import at.rocworks.oa4j.jni.ErrPrio;
  *
  * @author vogler
  */
-public class ApiThreadTest {
+public class ApiTestThreads {
     public static void main(String[] args) throws Exception {
         // add path to WCCOAjava.dll to your path environment!
         // logs are printed to WCCOAjava<num>.0.log and WCCOAjava10.err         
         JManager m = new JManager();
         m.init(args).start();
-        new ApiThreadTest().run();
+        new ApiTestThreads().run();
         m.stop();   
     }
     
@@ -92,7 +92,7 @@ public class ApiThreadTest {
             try {
                 Thread.sleep(delay);
             } catch (InterruptedException ex) {
-                Logger.getLogger(ApiThreadTest.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(ApiTestThreads.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
@@ -106,7 +106,7 @@ public class ApiThreadTest {
             try {
                 Thread.sleep(delay);
             } catch (InterruptedException ex) {
-                Logger.getLogger(ApiThreadTest.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(ApiTestThreads.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
@@ -121,7 +121,7 @@ public class ApiThreadTest {
                 //JDebug.out.info("--- DPNAMES END ---");
                 Thread.sleep(delay);
             } catch (InterruptedException ex) {
-                Logger.getLogger(ApiThreadTest.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(ApiTestThreads.class.getName()).log(Level.SEVERE, null, ex);
             }
         }        
     }
