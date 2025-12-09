@@ -17,3 +17,6 @@ lib
 out
 log
 target
+
+# WinCC OA API Docu
+api-docu
