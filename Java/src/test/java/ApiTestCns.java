@@ -64,14 +64,11 @@ public class ApiTestCns {
             return;
         }
 
-        log("--- Waiting 5 seconds before reading tree ---");
-        Thread.sleep(5000);
-
         // Read and walk the tree
         readAndWalkTree();
 
         log("--- Waiting 5 seconds before cleanup ---");
-        Thread.sleep(5000);
+        Thread.sleep(30000);
 
         // Delete the view
         cleanupView();
@@ -155,6 +152,7 @@ public class ApiTestCns {
             areaNames.setText(0, "Area " + area.substring(4));
             String areaPath = addNode(rootPath, area, CnsDataIdentifier.Types.NO_TYPE, null, areaNames);
             if (areaPath == null) continue;
+            log("Area path: " + areaPath);
 
             for (String unit : units) {
                 // Level 3: Unit
@@ -191,22 +189,27 @@ public class ApiTestCns {
     }
 
     private String addNode(String parentPath, String nodeId, int nodeType, DpIdentifierVar dpId, LangTextVar displayNames) {
+        log("  Adding node: " + nodeId + " under " + parentPath);
         int result = JClient.cnsAddNode(parentPath, nodeId, nodeType, dpId, displayNames);
         if (result != 0) {
             log("ERROR: Failed to add node: " + nodeId + " under " + parentPath);
             return null;
         }
-        // Return the new node's path
+        // Return the new node's path by querying children
+        // Note: CNS uses dot (.) as internal path separator, not the view's display separator
         String[] children = JClient.cnsGetChildren(parentPath);
         if (children != null) {
             for (String child : children) {
-                if (child.endsWith(SEPARATOR + nodeId) || child.endsWith(":" + VIEW_ID + SEPARATOR + nodeId)) {
+                // Check if this child ends with .nodeId (CNS internal format)
+                if (child.endsWith("." + nodeId)) {
                     return child;
                 }
             }
         }
-        // Fallback: construct the path
-        return parentPath + SEPARATOR + nodeId;
+        // Fallback: construct the path using dot separator (CNS internal format)
+        String newPath = parentPath + "." + nodeId;
+        log("    Constructed path (fallback): " + newPath);
+        return newPath;
     }
 
     private void readAndWalkTree() {
@@ -309,6 +312,5 @@ public class ApiTestCns {
 
     private void log(String message) {
         JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR, message);
-        System.out.println(message);
     }
 }
