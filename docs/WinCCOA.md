@@ -417,6 +417,39 @@ try {
 
 ---
 
+## Redundancy State Listeners
+
+In redundant systems, you can register a callback to be notified when the manager becomes active or passive:
+
+```java
+oa.onRedundancyStateChanged(isActive -> {
+    if (isActive) {
+        System.out.println("Manager is now ACTIVE - taking over primary role");
+        // Start processing, enable features, etc.
+    } else {
+        System.out.println("Manager is now PASSIVE - standby mode");
+        // Stop processing, disable features, etc.
+    }
+});
+```
+
+The callback receives `true` when becoming active, `false` when becoming passive.
+
+To remove a listener, keep a reference to the callback:
+
+```java
+Consumer<Boolean> callback = isActive -> {
+    WinCCOA.log(isActive ? "ACTIVE" : "PASSIVE");
+};
+
+oa.onRedundancyStateChanged(callback);
+
+// Later, remove it
+oa.removeRedundancyStateListener(callback);
+```
+
+---
+
 ## Complete Example
 
 ```java
@@ -531,3 +564,6 @@ public class CompleteExample {
 ### Logging (static)
 - `log(ErrPrio, ErrCode, String)`, `log(String)`, `logError(String)`
 - `logStackTrace(ErrPrio, ErrCode, Throwable)`, `logStackTrace(Throwable)`
+
+### Redundancy State
+- `onRedundancyStateChanged(Consumer<Boolean>)`, `removeRedundancyStateListener(Consumer<Boolean>)`

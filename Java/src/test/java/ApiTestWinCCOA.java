@@ -16,7 +16,7 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-import at.rocworks.oa4j.base.WinCCOA;
+import at.rocworks.oa4j.WinCCOA;
 import at.rocworks.oa4j.base.JDpHLGroup;
 import at.rocworks.oa4j.var.DpElementType;
 import at.rocworks.oa4j.var.DpTypeElement;

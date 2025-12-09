@@ -15,14 +15,16 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package at.rocworks.oa4j.base;
+package at.rocworks.oa4j;
 
+import at.rocworks.oa4j.base.*;
 import at.rocworks.oa4j.jni.ErrCode;
 import at.rocworks.oa4j.jni.ErrPrio;
 import at.rocworks.oa4j.var.*;
 
 import java.util.Date;
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * Unified facade class for WinCC OA operations.
@@ -924,5 +926,39 @@ public class WinCCOA {
      */
     public static void logStackTrace(Throwable exception) {
         JManager.stackTrace(exception);
+    }
+
+    // ========== Redundancy State Listeners ==========
+
+    /**
+     * Adds a redundancy state listener.
+     * <p>
+     * The callback receives a boolean: true when becoming active, false when becoming passive.
+     * </p>
+     *
+     * <h3>Example:</h3>
+     * <pre>{@code
+     * oa.onRedundancyStateChanged(isActive -> {
+     *     if (isActive) {
+     *         System.out.println("Now ACTIVE");
+     *     } else {
+     *         System.out.println("Now PASSIVE");
+     *     }
+     * });
+     * }</pre>
+     *
+     * @param callback The callback to invoke on state change (true=active, false=passive)
+     */
+    public void onRedundancyStateChanged(Consumer<Boolean> callback) {
+        manager.addRedundancyStateListener(callback);
+    }
+
+    /**
+     * Removes a redundancy state listener.
+     *
+     * @param callback The callback to remove
+     */
+    public void removeRedundancyStateListener(Consumer<Boolean> callback) {
+        manager.removeRedundancyStateListener(callback);
     }
 }

@@ -24,7 +24,10 @@ import at.rocworks.oa4j.var.DpTypeResult;
 import at.rocworks.oa4j.var.Variable;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.ArrayList;
 import java.util.concurrent.Callable;
@@ -41,7 +44,7 @@ public class JManager extends Manager implements Runnable {
 
     public static int MAX_ENQUEUE_SIZE_HIGH = 100000;
     public static int MAX_ENQUEUE_SIZE_LOW = 50000;
-    public static int MAX_DEQUEUE_SIZE_HIGH = 10000;  // Message queue high threshold (full capacity)
+    public static int MAX_DEQUEUE_SIZE_HIGH = 100000;  // Message queue high threshold (full capacity)
     public static int MAX_DEQUEUE_SIZE_LOW = 50000;    // Message queue low threshold (recovery point)
 
     private boolean connectToData = true;
@@ -75,6 +78,9 @@ public class JManager extends Manager implements Runnable {
     private boolean debugFlag=false;
 
     private Map<String, String> initSysMsgData;
+
+    // Redundancy state listeners (Consumer<Boolean> where true=active, false=passive)
+    private final List<Consumer<Boolean>> redundancyListeners = new CopyOnWriteArrayList<>();
 
     /**
      * Sets the maximum enqueue size thresholds for the task queue.
@@ -636,6 +642,7 @@ public class JManager extends Manager implements Runnable {
      */
     protected void becameActive() {
         isActive=1; // active
+        notifyRedundancyListeners(true);
     }
 
     /**
@@ -643,6 +650,42 @@ public class JManager extends Manager implements Runnable {
      */
     protected void becamePassive() {
         isActive=0; // passive
+        notifyRedundancyListeners(false);
+    }
+
+    /**
+     * Notifies all registered redundancy state listeners.
+     * @param isActive true if became active, false if became passive
+     */
+    private void notifyRedundancyListeners(boolean isActive) {
+        for (Consumer<Boolean> listener : redundancyListeners) {
+            try {
+                listener.accept(isActive);
+            } catch (Exception e) {
+                stackTrace(ErrPrio.PRIO_WARNING, ErrCode.UNEXPECTEDSTATE, e);
+            }
+        }
+    }
+
+    /**
+     * Adds a redundancy state listener.
+     * The callback receives true when becoming active, false when becoming passive.
+     *
+     * @param callback The callback to invoke on state change
+     */
+    public void addRedundancyStateListener(Consumer<Boolean> callback) {
+        if (callback != null) {
+            redundancyListeners.add(callback);
+        }
+    }
+
+    /**
+     * Removes a redundancy state listener.
+     *
+     * @param callback The callback to remove
+     */
+    public void removeRedundancyStateListener(Consumer<Boolean> callback) {
+        redundancyListeners.remove(callback);
     }
 
     /**
