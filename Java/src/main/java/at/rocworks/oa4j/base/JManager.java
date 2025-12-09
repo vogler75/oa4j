@@ -632,7 +632,7 @@ public class JManager extends Manager implements Runnable {
     }
 
     /**
-     * executed when manager becomes actigve
+     * executed when manager becomes active
      */
     protected void becameActive() {
         isActive=1; // active

@@ -644,7 +644,7 @@ Creates a historical data query using Java Date objects.
 #### `dpGetPeriod(Long start, long stop, int num)`
 
 ```java
-public static JDpGetPeriod dpGetPeriod(Long start, long stop, int num)
+public static JDpGetPeriod dpGetPeriod(long start, long stop, int num)
 ```
 
 Creates a historical data query using millisecond timestamps.

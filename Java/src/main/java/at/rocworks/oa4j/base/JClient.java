@@ -189,7 +189,7 @@ public class JClient {
      * @param num   maximum number of values (0 = unlimited)
      * @return a new JDpGetPeriod builder instance
      */
-    public static JDpGetPeriod dpGetPeriod(Long start, long stop, int num) {
+    public static JDpGetPeriod dpGetPeriod(long start, long stop, int num) {
         return dpGetPeriod(new TimeVar(start), new TimeVar(stop), num);
     }
 
