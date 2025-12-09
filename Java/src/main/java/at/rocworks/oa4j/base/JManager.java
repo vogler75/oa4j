@@ -780,4 +780,175 @@ public class JManager extends Manager implements Runnable {
     public DpTypeResult dpTypeGet(String typeName, boolean includeSubTypes) {
         return apiDpTypeGetFlat(typeName, includeSubTypes);
     }
+
+    // ========== Datapoint Type Management ==========
+
+    /**
+     * Create a new datapoint type.
+     *
+     * @param definition The type definition tree (root DpTypeElement)
+     * @return 0 on success, -1 on failure
+     */
+    public int dpTypeCreate(DpTypeElement definition) {
+        return dpTypeCreate(definition, null);
+    }
+
+    /**
+     * Create a new datapoint type.
+     *
+     * @param definition The type definition tree (root DpTypeElement)
+     * @param system System name or null for default system
+     * @return 0 on success, -1 on failure
+     */
+    public int dpTypeCreate(DpTypeElement definition, String system) {
+        return apiDpTypeCreate(definition, system);
+    }
+
+    /**
+     * Modify an existing datapoint type by appending elements under root.
+     *
+     * @param typeId The datapoint type ID to modify
+     * @param definition The new type definition to append
+     * @return 0 on success, -1 on failure
+     */
+    public int dpTypeChange(int typeId, DpTypeElement definition) {
+        return dpTypeChange(typeId, definition, true, null);
+    }
+
+    /**
+     * Modify an existing datapoint type.
+     *
+     * @param typeId The datapoint type ID to modify
+     * @param definition The new type definition
+     * @param append If true, append definition under root; if false, replace entire type
+     * @return 0 on success, -1 on failure
+     */
+    public int dpTypeChange(int typeId, DpTypeElement definition, boolean append) {
+        return dpTypeChange(typeId, definition, append, null);
+    }
+
+    /**
+     * Modify an existing datapoint type.
+     *
+     * @param typeId The datapoint type ID to modify
+     * @param definition The new type definition
+     * @param append If true, append definition under root; if false, replace entire type
+     * @param system System name or null for default system
+     * @return 0 on success, -1 on failure
+     */
+    public int dpTypeChange(int typeId, DpTypeElement definition, boolean append, String system) {
+        return apiDpTypeChange(typeId, definition, append, system);
+    }
+
+    /**
+     * Delete a datapoint type by ID.
+     *
+     * @param typeId The datapoint type ID to delete
+     * @return 0 on success, -1 on failure
+     */
+    public int dpTypeDelete(int typeId) {
+        return dpTypeDelete(typeId, null);
+    }
+
+    /**
+     * Delete a datapoint type by ID.
+     *
+     * @param typeId The datapoint type ID to delete
+     * @param system System name or null for default system
+     * @return 0 on success, -1 on failure
+     */
+    public int dpTypeDelete(int typeId, String system) {
+        return apiDpTypeDelete(typeId, system);
+    }
+
+    /**
+     * Delete a datapoint type by name.
+     *
+     * @param typeName The datapoint type name to delete
+     * @return 0 on success, -1 on failure
+     */
+    public int dpTypeDelete(String typeName) {
+        return dpTypeDelete(typeName, null);
+    }
+
+    /**
+     * Delete a datapoint type by name.
+     *
+     * @param typeName The datapoint type name to delete
+     * @param system System name or null for default system
+     * @return 0 on success, -1 on failure
+     */
+    public int dpTypeDelete(String typeName, String system) {
+        int typeId = apiDpTypeNameToId(typeName, system);
+        if (typeId < 0) {
+            return -1;
+        }
+        return apiDpTypeDelete(typeId, system);
+    }
+
+    /**
+     * Get the type ID for a datapoint type name.
+     *
+     * @param typeName The datapoint type name
+     * @return The type ID, or -1 if not found
+     */
+    public int dpTypeNameToId(String typeName) {
+        return dpTypeNameToId(typeName, null);
+    }
+
+    /**
+     * Get the type ID for a datapoint type name.
+     *
+     * @param typeName The datapoint type name
+     * @param system System name or null for default system
+     * @return The type ID, or -1 if not found
+     */
+    public int dpTypeNameToId(String typeName, String system) {
+        return apiDpTypeNameToId(typeName, system);
+    }
+
+    // ========== Datapoint Management ==========
+
+    /**
+     * Create a new datapoint.
+     *
+     * @param dpName The name of the datapoint to create
+     * @param dpTypeName The datapoint type name
+     * @return 0 on success, -1 on failure
+     */
+    public int dpCreate(String dpName, String dpTypeName) {
+        return dpCreate(dpName, dpTypeName, null);
+    }
+
+    /**
+     * Create a new datapoint.
+     *
+     * @param dpName The name of the datapoint to create
+     * @param dpTypeName The datapoint type name
+     * @param system System name or null for default system
+     * @return 0 on success, -1 on failure
+     */
+    public int dpCreate(String dpName, String dpTypeName, String system) {
+        return apiDpCreate(dpName, dpTypeName, system);
+    }
+
+    /**
+     * Delete a datapoint.
+     *
+     * @param dpName The name of the datapoint to delete
+     * @return 0 on success, -1 on failure
+     */
+    public int dpDelete(String dpName) {
+        return apiDpDelete(dpName);
+    }
+
+    /**
+     * Check if a datapoint exists.
+     *
+     * @param dpName The datapoint name to check
+     * @return true if the datapoint exists
+     */
+    public boolean dpExists(String dpName) {
+        return apiDpExists(dpName);
+    }
 }

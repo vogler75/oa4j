@@ -535,6 +535,62 @@ JNIEXPORT jint JNICALL Java_at_rocworks_oa4j_jni_Manager_apiCnsAddObserver
 JNIEXPORT jint JNICALL Java_at_rocworks_oa4j_jni_Manager_apiCnsRemoveObserver
   (JNIEnv *, jobject, jint);
 
+/*
+ * Class:     at_rocworks_oa4j_jni_Manager
+ * Method:    apiDpTypeCreate
+ * Signature: (Lat/rocworks/oa4j/var/DpTypeElement;Ljava/lang/String;)I
+ */
+JNIEXPORT jint JNICALL Java_at_rocworks_oa4j_jni_Manager_apiDpTypeCreate
+  (JNIEnv *, jobject, jobject, jstring);
+
+/*
+ * Class:     at_rocworks_oa4j_jni_Manager
+ * Method:    apiDpTypeChange
+ * Signature: (ILat/rocworks/oa4j/var/DpTypeElement;ZLjava/lang/String;)I
+ */
+JNIEXPORT jint JNICALL Java_at_rocworks_oa4j_jni_Manager_apiDpTypeChange
+  (JNIEnv *, jobject, jint, jobject, jboolean, jstring);
+
+/*
+ * Class:     at_rocworks_oa4j_jni_Manager
+ * Method:    apiDpTypeDelete
+ * Signature: (ILjava/lang/String;)I
+ */
+JNIEXPORT jint JNICALL Java_at_rocworks_oa4j_jni_Manager_apiDpTypeDelete
+  (JNIEnv *, jobject, jint, jstring);
+
+/*
+ * Class:     at_rocworks_oa4j_jni_Manager
+ * Method:    apiDpTypeNameToId
+ * Signature: (Ljava/lang/String;Ljava/lang/String;)I
+ */
+JNIEXPORT jint JNICALL Java_at_rocworks_oa4j_jni_Manager_apiDpTypeNameToId
+  (JNIEnv *, jobject, jstring, jstring);
+
+/*
+ * Class:     at_rocworks_oa4j_jni_Manager
+ * Method:    apiDpCreate
+ * Signature: (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)I
+ */
+JNIEXPORT jint JNICALL Java_at_rocworks_oa4j_jni_Manager_apiDpCreate
+  (JNIEnv *, jobject, jstring, jstring, jstring);
+
+/*
+ * Class:     at_rocworks_oa4j_jni_Manager
+ * Method:    apiDpDelete
+ * Signature: (Ljava/lang/String;)I
+ */
+JNIEXPORT jint JNICALL Java_at_rocworks_oa4j_jni_Manager_apiDpDelete
+  (JNIEnv *, jobject, jstring);
+
+/*
+ * Class:     at_rocworks_oa4j_jni_Manager
+ * Method:    apiDpExists
+ * Signature: (Ljava/lang/String;)Z
+ */
+JNIEXPORT jboolean JNICALL Java_at_rocworks_oa4j_jni_Manager_apiDpExists
+  (JNIEnv *, jobject, jstring);
+
 #ifdef __cplusplus
 }
 #endif

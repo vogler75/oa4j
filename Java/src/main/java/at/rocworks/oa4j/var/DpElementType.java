@@ -20,79 +20,98 @@ package at.rocworks.oa4j.var;
 /**
  * Datapoint element types as defined in WinCC OA.
  * These types define the structure and data types of datapoint elements.
+ * Values must match the C++ DpElementType enum in DpElementType.hxx.
  */
 public enum DpElementType {
-    // No element / invalid
+    // No element / invalid (0)
     NOELEMENT(0),
 
     // Structure container types
-    RECORD(1),
-    ARRAY(2),
+    RECORD(1),      // Container for children of different types
+    ARRAY(2),       // Container for children of same type
 
-    // Primitive types
-    CHAR(3),
-    UINT(4),
-    INT(5),
-    FLOAT(6),
-    BIT(7),
-    BIT32(8),
-    TEXT(9),
-    TIME(10),
-    DPID(11),
-    NOVALUE(12),
-    STRUCTURE(13),
-    LANGTEXT(14),
-    BLOB(15),
-    BIT64(16),
-    LONG(17),
+    // Dynamic array types (3-10)
+    DYNCHAR(3),
+    DYNUINT(4),
+    DYNINT(5),
+    DYNFLOAT(6),
+    DYNBIT(7),
+    DYN32BIT(8),
+    DYNTEXT(9),
+    DYNTIME(10),
 
-    // Type reference
-    TYPEREFERENCE(18),
+    // Static array types (11-18)
+    CHARARRAY(11),
+    UINTARRAY(12),
+    INTARRAY(13),
+    FLOATARRAY(14),
+    BITARRAY(15),
+    BIT32ARRAY(16),
+    TEXTARRAY(17),
+    TIMEARRAY(18),
 
-    // Dynamic array types
-    DYNCHAR(19),
-    DYNUINT(20),
-    DYNINT(21),
-    DYNFLOAT(22),
-    DYNBIT(23),
-    DYN32BIT(24),
-    DYNTEXT(25),
-    DYNTIME(26),
-    DYNDPID(27),
-    DYNLANGTEXT(28),
-    DYNBLOB(29),
-    DYN64BIT(30),
-    DYNLONG(31),
+    // Primitive types (19-28)
+    CHAR(19),
+    UINT(20),
+    INT(21),
+    FLOAT(22),
+    BIT(23),
+    BIT32(24),
+    TEXT(25),
+    TIME(26),
+    DPID(27),
+    NOVALUE(28),
 
-    // Static array types
-    CHARARRAY(32),
-    UINTARRAY(33),
-    INTARRAY(34),
-    FLOATARRAY(35),
-    BITARRAY(36),
-    BIT32ARRAY(37),
-    TEXTARRAY(38),
-    TIMEARRAY(39),
-    DPIDARRAY(40),
-    LANGTEXTARRAY(41),
-    BLOBARRAY(42),
-    BIT64ARRAY(43),
-    LONGARRAY(44),
+    // More dynamic types (29)
+    DYNDPID(29),
 
-    // Dynamic static array types
-    DYNCHARARRAY(45),
-    DYNUINTARRAY(46),
-    DYNINTARRAY(47),
-    DYNFLOATARRAY(48),
-    DYNBITARRAY(49),
-    DYN32BITARRAY(50),
-    DYNTEXTARRAY(51),
-    DYNTIMEARRAY(52),
-    DYNDPIDARRAY(53),
-    DYNLANGTEXTARRAY(54),
-    DYNBLOBARRAY(55),
-    DYN64BITARRAY(56),
+    // More dynamic array types (30-38)
+    DYNCHARARRAY(30),
+    DYNUINTARRAY(31),
+    DYNINTARRAY(32),
+    DYNFLOATARRAY(33),
+    DYNBITARRAY(34),
+    DYN32BITARRAY(35),
+    DYNTEXTARRAY(36),
+    DYNTIMEARRAY(37),
+    DYNDPIDARRAY(38),
+
+    // More static arrays (39-40)
+    DPIDARRAY(39),
+    NOVALUEARRAY(40),
+
+    // Type reference (41)
+    TYPEREFERENCE(41),
+
+    // LangText types (42-45)
+    LANGTEXT(42),
+    LANGTEXTARRAY(43),
+    DYNLANGTEXT(44),
+    DYNLANGTEXTARRAY(45),
+
+    // Blob types (46-49)
+    BLOB(46),
+    BLOBARRAY(47),
+    DYNBLOB(48),
+    DYNBLOBARRAY(49),
+
+    // 64-bit types (50-53)
+    BIT64(50),
+    DYN64BIT(51),
+    BIT64ARRAY(52),
+    DYN64BITARRAY(53),
+
+    // Long types (54-57)
+    LONG(54),
+    DYNLONG(55),
+    LONGARRAY(56),
     DYNLONGARRAY(57),
+
+    // Unsigned long types (58-61)
+    ULONG(58),
+    DYNULONG(59),
+    ULONGARRAY(60),
+    DYNULONGARRAY(61),
 
     // Unknown type (fallback)
     UNKNOWN(-1);
@@ -126,24 +145,9 @@ public enum DpElementType {
      * @return true if this is a primitive/leaf type
      */
     public boolean isLeafType() {
-        switch (this) {
-            case CHAR:
-            case UINT:
-            case INT:
-            case FLOAT:
-            case BIT:
-            case BIT32:
-            case BIT64:
-            case TEXT:
-            case TIME:
-            case DPID:
-            case LANGTEXT:
-            case BLOB:
-            case LONG:
-                return true;
-            default:
-                return false;
-        }
+        // Leaf types are the primitive scalar types (19-28) and some special ones
+        return (value >= CHAR.value && value <= NOVALUE.value) ||
+               this == LANGTEXT || this == BLOB || this == BIT64 || this == LONG || this == ULONG;
     }
 
     /**
@@ -151,7 +155,14 @@ public enum DpElementType {
      * @return true if this is a dynamic array type
      */
     public boolean isDynType() {
-        return value >= DYNCHAR.value && value <= DYNLONG.value;
+        return (value >= DYNCHAR.value && value <= DYNTIME.value) ||
+               this == DYNDPID ||
+               (value >= DYNCHARARRAY.value && value <= DYNDPIDARRAY.value) ||
+               this == DYNLANGTEXT || this == DYNLANGTEXTARRAY ||
+               this == DYNBLOB || this == DYNBLOBARRAY ||
+               this == DYN64BIT || this == DYN64BITARRAY ||
+               this == DYNLONG || this == DYNLONGARRAY ||
+               this == DYNULONG || this == DYNULONGARRAY;
     }
 
     /**
@@ -159,7 +170,11 @@ public enum DpElementType {
      * @return true if this is a static array type
      */
     public boolean isArrayType() {
-        return this == ARRAY || (value >= CHARARRAY.value && value <= LONGARRAY.value);
+        return this == ARRAY ||
+               (value >= CHARARRAY.value && value <= TIMEARRAY.value) ||
+               this == DPIDARRAY || this == NOVALUEARRAY ||
+               this == LANGTEXTARRAY || this == BLOBARRAY ||
+               this == BIT64ARRAY || this == LONGARRAY || this == ULONGARRAY;
     }
 
     /**
@@ -167,7 +182,7 @@ public enum DpElementType {
      * @return true if this is a record type
      */
     public boolean isRecordType() {
-        return this == RECORD || this == STRUCTURE;
+        return this == RECORD;
     }
 
     /**

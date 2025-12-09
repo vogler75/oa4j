@@ -432,4 +432,65 @@ public abstract class Manager {
      * @return 0 on success, -1 on failure
      */
     public native int apiCnsRemoveObserver(int observerId);
+
+    // ========== Datapoint Type Management ==========
+
+    /**
+     * Create a new datapoint type.
+     * @param definition The type definition tree (root DpTypeElement)
+     * @param system System name or null for default system
+     * @return 0 on success, -1 on failure
+     */
+    public native int apiDpTypeCreate(DpTypeElement definition, String system);
+
+    /**
+     * Modify an existing datapoint type.
+     * @param typeId The datapoint type ID to modify
+     * @param definition The new type definition
+     * @param append If true, append definition under root; if false, replace entire type
+     * @param system System name or null for default system
+     * @return 0 on success, -1 on failure
+     */
+    public native int apiDpTypeChange(int typeId, DpTypeElement definition, boolean append, String system);
+
+    /**
+     * Delete a datapoint type.
+     * @param typeId The datapoint type ID to delete
+     * @param system System name or null for default system
+     * @return 0 on success, -1 on failure
+     */
+    public native int apiDpTypeDelete(int typeId, String system);
+
+    /**
+     * Get the type ID for a datapoint type name.
+     * @param typeName The datapoint type name
+     * @param system System name or null for default system
+     * @return The type ID, or -1 if not found
+     */
+    public native int apiDpTypeNameToId(String typeName, String system);
+
+    // ========== Datapoint Management ==========
+
+    /**
+     * Create a new datapoint.
+     * @param dpName The name of the datapoint to create
+     * @param dpTypeName The datapoint type name
+     * @param system System name or null for default system
+     * @return 0 on success, -1 on failure
+     */
+    public native int apiDpCreate(String dpName, String dpTypeName, String system);
+
+    /**
+     * Delete a datapoint.
+     * @param dpName The name of the datapoint to delete
+     * @return 0 on success, -1 on failure
+     */
+    public native int apiDpDelete(String dpName);
+
+    /**
+     * Check if a datapoint exists.
+     * @param dpName The datapoint name to check
+     * @return true if the datapoint exists
+     */
+    public native boolean apiDpExists(String dpName);
 }

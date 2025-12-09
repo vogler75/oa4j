@@ -927,3 +927,374 @@ JNIEXPORT jobject JNICALL Java_at_rocworks_oa4j_jni_Manager_apiDpTypeGetFlat
 
 	return jResult;
 }
+
+//------------------------------------------------------------------------------------------------
+// Helper function to recursively add children to a DpTypeDefinition
+
+static void addChildrenRecursive(JNIEnv *env, DpTypeDefinition *parent, jobject jElement,
+	jclass clsDpTypeElement, jclass clsDpElementType,
+	jmethodID midGetName, jmethodID midGetElementId, jmethodID midGetElementType,
+	jmethodID midGetReferencedTypeId, jmethodID midGetChildren, jmethodID midGetValue,
+	jmethodID midSize, jmethodID midGet)
+{
+	if (parent == NULL || jElement == NULL) {
+		return;
+	}
+
+	// Get element properties
+	jstring jName = (jstring)env->CallObjectMethod(jElement, midGetName);
+	jint elementId = env->CallIntMethod(jElement, midGetElementId);
+	jobject jElementType = env->CallObjectMethod(jElement, midGetElementType);
+	jint refTypeId = env->CallIntMethod(jElement, midGetReferencedTypeId);
+	jint elementTypeValue = env->CallIntMethod(jElementType, midGetValue);
+	env->DeleteLocalRef(jElementType);
+
+	CharString *name = Java::convertJString(env, jName);
+	env->DeleteLocalRef(jName);
+
+	if (name == NULL) {
+		return;
+	}
+
+	// Add this element to the parent
+	DpTypeDefinition *childDef;
+	if (refTypeId != 0) {
+		// Type reference
+		childDef = parent->addChild(*name, (DpTypeId)refTypeId, (DpElementId)elementId);
+	} else {
+		// Normal element
+		childDef = parent->addChild(*name, (DpElementType)elementTypeValue, (DpElementId)elementId);
+	}
+	delete name;
+
+	// Recursively add grandchildren
+	if (childDef != NULL) {
+		jobject jChildList = env->CallObjectMethod(jElement, midGetChildren);
+		if (jChildList != NULL) {
+			jint childCount = env->CallIntMethod(jChildList, midSize);
+			for (jint i = 0; i < childCount; i++) {
+				jobject jChild = env->CallObjectMethod(jChildList, midGet, i);
+				if (jChild != NULL) {
+					addChildrenRecursive(env, childDef, jChild,
+						clsDpTypeElement, clsDpElementType,
+						midGetName, midGetElementId, midGetElementType,
+						midGetReferencedTypeId, midGetChildren, midGetValue,
+						midSize, midGet);
+					env->DeleteLocalRef(jChild);
+				}
+			}
+			env->DeleteLocalRef(jChildList);
+		}
+	}
+}
+
+//------------------------------------------------------------------------------------------------
+// Helper function to convert Java DpTypeElement to C++ DpTypeDefinition
+
+static DpTypeDefinition* convertJavaToDpTypeDefinition(JNIEnv *env, jobject jElement,
+	jclass clsDpTypeElement, jclass clsDpElementType,
+	jmethodID midGetName, jmethodID midGetElementId, jmethodID midGetElementType,
+	jmethodID midGetReferencedTypeId, jmethodID midGetChildren, jmethodID midGetValue)
+{
+	if (jElement == NULL) {
+		return NULL;
+	}
+
+	// Get element properties from Java object
+	jstring jName = (jstring)env->CallObjectMethod(jElement, midGetName);
+	jint elementId = env->CallIntMethod(jElement, midGetElementId);
+	jobject jElementType = env->CallObjectMethod(jElement, midGetElementType);
+
+	// Convert name
+	CharString *name = Java::convertJString(env, jName);
+	env->DeleteLocalRef(jName);
+
+	if (name == NULL) {
+		env->DeleteLocalRef(jElementType);
+		return NULL;
+	}
+
+	// Get element type value
+	jint elementTypeValue = env->CallIntMethod(jElementType, midGetValue);
+	env->DeleteLocalRef(jElementType);
+
+	// Create DpTypeDefinition - constructor only takes (name, DpElementType, elId)
+	DpTypeDefinition *def = new DpTypeDefinition(*name, (DpElementType)elementTypeValue, (DpElementId)elementId);
+	delete name;
+
+	// Get children and add them recursively
+	jobject jChildList = env->CallObjectMethod(jElement, midGetChildren);
+	if (jChildList != NULL) {
+		// Get List methods
+		jclass clsList = env->GetObjectClass(jChildList);
+		jmethodID midSize = env->GetMethodID(clsList, "size", "()I");
+		jmethodID midGet = env->GetMethodID(clsList, "get", "(I)Ljava/lang/Object;");
+
+		jint childCount = env->CallIntMethod(jChildList, midSize);
+		for (jint i = 0; i < childCount; i++) {
+			jobject jChild = env->CallObjectMethod(jChildList, midGet, i);
+			if (jChild != NULL) {
+				addChildrenRecursive(env, def, jChild,
+					clsDpTypeElement, clsDpElementType,
+					midGetName, midGetElementId, midGetElementType,
+					midGetReferencedTypeId, midGetChildren, midGetValue,
+					midSize, midGet);
+				env->DeleteLocalRef(jChild);
+			}
+		}
+		env->DeleteLocalRef(clsList);
+		env->DeleteLocalRef(jChildList);
+	}
+
+	return def;
+}
+
+//------------------------------------------------------------------------------------------------
+// JAVA JNI apiDpTypeCreate
+
+JNIEXPORT jint JNICALL Java_at_rocworks_oa4j_jni_Manager_apiDpTypeCreate
+(JNIEnv *env, jobject obj, jobject jDefinition, jstring jSystem)
+{
+	if (jDefinition == NULL) {
+		return -1;
+	}
+
+	// Get DpTypeElement class and methods
+	jclass clsDpTypeElement = env->GetObjectClass(jDefinition);
+	if (clsDpTypeElement == NULL) {
+		return -1;
+	}
+
+	jclass clsDpElementType = env->FindClass("at/rocworks/oa4j/var/DpElementType");
+	if (clsDpElementType == NULL) {
+		env->DeleteLocalRef(clsDpTypeElement);
+		return -1;
+	}
+
+	jmethodID midGetName = env->GetMethodID(clsDpTypeElement, "getName", "()Ljava/lang/String;");
+	jmethodID midGetElementId = env->GetMethodID(clsDpTypeElement, "getElementId", "()I");
+	jmethodID midGetElementType = env->GetMethodID(clsDpTypeElement, "getElementType", "()Lat/rocworks/oa4j/var/DpElementType;");
+	jmethodID midGetReferencedTypeId = env->GetMethodID(clsDpTypeElement, "getReferencedTypeId", "()I");
+	jmethodID midGetChildren = env->GetMethodID(clsDpTypeElement, "getChildren", "()Ljava/util/List;");
+	jmethodID midGetValue = env->GetMethodID(clsDpElementType, "getValue", "()I");
+
+	if (midGetName == NULL || midGetElementId == NULL || midGetElementType == NULL ||
+		midGetReferencedTypeId == NULL || midGetChildren == NULL || midGetValue == NULL) {
+		env->DeleteLocalRef(clsDpTypeElement);
+		env->DeleteLocalRef(clsDpElementType);
+		return -1;
+	}
+
+	// Convert Java DpTypeElement to C++ DpTypeDefinition
+	DpTypeDefinition *typeDef = convertJavaToDpTypeDefinition(env, jDefinition,
+		clsDpTypeElement, clsDpElementType,
+		midGetName, midGetElementId, midGetElementType,
+		midGetReferencedTypeId, midGetChildren, midGetValue);
+
+	env->DeleteLocalRef(clsDpTypeElement);
+	env->DeleteLocalRef(clsDpElementType);
+
+	if (typeDef == NULL) {
+		return -1;
+	}
+
+	// Get system number
+	SystemNumType sysNum = Java::parseSystemNum(env, jSystem);
+
+	// Create the type
+	bool success = Manager::dpTypeCreate(*typeDef, NULL, true, sysNum);
+
+	delete typeDef;
+
+	return success ? 0 : -1;
+}
+
+//------------------------------------------------------------------------------------------------
+// JAVA JNI apiDpTypeChange
+
+JNIEXPORT jint JNICALL Java_at_rocworks_oa4j_jni_Manager_apiDpTypeChange
+(JNIEnv *env, jobject obj, jint jTypeId, jobject jDefinition, jboolean jAppend, jstring jSystem)
+{
+	if (jDefinition == NULL) {
+		return -1;
+	}
+
+	// Get DpTypeElement class and methods
+	jclass clsDpTypeElement = env->GetObjectClass(jDefinition);
+	if (clsDpTypeElement == NULL) {
+		return -1;
+	}
+
+	jclass clsDpElementType = env->FindClass("at/rocworks/oa4j/var/DpElementType");
+	if (clsDpElementType == NULL) {
+		env->DeleteLocalRef(clsDpTypeElement);
+		return -1;
+	}
+
+	jmethodID midGetName = env->GetMethodID(clsDpTypeElement, "getName", "()Ljava/lang/String;");
+	jmethodID midGetElementId = env->GetMethodID(clsDpTypeElement, "getElementId", "()I");
+	jmethodID midGetElementType = env->GetMethodID(clsDpTypeElement, "getElementType", "()Lat/rocworks/oa4j/var/DpElementType;");
+	jmethodID midGetReferencedTypeId = env->GetMethodID(clsDpTypeElement, "getReferencedTypeId", "()I");
+	jmethodID midGetChildren = env->GetMethodID(clsDpTypeElement, "getChildren", "()Ljava/util/List;");
+	jmethodID midGetValue = env->GetMethodID(clsDpElementType, "getValue", "()I");
+
+	if (midGetName == NULL || midGetElementId == NULL || midGetElementType == NULL ||
+		midGetReferencedTypeId == NULL || midGetChildren == NULL || midGetValue == NULL) {
+		env->DeleteLocalRef(clsDpTypeElement);
+		env->DeleteLocalRef(clsDpElementType);
+		return -1;
+	}
+
+	// Convert Java DpTypeElement to C++ DpTypeDefinition
+	DpTypeDefinition *typeDef = convertJavaToDpTypeDefinition(env, jDefinition,
+		clsDpTypeElement, clsDpElementType,
+		midGetName, midGetElementId, midGetElementType,
+		midGetReferencedTypeId, midGetChildren, midGetValue);
+
+	env->DeleteLocalRef(clsDpTypeElement);
+	env->DeleteLocalRef(clsDpElementType);
+
+	if (typeDef == NULL) {
+		return -1;
+	}
+
+	// Get system number
+	SystemNumType sysNum = Java::parseSystemNum(env, jSystem);
+
+	// Change the type
+	bool success = Manager::dpTypeChange((DpTypeId)jTypeId, *typeDef, jAppend, NULL, true, sysNum);
+
+	delete typeDef;
+
+	return success ? 0 : -1;
+}
+
+//------------------------------------------------------------------------------------------------
+// JAVA JNI apiDpTypeDelete
+
+JNIEXPORT jint JNICALL Java_at_rocworks_oa4j_jni_Manager_apiDpTypeDelete
+(JNIEnv *env, jobject obj, jint jTypeId, jstring jSystem)
+{
+	// Get system number
+	SystemNumType sysNum = Java::parseSystemNum(env, jSystem);
+
+	// Delete the type
+	bool success = Manager::dpTypeDelete((DpTypeId)jTypeId, NULL, true, sysNum);
+
+	return success ? 0 : -1;
+}
+
+//------------------------------------------------------------------------------------------------
+// JAVA JNI apiDpTypeNameToId
+
+JNIEXPORT jint JNICALL Java_at_rocworks_oa4j_jni_Manager_apiDpTypeNameToId
+(JNIEnv *env, jobject obj, jstring jTypeName, jstring jSystem)
+{
+	if (jTypeName == NULL) {
+		return -1;
+	}
+
+	CharString *typeName = Java::convertJString(env, jTypeName);
+	if (typeName == NULL) {
+		return -1;
+	}
+
+	DpTypeId typeId;
+	bool found = Manager::getTypeId(typeName->c_str(), typeId);
+	delete typeName;
+
+	return found ? (jint)typeId : -1;
+}
+
+//------------------------------------------------------------------------------------------------
+// JAVA JNI apiDpCreate
+
+JNIEXPORT jint JNICALL Java_at_rocworks_oa4j_jni_Manager_apiDpCreate
+(JNIEnv *env, jobject obj, jstring jDpName, jstring jDpTypeName, jstring jSystem)
+{
+	if (jDpName == NULL || jDpTypeName == NULL) {
+		return -1;
+	}
+
+	CharString *dpName = Java::convertJString(env, jDpName);
+	if (dpName == NULL) {
+		return -1;
+	}
+
+	CharString *dpTypeName = Java::convertJString(env, jDpTypeName);
+	if (dpTypeName == NULL) {
+		delete dpName;
+		return -1;
+	}
+
+	// Get type ID from type name
+	DpTypeId typeId;
+	if (!Manager::getTypeId(dpTypeName->c_str(), typeId)) {
+		delete dpName;
+		delete dpTypeName;
+		return -1;
+	}
+	delete dpTypeName;
+
+	// Get system number
+	SystemNumType sysNum = Java::parseSystemNum(env, jSystem);
+
+	// Create the datapoint
+	bool success = Manager::dpCreate(*dpName, typeId, NULL, sysNum);
+
+	delete dpName;
+
+	return success ? 0 : -1;
+}
+
+//------------------------------------------------------------------------------------------------
+// JAVA JNI apiDpDelete
+
+JNIEXPORT jint JNICALL Java_at_rocworks_oa4j_jni_Manager_apiDpDelete
+(JNIEnv *env, jobject obj, jstring jDpName)
+{
+	if (jDpName == NULL) {
+		return -1;
+	}
+
+	CharString *dpName = Java::convertJString(env, jDpName);
+	if (dpName == NULL) {
+		return -1;
+	}
+
+	// Get the DpIdentifier for this datapoint
+	DpIdentifier dpId;
+	if (!Manager::getId(dpName->c_str(), dpId)) {
+		delete dpName;
+		return -1;
+	}
+	delete dpName;
+
+	// Delete the datapoint
+	bool success = Manager::dpDelete(dpId, NULL);
+
+	return success ? 0 : -1;
+}
+
+//------------------------------------------------------------------------------------------------
+// JAVA JNI apiDpExists
+
+JNIEXPORT jboolean JNICALL Java_at_rocworks_oa4j_jni_Manager_apiDpExists
+(JNIEnv *env, jobject obj, jstring jDpName)
+{
+	if (jDpName == NULL) {
+		return JNI_FALSE;
+	}
+
+	CharString *dpName = Java::convertJString(env, jDpName);
+	if (dpName == NULL) {
+		return JNI_FALSE;
+	}
+
+	// Check if the datapoint exists
+	DpIdentifier dpId;
+	bool exists = Manager::getId(dpName->c_str(), dpId);
+	delete dpName;
+
+	return exists ? JNI_TRUE : JNI_FALSE;
+}
