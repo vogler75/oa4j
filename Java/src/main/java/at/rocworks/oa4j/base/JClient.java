@@ -384,4 +384,367 @@ public class JClient {
             return JManager.getInstance().setUserId(username, password);
         });
     }
+
+    // ========== CNS (Common Name Service) ==========
+
+    /**
+     * Create a new CNS view.
+     * @param system System name (e.g., "System1:") or null for default system
+     * @param viewId The unique identifier for the view
+     * @param separator The separator character for display paths
+     * @param displayNames Display names for the view (LangTextVar), or null
+     * @return 0 on success, -1 on failure
+     */
+    public static int cnsCreateView(String system, String viewId, String separator, LangTextVar displayNames) {
+        return (int)JManager.getInstance().executeTask(()->{
+            return JManager.getInstance().apiCnsCreateView(system, viewId, separator, displayNames);
+        });
+    }
+
+    /**
+     * Delete a CNS view.
+     * @param system System name or null for default system
+     * @param viewId The view identifier to delete
+     * @return 0 on success, -1 on failure
+     */
+    public static int cnsDeleteView(String system, String viewId) {
+        return (int)JManager.getInstance().executeTask(()->{
+            return JManager.getInstance().apiCnsDeleteView(system, viewId);
+        });
+    }
+
+    /**
+     * Get all views in a system.
+     * @param system System name or null for default system
+     * @return Array of view identifiers, or null on failure
+     */
+    public static String[] cnsGetViews(String system) {
+        return (String[])JManager.getInstance().executeTask(()->{
+            return JManager.getInstance().apiCnsGetViews(system);
+        });
+    }
+
+    /**
+     * Get display names of a view.
+     * @param system System name or null for default system
+     * @param viewId The view identifier
+     * @return LangTextVar with display names, or null on failure
+     */
+    public static LangTextVar cnsGetViewDisplayNames(String system, String viewId) {
+        return (LangTextVar)JManager.getInstance().executeTask(()->{
+            return JManager.getInstance().apiCnsGetViewDisplayNames(system, viewId);
+        });
+    }
+
+    /**
+     * Change display names of a view.
+     * @param system System name or null for default system
+     * @param viewId The view identifier
+     * @param displayNames New display names
+     * @return 0 on success, -1 on failure
+     */
+    public static int cnsChangeViewDisplayNames(String system, String viewId, LangTextVar displayNames) {
+        return (int)JManager.getInstance().executeTask(()->{
+            return JManager.getInstance().apiCnsChangeViewDisplayNames(system, viewId, displayNames);
+        });
+    }
+
+    /**
+     * Get separators of a view.
+     * @param system System name or null for default system
+     * @param viewId The view identifier
+     * @return Separator string, or null on failure
+     */
+    public static String cnsGetViewSeparators(String system, String viewId) {
+        return (String)JManager.getInstance().executeTask(()->{
+            return JManager.getInstance().apiCnsGetViewSeparators(system, viewId);
+        });
+    }
+
+    /**
+     * Change separators of a view.
+     * @param system System name or null for default system
+     * @param viewId The view identifier
+     * @param separator New separator string
+     * @return 0 on success, -1 on failure
+     */
+    public static int cnsChangeViewSeparators(String system, String viewId, String separator) {
+        return (int)JManager.getInstance().executeTask(()->{
+            return JManager.getInstance().apiCnsChangeViewSeparators(system, viewId, separator);
+        });
+    }
+
+    /**
+     * Add a tree to a view.
+     * @param system System name or null for default system
+     * @param viewId The view identifier
+     * @param nodeId The tree root node identifier
+     * @param nodeType Node type (CnsDataIdentifier.Types value)
+     * @param dpId Datapoint identifier to link, or null
+     * @param displayNames Display names for the tree root
+     * @return 0 on success, -1 on failure
+     */
+    public static int cnsAddTree(String system, String viewId, String nodeId, int nodeType,
+                                  DpIdentifierVar dpId, LangTextVar displayNames) {
+        return (int)JManager.getInstance().executeTask(()->{
+            return JManager.getInstance().apiCnsAddTree(system, viewId, nodeId, nodeType, dpId, displayNames);
+        });
+    }
+
+    /**
+     * Delete a tree or node from CNS.
+     * @param cnsPath Full CNS path to the tree/node
+     * @return 0 on success, -1 on failure
+     */
+    public static int cnsDeleteTree(String cnsPath) {
+        return (int)JManager.getInstance().executeTask(()->{
+            return JManager.getInstance().apiCnsDeleteTree(cnsPath);
+        });
+    }
+
+    /**
+     * Get all trees in a view.
+     * @param system System name or null for default system
+     * @param viewId The view identifier
+     * @return Array of tree root paths, or null on failure
+     */
+    public static String[] cnsGetTrees(String system, String viewId) {
+        return (String[])JManager.getInstance().executeTask(()->{
+            return JManager.getInstance().apiCnsGetTrees(system, viewId);
+        });
+    }
+
+    /**
+     * Get the root node of a tree.
+     * @param cnsPath Any CNS path within the tree
+     * @return Path to root node, or null on failure
+     */
+    public static String cnsGetRoot(String cnsPath) {
+        return (String)JManager.getInstance().executeTask(()->{
+            return JManager.getInstance().apiCnsGetRoot(cnsPath);
+        });
+    }
+
+    /**
+     * Add a node to a parent node.
+     * @param parentPath CNS path to the parent node
+     * @param nodeId The new node identifier
+     * @param nodeType Node type (CnsDataIdentifier.Types value)
+     * @param dpId Datapoint identifier to link, or null
+     * @param displayNames Display names for the node
+     * @return 0 on success, -1 on failure
+     */
+    public static int cnsAddNode(String parentPath, String nodeId, int nodeType,
+                                  DpIdentifierVar dpId, LangTextVar displayNames) {
+        return (int)JManager.getInstance().executeTask(()->{
+            return JManager.getInstance().apiCnsAddNode(parentPath, nodeId, nodeType, dpId, displayNames);
+        });
+    }
+
+    /**
+     * Get children of a node.
+     * @param cnsPath CNS path to the parent node
+     * @return Array of child node paths, or null on failure
+     */
+    public static String[] cnsGetChildren(String cnsPath) {
+        return (String[])JManager.getInstance().executeTask(()->{
+            return JManager.getInstance().apiCnsGetChildren(cnsPath);
+        });
+    }
+
+    /**
+     * Get parent of a node.
+     * @param cnsPath CNS path to the node
+     * @return Path to parent node, or null on failure
+     */
+    public static String cnsGetParent(String cnsPath) {
+        return (String)JManager.getInstance().executeTask(()->{
+            return JManager.getInstance().apiCnsGetParent(cnsPath);
+        });
+    }
+
+    /**
+     * Change node data (datapoint and type).
+     * @param cnsPath CNS path to the node
+     * @param dpId New datapoint identifier, or null
+     * @param nodeType New node type
+     * @return 0 on success, -1 on failure
+     */
+    public static int cnsChangeNodeData(String cnsPath, DpIdentifierVar dpId, int nodeType) {
+        return (int)JManager.getInstance().executeTask(()->{
+            return JManager.getInstance().apiCnsChangeNodeData(cnsPath, dpId, nodeType);
+        });
+    }
+
+    /**
+     * Change node display names.
+     * @param cnsPath CNS path to the node
+     * @param displayNames New display names
+     * @return 0 on success, -1 on failure
+     */
+    public static int cnsChangeNodeDisplayNames(String cnsPath, LangTextVar displayNames) {
+        return (int)JManager.getInstance().executeTask(()->{
+            return JManager.getInstance().apiCnsChangeNodeDisplayNames(cnsPath, displayNames);
+        });
+    }
+
+    /**
+     * Get a CNS node by path.
+     * @param cnsPath Full CNS path
+     * @return CnsNode object, or null if not found
+     */
+    public static CnsNode cnsGetNode(String cnsPath) {
+        return (CnsNode)JManager.getInstance().executeTask(()->{
+            return JManager.getInstance().apiCnsGetNode(cnsPath);
+        });
+    }
+
+    /**
+     * Get datapoint identifier for a CNS path.
+     * @param cnsPath Full CNS path
+     * @return CnsDataIdentifier object, or null if not found
+     */
+    public static CnsDataIdentifier cnsGetId(String cnsPath) {
+        return (CnsDataIdentifier)JManager.getInstance().executeTask(()->{
+            return JManager.getInstance().apiCnsGetId(cnsPath);
+        });
+    }
+
+    /**
+     * Search nodes by name pattern.
+     * @param system System name or null for default system
+     * @param viewId The view identifier
+     * @param pattern Name pattern to search
+     * @param searchMode Search mode (0=NAME, 1=DISPLAY_NAME, 2=ALL_NAMES)
+     * @param langIdx Language index for display name search
+     * @return Array of matching node paths, or null on failure
+     */
+    public static String[] cnsGetNodesByName(String system, String viewId, String pattern,
+                                              int searchMode, int langIdx) {
+        return (String[])JManager.getInstance().executeTask(()->{
+            return JManager.getInstance().apiCnsGetNodesByName(system, viewId, pattern, searchMode, langIdx);
+        });
+    }
+
+    /**
+     * Find nodes by datapoint.
+     * @param system System name or null for default system
+     * @param viewId The view identifier
+     * @param dpId Datapoint identifier to search for
+     * @return Array of matching node paths, or null on failure
+     */
+    public static String[] cnsGetNodesByData(String system, String viewId, DpIdentifierVar dpId) {
+        return (String[])JManager.getInstance().executeTask(()->{
+            return JManager.getInstance().apiCnsGetNodesByData(system, viewId, dpId);
+        });
+    }
+
+    /**
+     * Extract parts of a CNS path.
+     * @param cnsPath Full CNS path
+     * @param mask Bitmask for parts to extract
+     * @param resolve Whether to resolve display names
+     * @return Extracted path substring, or null on failure
+     */
+    public static String cnsSubStr(String cnsPath, int mask, boolean resolve) {
+        return (String)JManager.getInstance().executeTask(()->{
+            return JManager.getInstance().apiCnsSubStr(cnsPath, mask, resolve);
+        });
+    }
+
+    /**
+     * Get system display names.
+     * @param system System name or null for default system
+     * @return LangTextVar with system display names, or null on failure
+     */
+    public static LangTextVar cnsGetSystemNames(String system) {
+        return (LangTextVar)JManager.getInstance().executeTask(()->{
+            return JManager.getInstance().apiCnsGetSystemNames(system);
+        });
+    }
+
+    /**
+     * Set system display names.
+     * @param system System name or null for default system
+     * @param displayNames New display names
+     * @return 0 on success, -1 on failure
+     */
+    public static int cnsSetSystemNames(String system, LangTextVar displayNames) {
+        return (int)JManager.getInstance().executeTask(()->{
+            return JManager.getInstance().apiCnsSetSystemNames(system, displayNames);
+        });
+    }
+
+    /**
+     * Check if a node ID is valid.
+     * @param id Node ID to validate
+     * @return true if valid
+     */
+    public static boolean cnsCheckId(String id) {
+        return (boolean)JManager.getInstance().executeTask(()->{
+            return JManager.getInstance().apiCnsCheckId(id);
+        });
+    }
+
+    /**
+     * Check if a display name is valid.
+     * @param displayName Display name to validate
+     * @return true if valid
+     */
+    public static boolean cnsCheckName(String displayName) {
+        return (boolean)JManager.getInstance().executeTask(()->{
+            return JManager.getInstance().apiCnsCheckName(displayName);
+        });
+    }
+
+    /**
+     * Check if a separator character is valid.
+     * @param separator Separator character to validate
+     * @return true if valid
+     */
+    public static boolean cnsCheckSeparator(char separator) {
+        return (boolean)JManager.getInstance().executeTask(()->{
+            return JManager.getInstance().apiCnsCheckSeparator(separator);
+        });
+    }
+
+    /**
+     * Get datapoint identifiers matching a pattern.
+     * This is more efficient than cnsGetNodesByName + cnsGetId when you only need the DpIdentifiers.
+     * @param system System name or null for default system
+     * @param viewId The view identifier
+     * @param pattern Name pattern to search
+     * @param searchMode Search mode (0=NAME, 1=DISPLAY_NAME, 2=ALL_NAMES)
+     * @param langIdx Language index for display name search
+     * @return Array of DpIdentifierVar objects, or null on failure
+     */
+    public static DpIdentifierVar[] cnsGetIdSet(String system, String viewId, String pattern,
+                                                 int searchMode, int langIdx) {
+        return (DpIdentifierVar[])JManager.getInstance().executeTask(()->{
+            return JManager.getInstance().apiCnsGetIdSet(system, viewId, pattern, searchMode, langIdx);
+        });
+    }
+
+    /**
+     * Add an observer to receive CNS change notifications.
+     * The observer object must implement a method: void onCnsChange(String path, int changeType)
+     * @param observer Object with onCnsChange(String, int) method (typically implements CnsObserver)
+     * @return Observer ID (for removal), or -1 on failure
+     */
+    public static int cnsAddObserver(Object observer) {
+        return (int)JManager.getInstance().executeTask(()->{
+            return JManager.getInstance().apiCnsAddObserver(observer);
+        });
+    }
+
+    /**
+     * Remove a CNS observer.
+     * @param observerId The observer ID returned by cnsAddObserver
+     * @return 0 on success, -1 on failure
+     */
+    public static int cnsRemoveObserver(int observerId) {
+        return (int)JManager.getInstance().executeTask(()->{
+            return JManager.getInstance().apiCnsRemoveObserver(observerId);
+        });
+    }
 }
