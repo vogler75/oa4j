@@ -1,0 +1,40 @@
+@startuml
+package "IOWA Runtime" {
+    [WCCILevent]
+    [WCCILdata]
+}
+package "Java Manager" {
+
+    package "Startup" {
+        [EXE] as "WCCILjava.exe"
+        [JVM] as "JVM (jvm.dll)"        
+    }
+
+    package "Interface" {
+        (JAR) as "WCCILjava.jar"
+        [DLL] as "WCCILjava.dll" 
+    }
+
+    package "Java Program" {
+        [PRG] as "Java Classes or JAR"
+    }    
+
+    :User: --> [PRG]
+
+    note right of [PRG] : Business Logic implemented Java \nUse Libraries of Java Ecosystem
+    note left of [EXE] : Main class as argument
+    note left of [JVM] : Java Virtual Machine
+    note left of [JAR] : Java Interface to IOWA Runtime (JNI)
+    note left of [DLL] : C++ Interface based on IOWA API
+
+    [EXE] --> [JVM] : "JNI_CreateJavaVM()"
+    [JVM] --> [PRG]
+
+    [PRG] --> [JAR] : uses
+
+    [JAR] --> [DLL] : Java Native Interface (JNI)
+
+    [DLL] --> [WCCILevent]
+    [DLL] --> [WCCILdata]
+}
+@enduml
