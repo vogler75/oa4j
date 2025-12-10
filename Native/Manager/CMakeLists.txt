@@ -17,10 +17,10 @@ endif()
 project(Manager)
 
 #############################################################
-# WCCOAJavaManager (EXE) 
+# WCCOAjava (EXE)
 #############################################################
 
-set(TARGET WCCOAJavaManager)
+set(TARGET WCCOAjava)
 
 set(SOURCES
 WCCOAJavaMain.cxx

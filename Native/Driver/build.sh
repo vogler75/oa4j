@@ -33,12 +33,6 @@ echo "JAVA_HOME: $JAVA_HOME"
 echo "CMake version: $(cmake --version | head -1)"
 echo ""
 
-# Source the environment setup
-if [ -f "./make.env" ]; then
-  echo "Sourcing make.env for additional environment setup..."
-  source ./make.env
-fi
-
 # Create and enter build directory
 BUILD_DIR="build"
 if [ -d "$BUILD_DIR" ]; then

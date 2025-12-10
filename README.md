@@ -1,225 +1,93 @@
-# Content
+# WinCC OA for Java (oa4j)
 
-- [WinCC OA for Java](#wincc-oa-open-architecture-for-java)
-- [Deploy Java Manager](#deploy-java-manager)
-- [Start Java Manager](#start-java-manager)
-- [Config Java Manager](#config-java-manager)
-- [Compile Java Manager](#compile-java-manager)
+Java API for connecting to Siemens WinCC Open Architecture SCADA system.
 
-# WinCC OA (Open Architecture) for Java
-WinCC Open Architecture for Java is an API to connect WinCC OA to Java.<br>
-It is based on the WinCC OA native API+JNI and works on Windows and Linux.<br>
+**Note:** Requires a valid WinCC OA API license.
 
-**⚠️ IMPORTANT: You need a valid WinCC OA API license to use this library!**<br>
+## Prerequisites
 
-An example WinCC OA project is available in the examples directory.<br>
-An example for Scala and Clojure can be found in the examples directory.<br>
-* Java: the java library for WinCC OA (winccoa-java-x.x.jar)
-* Native: the native api which is used by the Java library
+- Java JDK 11+ with `JAVA_HOME` set
+- Apache Maven 3.6+
+- WinCC OA 3.18+ with `API_ROOT` set (for native components)
+- CMake 3.1+ and GCC 11+ (Linux)
 
-## Manager (oa4j/Native/Manager <-> at.rocworks.oa4j.base)<br>
-Examples can be found in the Java/src/test directory and in the examples directory, please read the examples/WinCCOA/Readme.txt. <br>
-The JClient class is an easy to use static class. It should be thread safe and callback functions are processed in a separate thread, so that the main WinCC OA thread/loop will not be blocked by callback functions.<br>
-```
-// Example how to connect to WinCC OA and set some tags (datapoints)
-JManager m = new JManager();
-m.init(args).start(); 
-ret = JClient.dpSet()
-  .add("ExampleDP_Trend1.", Math.random())
-  .add("ExampleDP_SumAlert.", "hello world")
-  .await();
-m.stop();
+## Build
+
+### Java Library
+
+```bash
+cd Java
+./make.sh
 ```
 
-## Driver (oa4j/Native/Driver <-> at.rocworks.oa4j.driver)<br>
-There is an API and framework to implement a WinCC OA driver program in Java. A driver program is used to connect WinCC OA to peripherial devices and exchange data. There is a driver class driver.JDriver and a driver.JDriverSimple class, which can be used to implement a driver. An example drivers can be found in another git respository - Mqtt,  Apache Kafka, Epics (Experimental Physics and Industrial Control System), ... <br>
+Output: `Java/lib/winccoa-java-1.0-SNAPSHOT.jar`
 
-## CtrlExt (oa4j\Native\CtrlExt <-> at.rocworks.oa4j.base.ExternHdl)<br>
-It is possible to call a Java function from WinCC OA control language. 
-The control extension JavaCtrlExt must be loaded and a Subclass of ExternHdlFunction must be implemented. This class can be used to execute a function. Executing the Java function in Control is done with the control function "javaCall" and "javaCallAsync". E.g.: javaCall("ApiTestExternHdl", "myFunTest", makeDynAnytype("hello", 1, true), out); A list of variables can be passed as input parameters and a list of values can be passed out by the Java function (it is the return value of the Java function). It is also possible to execute ctrl callback functions from Java. An example can be found in examples/WinCCOA/panels/JavaCtrlExt.pnl and the Java source src/test/java/ApiTestExternHdl.java. For each javaCall a new Java object of the given class is created (where a reference pointer to the WaitCond object in C++ is stored in the case of an async call).<br>
+### Native Manager
+
+```bash
+cd Native/Manager
+export API_ROOT=/opt/WinCC_OA/3.20/api
+export JAVA_HOME=/usr/lib/jvm/java-11-openjdk
+./build.sh
 ```
-    // Java Code (Class ApiTestExternHdl)
-    public DynVar execute(String function, DynVar parameter) {
-        Debug.out.log(Level.INFO, "execute function={0} parameter={1}", new Object[] { function, parameter.formatValue() });
-        return new DynVar(new IntegerVar(0));
+
+Output: `Native/Builds/WCCOAjava` and `libWCCOAjava.so`
+
+### Native Driver
+
+```bash
+cd Native/Driver
+export API_ROOT=/opt/WinCC_OA/3.20/api
+export JAVA_HOME=/usr/lib/jvm/java-11-openjdk
+./build.sh
+```
+
+Output: `Native/Builds/WCCOAjavadrv` and `libWCCOAjavadrv.so`
+
+## Install
+
+Install the Java library to your local Maven repository:
+
+```bash
+cd Java
+./install.sh
+```
+
+This installs `winccoa-java-1.0-SNAPSHOT.jar` as:
+- Group ID: `at.rocworks`
+- Artifact ID: `winccoa-java`
+- Version: `1.0-SNAPSHOT`
+
+You can then add it as a dependency to your Maven projects:
+
+```xml
+<dependency>
+    <groupId>at.rocworks</groupId>
+    <artifactId>winccoa-java</artifactId>
+    <version>1.0-SNAPSHOT</version>
+</dependency>
+```
+
+## Quick Start
+
+```java
+import at.rocworks.oa4j.WinCCOA;
+
+public class Example {
+    public static void main(String[] args) throws Exception {
+        WinCCOA oa = WinCCOA.connect(args);
+
+        oa.dpSet("ExampleDP_Trend1.", 123.45);
+
+        oa.disconnect();
     }
-
-    // Control Code
-    dyn_anytype out;
-    dyn_anytype in = makeDynAnytype("hallo", 1, getCurrentTime());
-    int ret = javaCall("ApiTestExternHdl", "myFunTest", in, out);
+}
 ```
 
-# Deploy Java Manager
+See `Examples/` directory for more examples in Java, Scala, and Clojure.
 
-Compiled versions can be downloaded from here: http://rocworks.at/oa4j/
+For detailed documentation, see `CLAUDE.md` and the `docs/` directory.
 
-```
-set VERS=3.18
-set PROJ=Test
-set OA4J=C:\Tools\oa4j
-```
-Unzip compiled versions and deploy it to WinCC Open Architecure:
-```
-copy WCCOAjava.* C:\Siemens\Automation\WinCC_OA\%VERS%\bin
-copy winccoa-java-1.0-SNAPSHOT.jar C:\WinCC_OA_Proj\%PROJ%\bin
-```
+## License
 
-Start a test manger to check if it works:  
-```
-cd C:\WinCC_OA_Proj\%PROJ%
-java -Djava.library.path=C:\Siemens\Automation\WinCC_OA\%VERS%\bin -cp C:\WinCC_OA_Proj\%PROJ%\bin;C:\WinCC_OA_Proj\%PROJ%\bin\winccoa-java-1.0-SNAPSHOT.jar;%OA4J%\Java\target\test-classes ApiTestDpConnect -proj Test
-```
-Logs are written to a file named "WCCILjava1.0.log" to the "log" directory from where the java program has been started! If there is no "log" directory, the log is written to the current directory.
-
-# Start Java Manager
-Add the following lines to the WinCC OA message catalog "managers.cat". You will find this file here C:/Siemens/Automation/WinCC_OA/%VERS%/msg/de_AT.utf8/managers.cat. Change it for all languages.
-```
-WCCOAjava,Java Manager  
-WCCOAjavadrv,Java Driver  
-```
-Add a java section to your project config file 
-```
-[java]
-classPath = "bin;bin/winccoa-java-1.0-SNAPSHOT.jar;C:/Tools/oa4j/Java/target/test-classes"
-```
-
-Add a new manager "WCCOAjava" in the console with the argument "-class ApiTestDpConnect".   
-The program is connected to "ExampleDP_Trend1" and "ExampleDP_Trend1" and it writes a sum to ExampleDP_Trend3.".  
-
-Or ou can start the manager from commandline:
-```
-set VERS=3.18
-set PROJ=Test
-set OA4J=C:\Tools\oa4j
-java -Djava.library.path=C:/Siemens/Automation/WinCC_OA/%VERS%/bin -cp C:/WinCC_OA_Proj/%PROJ%/bin;C:/WinCC_OA_Proj/%PROJ%/bin/winccoa-java-1.0-SNAPSHOT.jar;%OA4J%/Java/target/test-classes ApiTestDpConnect -proj %PROJ%
-```
-
-If you get a message "MSVCR100.dll is missing", then you need to install Microsoft Visual C++ 2010 SP1 Redistributable Package (x64) http://www.microsoft.com/en-us/download/details.aspx?id=13523  
-
-# Config Java Manager
-
-Configuration is done in the WinCC OA project config file (config or config.level) in the `[java]` section.
-
-## Available Configuration Options
-
-```ini
-[java]
-# JVM options (e.g., -Xmx512m for max heap size, --enable-native-access=ALL-UNNAMED for Java 17+)
-# Multiple options MUST be separated with spaces (each option becomes a separate JVM parameter)
-# Examples:
-#   Single option: jvmOption = "-Xmx512m"
-#   Multiple options: jvmOption = "-Xmx512m -Xms256m --enable-native-access=ALL-UNNAMED"
-#   Complex example: jvmOption = "--enable-native-access=ALL-UNNAMED -Xmx256m -XX:UseSVE=0"
-#jvmOption = "-Xmx512m -Xms256m"
-#jvmOption = "--enable-native-access=ALL-UNNAMED"
-
-# Java user directory (-Duser.dir)
-# Defaults to the project directory
-#userDir = "<project-dir>"
-
-# Java library path (-Djava.library.path)
-# Defaults to the project bin directory and WinCC OA bin directory
-# WCCOAjava.dll/.so must be located in one of these directories
-#libraryPath = "C:/Siemens/Automation/WinCC_OA/3.18/bin"
-
-# Java class path (-Djava.class.path)
-# Defaults to project/bin directory
-# Use semicolon (;) on Windows, colon (:) on Linux as separator
-classPath = "bin;bin/winccoa-java-1.0-SNAPSHOT.jar"
-
-# Config file for additional JVM options
-# If you have many JVM options or a long class path, you can use a separate file
-# Each line in the config file becomes a JVM option
-#configFile = "config.java"
-```
-
-## Example Configuration
-
-**For Java 17+ with native access (Linux):**
-```ini
-[java]
-jvmOption = "--enable-native-access=ALL-UNNAMED"
-classPath = "/home/vogler/Workspace/oa4j/Java/target/classes:/home/vogler/Workspace/oa4j/Java/target/test-classes"
-```
-
-**For Windows:**
-```ini
-[java]
-jvmOption = "--enable-native-access=ALL-UNNAMED"
-classPath = "bin;bin/winccoa-java-1.0-SNAPSHOT.jar"
-```
-
-## Using a Separate Config File
-
-If you have many JVM options or a very long classpath, you can use a separate config file:
-
-**config or config.level:**
-```ini
-[java]
-classPath = "bin;bin/winccoa-java.jar"
-configFile = "config.java"
-```
-
-**config.java:**
-```
--Djava.library.path=bin
--Djava.class.path=lib/winccoa-java.jar;lib/dependency1.jar;lib/dependency2.jar
--Xmx1024m
--Xms256m
---enable-native-access=ALL-UNNAMED
-```
-
-Each line in the config file is passed as a JVM option. Lines starting with `-Duser.dir`, `-Djava.class.path`, or `-Djava.library.path` override the defaults.
-
-# Compile Java Manager
-* Install WinCC OA 
-
-* Install Java JDK  
-  http://www.oracle.com/technetwork/java/javase/downloads/dk8-downloads-2133151.html  
-  or  
-  https://docs.aws.amazon.com/corretto/latest/corretto-8-ug/downloads-list.html
-
-* Add the path to the jvm.dll of your Java installation to the PATH environment variable  
-  e.g. PATH=C:\Program Files\Java\jre1.8.0_<version>\bin\server
-	
-* Download GIT  
-  https://git-scm.com/download  
-  mkdir C:\Tools, cd C:\Tools  
-  git clone https://github.com/vogler75/oa4j.git  
-   
-* Download Apache Maven
-  https://maven.apache.org/download.cgi
-  Copy content of zip to e.g. C:\Tools\apache-maven-3.5.0
-   
-* Build Java Library  
-  set VERS=3.18  
-  set PROJ=Test  
-  set PATH=%PATH%;C:\Tools\apache-maven-3.5.0\bin  
-  set JAVA_HOME=C:\Program Files\Java\jdk1.8.0_131  
-  set PROJ_HOME=C:\WinCC_OA_Proj\%PROJ%  
-  cd C:\Tools\oa4j\Project\Java  
-  copy make.sh make.bat  
-  make.bat  
-  copy winccoa-java-1.0-SNAPSHOT.jar %PROJ_HOME%  
-
-* Download oa4j binaries http://rocworks.at/oa4j/.
-
-* Or compile oa4j from the Native/Tools directory.   
-  Open vc-start_3.XX.bat to start Visual Studio.  
-  <br>
-  Open the solution from Native/Manager/build and build it.  
-  &rarr; use the solution in dir "build" for WinCC OA Version >= 3.19
-  &rarr; use the solution in dir "build-318" for WinCC OA Version 3.18   
-  &rarr; use the solution in dir "build-pre-318" for WinCC OA Version < 3.18  
-  <br>
-  Then copy bin\WCCOAjava.dll & bin\WCCOAjava.exe files to C:\Siemens\Automation\WinCC_OA\%VERS%\bin  
-  Note: With 3.19 the exe is named "WCCOAJavaManager.exe", rename it or use this name. 
-
-* Add the following lines to the WinCC OA message catalouge "managers.cat"  
-  WCCOAjava,Java Manager  
-  WCCOAjavadrv,Java Driver  
-
-
-
-
+GNU Affero General Public License v3.0

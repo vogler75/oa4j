@@ -33,12 +33,6 @@ echo "JAVA_HOME: $JAVA_HOME"
 echo "CMake version: $(cmake --version | head -1)"
 echo ""
 
-# Source the environment setup
-if [ -f "./make.env" ]; then
-  echo "Sourcing make.env for additional environment setup..."
-  source ./make.env
-fi
-
 # Create and enter build directory
 BUILD_DIR="build"
 if [ -d "$BUILD_DIR" ]; then
@@ -67,9 +61,9 @@ fi
 # Copy outputs
 echo ""
 echo "=== Installing to ../Builds ==="
-if [ -f "WCCOAJavaManager" ]; then
-  cp WCCOAJavaManager ../../Builds/
-  echo "  Copied WCCOAJavaManager"
+if [ -f "WCCOAjava" ]; then
+  cp WCCOAjava ../../Builds/
+  echo "  Copied WCCOAjava"
 fi
 
 if [ -f "libWCCOAjava.so" ]; then
@@ -86,8 +80,8 @@ if [ ! -d "$INSTALL_DIR" ]; then
   mkdir -p "$INSTALL_DIR"
 fi
 
-if [ -f "../../Builds/WCCOAJavaManager" ]; then
-  sudo cp ../../Builds/WCCOAJavaManager "$INSTALL_DIR/WCCOAjava"
+if [ -f "../../Builds/WCCOAjava" ]; then
+  sudo cp ../../Builds/WCCOAjava "$INSTALL_DIR/WCCOAjava"
   echo "  Copied WCCOAjava to $INSTALL_DIR"
 fi
 

@@ -1,958 +1,1717 @@
-# OA4J Java API Reference
+# WinCC OA Java API Reference
 
-This document describes the two main classes for interacting with WinCC OA from Java: `JManager` and `JClient`.
+This document describes the complete Java API for interacting with Siemens WinCC Open Architecture SCADA system. The API is accessed through the `WinCCOA` class, which provides a single, unified interface for all operations.
+
+## Table of Contents
+
+1. [Overview](#overview)
+2. [Getting Started](#getting-started)
+3. [Connection Management](#connection-management)
+4. [Reading Datapoints](#reading-datapoints)
+5. [Writing Datapoints](#writing-datapoints)
+6. [Subscribing to Changes](#subscribing-to-changes)
+7. [Querying Datapoints](#querying-datapoints)
+8. [Historical Data](#historical-data)
+9. [Datapoint Metadata](#datapoint-metadata)
+10. [Variable Types](#variable-types)
+11. [Error Handling](#error-handling)
+12. [Complete Examples](#complete-examples)
+
+---
 
 ## Overview
 
-- **JManager** - Manages the connection lifecycle to WinCC OA. Handles initialization, startup, shutdown, and the main event dispatch loop.
-- **JClient** - Provides a fluent API for datapoint operations: reading, writing, subscribing to changes, and querying.
+The WinCC OA Java API consists of:
 
-## Quick Start
+- **WinCCOA** - Main class providing all datapoint operations and connection management
+- **Variable Types** - Type-safe wrappers for WinCC OA data types (FloatVar, IntegerVar, TextVar, etc.)
+- **Builder Classes** - Fluent API for complex operations (JDpGet, JDpSet, JDpConnect, etc.)
+- **Response Classes** - Containers for operation results (JDpMsgAnswer, JDpVCItem, etc.)
+
+**Key Characteristics:**
+
+- Thread-safe: All operations can be called from any thread
+- Singleton pattern: Only one WinCCOA connection per JVM
+- Fluent API: Builder pattern for complex operations
+- Synchronous and asynchronous modes: Choose `.await()` or `.send()`
+
+---
+
+## Getting Started
+
+### Minimal Example
 
 ```java
-public static void main(String[] args) throws Exception {
-    // Initialize and start the manager
-    JManager m = new JManager();
-    m.init(args).start();
+import at.rocworks.oa4j.WinCCOA;
+import at.rocworks.oa4j.var.Variable;
 
-    // Read a datapoint
-    Variable value = JClient.dpGet("ExampleDP_Arg1.");
-    System.out.println("Value: " + value);
+public class Main {
+    public static void main(String[] args) throws Exception {
+        // Connect to WinCC OA
+        WinCCOA oa = WinCCOA.connect(args);
 
-    // Write a datapoint
-    JClient.dpSet("ExampleDP_Arg1.", 42);
+        // Read a datapoint
+        Variable value = oa.dpGet("ExampleDP_Arg1.");
+        System.out.println("Value: " + value);
 
-    // Subscribe to changes
-    JClient.dpConnect()
-        .add("ExampleDP_Arg1.")
-        .action(hlg -> hlg.forEach(item ->
-            System.out.println(item.getDpName() + " = " + item.getVariable())
-        ))
-        .connect();
+        // Write a datapoint
+        oa.dpSet("ExampleDP_Arg1.", 42);
 
-    // Keep running or do other work...
-    Thread.sleep(60000);
+        // Disconnect when done
+        oa.disconnect();
+    }
+}
+```
 
-    // Cleanup
-    m.stop();
+### Complete Program Template
+
+```java
+import at.rocworks.oa4j.WinCCOA;
+import at.rocworks.oa4j.var.*;
+import at.rocworks.oa4j.base.*;
+
+public class MyApplication {
+    public static void main(String[] args) throws Exception {
+        // 1. Connect to WinCC OA
+        WinCCOA oa = WinCCOA.connect(args);
+
+        try {
+            // 2. Your application logic here
+            runApplication(oa);
+
+        } catch (Exception e) {
+            WinCCOA.logStackTrace(e);
+        } finally {
+            // 3. Cleanup
+            oa.disconnect();
+        }
+    }
+
+    private static void runApplication(WinCCOA oa) throws Exception {
+        // Your code here
+    }
 }
 ```
 
 ---
 
-## JManager Class
+## Connection Management
 
-`at.rocworks.oa4j.base.JManager`
+### WinCCOA Class
 
-The JManager class is a singleton that manages the connection to WinCC OA. It handles the native API bridge, event dispatching, and task queue management.
+`at.rocworks.oa4j.WinCCOA`
 
-### Constants
+The WinCCOA class is the main entry point for all operations. It manages the connection lifecycle and provides all API methods.
 
-| Constant | Value | Description |
-|----------|-------|-------------|
-| `DB_MAN` | 3 | Database manager type |
-| `API_MAN` | 7 | API manager type (default) |
-| `MAX_ENQUEUE_SIZE_HIGH` | 100000 | Default upper threshold for task queue |
-| `MAX_ENQUEUE_SIZE_LOW` | 50000 | Default lower threshold for task queue |
+### Connecting to WinCC OA
 
-### Initialization Methods
+#### connect(String[] args)
 
-#### `getInstance()`
+Connects using command-line arguments.
 
 ```java
-public static JManager getInstance()
+public static WinCCOA connect(String[] args) throws Exception
 ```
-
-Returns the singleton instance of the JManager.
-
-**Returns:** The singleton JManager instance, or `null` if not yet initialized.
-
----
-
-#### `init(String[] args)`
-
-```java
-public JManager init(String[] args) throws Exception
-```
-
-Initializes the manager by parsing command-line arguments.
 
 **Parameters:**
-- `args` - Command-line arguments array
+- `args` - Command-line arguments (e.g., from `main()`)
 
-**Supported arguments:**
-| Argument | Description |
-|----------|-------------|
-| `-proj <name>` | Set the project name (required) |
-| `-path <dir>` | Set the project directory path |
-| `-num <n>` | Set the manager number |
-| `-db` | Use DB_MAN manager type instead of API_MAN |
-| `-noinit` | Skip resource initialization |
-| `-debug` | Enable debug output |
+**Supported Arguments:**
 
-**Returns:** This JManager instance for method chaining.
+| Argument | Description | Example |
+|----------|-------------|---------|
+| `-proj <name>` | Project name (required) | `-proj MyProject` |
+| `-path <dir>` | Project directory path | `-path /opt/projects/myproj` |
+| `-num <n>` | Manager number | `-num 2` |
+| `-db` | Use DB_MAN instead of API_MAN | `-db` |
+| `-noinit` | Skip resource initialization | `-noinit` |
+| `-debug` | Enable debug output | `-debug` |
 
-**Throws:** `Exception` if the native library cannot be loaded or version is incompatible.
+**Returns:** WinCCOA instance
+
+**Throws:** Exception if connection fails
 
 **Example:**
+
 ```java
-JManager m = new JManager();
-m.init(new String[]{"-proj", "MyProject", "-num", "2"});
+// From command line: java Main -proj MyProject -num 1
+WinCCOA oa = WinCCOA.connect(args);
 ```
 
 ---
 
-#### `init(String projName, int manType, int manNum)`
+#### connect(String project)
+
+Connects with just a project name (manager number defaults to 1).
 
 ```java
-public JManager init(String projName, int manType, int manNum) throws Exception
+public static WinCCOA connect(String project) throws Exception
 ```
 
-Initializes the manager with explicit configuration parameters.
-
 **Parameters:**
-- `projName` - The WinCC OA project name
-- `manType` - The manager type (`API_MAN` or `DB_MAN`)
-- `manNum` - The manager number
-
-**Returns:** This JManager instance for method chaining.
+- `project` - WinCC OA project name
 
 **Example:**
+
 ```java
-JManager m = new JManager();
-m.init("MyProject", JManager.API_MAN, 1);
+WinCCOA oa = WinCCOA.connect("MyProject");
 ```
 
 ---
 
-### Lifecycle Methods
+#### connect(String project, int managerNumber)
 
-#### `start()`
-
-```java
-public void start()
-```
-
-Starts the manager with default connection settings. Connects to both the data manager and event manager. This method blocks until the manager is fully started and connected.
-
----
-
-#### `start(boolean connectToData, boolean connectToEvent)`
+Connects with a project name and manager number.
 
 ```java
-public void start(boolean connectToData, boolean connectToEvent)
+public static WinCCOA connect(String project, int managerNumber) throws Exception
 ```
-
-Starts the manager with specified connection options.
 
 **Parameters:**
-- `connectToData` - If true, connect to the data manager for datapoint operations
-- `connectToEvent` - If true, connect to the event manager for alerts and events
+- `project` - WinCC OA project name
+- `managerNumber` - Manager number (used to run multiple instances)
 
----
-
-#### `stop()`
+**Example:**
 
 ```java
-public void stop()
+WinCCOA oa = WinCCOA.connect("MyProject", 2);
 ```
-
-Stops the manager and disconnects from WinCC OA. This method should be called before application exit to ensure clean shutdown.
 
 ---
 
-#### `pause()`
+#### disconnect()
+
+Disconnects from WinCC OA and releases all resources.
 
 ```java
-public void pause()
+public void disconnect()
 ```
 
-Pauses the manager's dispatch loop. While paused, no new messages are processed from WinCC OA. This method blocks until the loop is fully paused.
-
----
-
-#### `resume()`
+**Example:**
 
 ```java
-public void resume()
+oa.disconnect();
 ```
 
-Resumes the manager's dispatch loop after a pause.
+**Important:** Always call `disconnect()` before application exit, preferably in a `finally` block.
 
 ---
 
-### Configuration Methods
+#### getInstance()
 
-#### `setProjName(String projName)`
+Gets the current WinCCOA instance (if connected).
 
 ```java
-public JManager setProjName(String projName)
+public static WinCCOA getInstance()
 ```
 
-Sets the WinCC OA project name.
+**Returns:** The WinCCOA instance, or `null` if not connected
 
-**Returns:** This JManager instance for method chaining.
-
----
-
-#### `setManNum(int manNum)`
+**Example:**
 
 ```java
-public JManager setManNum(int manNum)
+WinCCOA oa = WinCCOA.getInstance();
+if (oa != null && oa.isConnected()) {
+    // Use the instance
+}
 ```
-
-Sets the manager number. Used to distinguish multiple instances of the same manager type.
-
-**Returns:** This JManager instance for method chaining.
 
 ---
 
-#### `setLoopWaitUSec(int usec)`
+### Status & Information Methods
 
-```java
-public JManager setLoopWaitUSec(int usec)
-```
+#### isConnected()
 
-Sets the wait time for the main dispatch loop in microseconds. Lower values increase responsiveness but use more CPU.
-
-**Parameters:**
-- `usec` - Wait time in microseconds (default is 10000)
-
-**Returns:** This JManager instance for method chaining.
-
----
-
-#### `setMaxEnqueueSize(int high, int low)`
-
-```java
-public JManager setMaxEnqueueSize(int high, int low)
-```
-
-Sets the maximum enqueue size thresholds for the task queue. When the queue reaches the high threshold, new hotlinks are discarded. When the queue drops below the low threshold, normal processing resumes.
-
-**Parameters:**
-- `high` - Upper threshold at which hotlinks start being discarded
-- `low` - Lower threshold at which normal processing resumes
-
-**Returns:** This JManager instance for method chaining.
-
----
-
-#### `setMaxDequeueSize(int high, int low)`
-
-```java
-public JManager setMaxDequeueSize(int high, int low)
-```
-
-Sets the maximum dequeue size thresholds for message queue processing.
-
-**Returns:** This JManager instance for method chaining.
-
----
-
-### State & Information Methods
-
-#### `isEnabled()`
-
-```java
-public boolean isEnabled()
-```
-
-Checks if the WinCC OA native API is enabled (native library loaded).
-
-**Returns:** `true` if the native API library is loaded.
-
----
-
-#### `isConnected()`
+Checks if currently connected to WinCC OA.
 
 ```java
 public boolean isConnected()
 ```
 
-Checks if the manager is connected to WinCC OA.
+**Returns:** `true` if connected
 
-**Returns:** `true` if the manager is currently connected.
+**Example:**
+
+```java
+if (oa.isConnected()) {
+    System.out.println("Connected!");
+}
+```
 
 ---
 
-#### `isActive()`
+#### isActive()
+
+Checks if connected to the active host in a redundant system. In non-redundant systems, always returns `true`.
 
 ```java
 public Boolean isActive()
 ```
 
-Checks if the manager is connected to the active host in a redundant system. In non-redundant systems, this always returns `true`.
-
-**Returns:** `true` if connected to the active host.
+**Returns:** `true` if connected to active host
 
 ---
 
-#### `getManName()`
+#### getProjectPath()
+
+Gets the absolute path to the WinCC OA project directory.
 
 ```java
-public String getManName()
+public String getProjectPath()
 ```
 
-Returns the manager name used for identification and logging.
-
-**Returns:** The manager name in format `WCCOAjava{manNum}`.
+**Returns:** Absolute path to project directory
 
 ---
 
-#### `getManType()`
+#### getConfigDir()
 
-```java
-public int getManType()
-```
-
-**Returns:** The manager type constant (`API_MAN` or `DB_MAN`).
-
----
-
-#### `getManNum()`
-
-```java
-public int getManNum()
-```
-
-**Returns:** The manager number (default is 1).
-
----
-
-#### `getProjPath()`
-
-```java
-public String getProjPath()
-```
-
-**Returns:** The absolute path to the WinCC OA project directory.
-
----
-
-#### `getConfigDir()`
+Gets the absolute path to the config directory.
 
 ```java
 public String getConfigDir()
 ```
 
-**Returns:** The absolute path to the project's config directory.
+**Returns:** Absolute path to config directory
 
 ---
 
-#### `getLogDir()`
+#### getLogDir()
+
+Gets the absolute path to the log directory.
 
 ```java
 public String getLogDir()
 ```
 
-**Returns:** The absolute path to the project's log directory.
+**Returns:** Absolute path to log directory
 
 ---
 
-#### `getLogFile()`
+#### getManagerName()
+
+Gets the manager name.
 
 ```java
-public String getLogFile()
+public String getManagerName()
 ```
 
-**Returns:** The absolute path to the manager's log file (without extension).
+**Returns:** Manager name (e.g., "WCCOAjava1")
 
 ---
 
-#### `getConfigValue(String key)`
+#### getManagerNumber()
+
+Gets the manager number.
+
+```java
+public int getManagerNumber()
+```
+
+**Returns:** Manager number
+
+---
+
+#### getConfigValue(String key)
+
+Retrieves a value from the WinCC OA configuration file.
 
 ```java
 public String getConfigValue(String key)
 ```
 
-Retrieves a configuration value from the WinCC OA config file.
-
 **Parameters:**
-- `key` - The configuration key (e.g., `"java:classPath"`)
+- `key` - Configuration key (e.g., `"java:classPath"`)
 
-**Returns:** The configuration value, or `null` if not found.
+**Returns:** Configuration value, or `null` if not found
+
+**Example:**
+
+```java
+String classpath = oa.getConfigValue("java:classPath");
+```
 
 ---
 
-#### `getConfigValueOrDefault(String key, String def)`
-
-```java
-public String getConfigValueOrDefault(String key, String def)
-```
+#### getConfigValue(String key, String defaultValue)
 
 Retrieves a configuration value with a default fallback.
 
-**Parameters:**
-- `key` - The configuration key
-- `def` - Default value if key is not found or empty
-
-**Returns:** The configuration value, or the default.
-
----
-
-#### `getLoopWaitUSec()`
-
 ```java
-public int getLoopWaitUSec()
+public String getConfigValue(String key, String defaultValue)
 ```
-
-**Returns:** The wait time in microseconds for the dispatch loop.
-
----
-
-#### `getEnqueueSize()`
-
-```java
-public int getEnqueueSize()
-```
-
-**Returns:** The number of tasks currently in the queue.
-
----
-
-#### `getInitSysMsgData()`
-
-```java
-public Map<String, String> getInitSysMsgData()
-```
-
-Returns the initialization system message data containing system state, redundancy information, and configuration details.
-
-**Returns:** A map of key-value pairs, or an empty map if not yet received.
-
----
-
-### Task Execution Methods
-
-#### `enqueueTask(Callable task)`
-
-```java
-public boolean enqueueTask(Callable task)
-```
-
-Adds a task to the manager's task queue for asynchronous execution. Tasks are executed in the main dispatch loop thread.
 
 **Parameters:**
-- `task` - The Callable to execute
+- `key` - Configuration key
+- `defaultValue` - Default value if not found
 
-**Returns:** `true` if the task was successfully added.
-
----
-
-#### `executeTask(Callable task)`
-
-```java
-public Object executeTask(Callable task)
-```
-
-Executes a task synchronously in the manager's dispatch loop thread. This method blocks until the task completes.
-
-**Parameters:**
-- `task` - The Callable to execute
-
-**Returns:** The result of the task execution, or `null` if no result.
+**Returns:** Configuration value, or default
 
 ---
 
-### Logging Methods
+## Reading Datapoints
 
-#### `log(ErrPrio prio, ErrCode code, String text)`
+### Single Datapoint - Simple
+
+#### dpGet(String dp)
+
+Reads a single datapoint value synchronously.
 
 ```java
-public static void log(ErrPrio prio, ErrCode code, String text)
+public Variable dpGet(String dp)
 ```
 
-Logs a message to the WinCC OA log system.
-
 **Parameters:**
-- `prio` - Priority level (e.g., `PRIO_INFO`, `PRIO_WARNING`, `PRIO_SEVERE`)
-- `code` - Error code describing the state or error type
-- `text` - The message text to log
+- `dp` - Datapoint name (e.g., `"ExampleDP_Arg1."` or `"System1:ExampleDP_Arg1."`)
+
+**Returns:** Variable containing the value, or `null` if not found
 
 **Example:**
+
 ```java
-JManager.log(ErrPrio.PRIO_INFO, ErrCode.NOERR, "Processing started");
+// Read and cast to specific type
+Variable value = oa.dpGet("ExampleDP_Arg1.");
+if (value instanceof FloatVar) {
+    double d = ((FloatVar) value).getValue();
+    System.out.println("Value: " + d);
+}
+
+// Read integer
+IntegerVar intVal = (IntegerVar) oa.dpGet("ExampleDP_Int.");
+int i = intVal.getValue();
+
+// Read text
+TextVar textVal = (TextVar) oa.dpGet("ExampleDP_Text.");
+String s = textVal.getValue();
+
+// Read boolean
+BitVar boolVal = (BitVar) oa.dpGet("ExampleDP_Bool.");
+boolean b = boolVal.getValue();
 ```
 
 ---
 
-#### `stackTrace(ErrPrio prio, ErrCode code, Throwable exception)`
+### Multiple Datapoints - Simple
+
+#### dpGet(List&lt;String&gt; dps)
+
+Reads multiple datapoint values synchronously.
 
 ```java
-public static void stackTrace(ErrPrio prio, ErrCode code, Throwable exception)
+public List<Variable> dpGet(List<String> dps)
 ```
-
-Logs an exception's stack trace to the WinCC OA log system.
 
 **Parameters:**
-- `prio` - Priority level
-- `code` - Error code
-- `exception` - The exception to log
+- `dps` - List of datapoint names
 
----
-
-#### `stackTrace(Throwable exception)`
-
-```java
-public static void stackTrace(Throwable exception)
-```
-
-Logs an exception with `PRIO_SEVERE` priority and `UNEXPECTEDSTATE` error code.
-
----
-
----
-
-## JClient Class
-
-`at.rocworks.oa4j.base.JClient`
-
-Static utility class providing the main API for WinCC OA datapoint operations. All methods are static and thread-safe.
-
-### Connection Status
-
-#### `isConnected()`
-
-```java
-public static boolean isConnected()
-```
-
-Checks if the manager is connected to WinCC OA.
-
-**Returns:** `true` if the manager is initialized and connected.
-
----
-
-### Reading Datapoints (dpGet)
-
-#### `dpGet()`
-
-```java
-public static JDpGet dpGet()
-```
-
-Creates a new datapoint get request builder for reading multiple datapoints.
-
-**Returns:** A new `JDpGet` builder instance.
+**Returns:** List of Variable values in the same order as the input
 
 **Example:**
+
 ```java
-JDpMsgAnswer answer = JClient.dpGet()
+List<String> dpNames = Arrays.asList(
+    "ExampleDP_Arg1.",
+    "ExampleDP_Arg2.",
+    "ExampleDP_Arg3."
+);
+
+List<Variable> values = oa.dpGet(dpNames);
+for (int i = 0; i < values.size(); i++) {
+    System.out.println(dpNames.get(i) + " = " + values.get(i));
+}
+```
+
+---
+
+### Multiple Datapoints - Builder API
+
+#### dpGet()
+
+Creates a fluent builder for reading multiple datapoints with detailed control.
+
+```java
+public JDpGet dpGet()
+```
+
+**Returns:** JDpGet builder instance
+
+**Builder Methods:**
+
+| Method | Description |
+|--------|-------------|
+| `add(String dp)` | Add a datapoint to read |
+| `add(String dp, String attr)` | Add datapoint with specific attribute |
+| `await()` | Execute synchronously and wait for result |
+| `send()` | Execute asynchronously (fire and forget) |
+
+**Example:**
+
+```java
+// Read multiple datapoints
+JDpMsgAnswer answer = oa.dpGet()
     .add("ExampleDP_Arg1.")
     .add("ExampleDP_Arg2.")
+    .add("ExampleDP_Trend1.:_offline.._value")  // specific attribute
     .await();
+
+// Process results
+for (JDpVCItem item : answer) {
+    System.out.println(item.getDpName() + " = " + item.getVariable());
+}
+```
+
+**Attribute Examples:**
+
+```java
+// Online value (default)
+oa.dpGet().add("ExampleDP_Arg1.").await();
+
+// Specific attribute
+oa.dpGet().add("ExampleDP_Arg1.:_online.._value").await();
+oa.dpGet().add("ExampleDP_Arg1.:_online.._stime").await();  // timestamp
+
+// Offline/historical attribute
+oa.dpGet().add("ExampleDP_Trend1.:_offline.._value").await();
+```
+
+---
+
+## Writing Datapoints
+
+### Single Datapoint - Fire and Forget
+
+#### dpSet(String dp, Object value)
+
+Writes a single datapoint value asynchronously (no confirmation).
+
+```java
+public JDpSet dpSet(String dp, Object value)
+```
+
+**Parameters:**
+- `dp` - Datapoint name
+- `value` - Value to write (automatically converted to appropriate type)
+
+**Returns:** JDpSet instance (already sent)
+
+**Supported Value Types:**
+- Java primitives: `int`, `long`, `float`, `double`, `boolean`, `char`
+- Java objects: `Integer`, `Long`, `Float`, `Double`, `Boolean`, `String`
+- WinCC OA types: `FloatVar`, `IntegerVar`, `TextVar`, etc.
+- Arrays and Lists (for dynamic types)
+
+**Example:**
+
+```java
+// Write numbers
+oa.dpSet("ExampleDP_Float.", 3.14159);
+oa.dpSet("ExampleDP_Int.", 42);
+oa.dpSet("ExampleDP_Long.", 1234567890L);
+
+// Write text
+oa.dpSet("ExampleDP_Text.", "Hello WinCC OA");
+
+// Write boolean
+oa.dpSet("ExampleDP_Bool.", true);
+
+// Write time
+oa.dpSet("ExampleDP_Time.", new TimeVar(System.currentTimeMillis()));
+
+// Write to nested element
+oa.dpSet("ExampleDP_Struct.temperature", 25.5);
+oa.dpSet("ExampleDP_Struct.status", "OK");
+```
+
+---
+
+### Single Datapoint - With Confirmation
+
+#### dpSetWait(String dp, Object value)
+
+Writes a single datapoint value synchronously and waits for confirmation.
+
+```java
+public int dpSetWait(String dp, Object value)
+```
+
+**Parameters:**
+- `dp` - Datapoint name
+- `value` - Value to write
+
+**Returns:**
+- `0` - Success
+- Non-zero - Error code
+
+**Example:**
+
+```java
+int result = oa.dpSetWait("ExampleDP_Arg1.", 42);
+if (result == 0) {
+    System.out.println("Write successful");
+} else {
+    System.err.println("Write failed with error code: " + result);
+}
+```
+
+---
+
+### Multiple Datapoints - Arrays
+
+#### dpSet(String[] dps, Object[] values)
+
+Writes multiple datapoints asynchronously (fire and forget).
+
+```java
+public JDpSet dpSet(String[] dps, Object[] values)
+```
+
+**Parameters:**
+- `dps` - Array of datapoint names
+- `values` - Array of values (must match length of `dps`)
+
+**Returns:** JDpSet instance (already sent)
+
+**Example:**
+
+```java
+String[] dps = {"ExampleDP_Arg1.", "ExampleDP_Arg2.", "ExampleDP_Arg3."};
+Object[] values = {100, 200, 300};
+oa.dpSet(dps, values);
+```
+
+---
+
+#### dpSetWait(String[] dps, Object[] values)
+
+Writes multiple datapoints synchronously with confirmation.
+
+```java
+public int dpSetWait(String[] dps, Object[] values)
+```
+
+**Parameters:**
+- `dps` - Array of datapoint names
+- `values` - Array of values
+
+**Returns:** 0 on success, non-zero on failure
+
+---
+
+### Multiple Datapoints - Builder API
+
+#### dpSet()
+
+Creates a fluent builder for writing multiple datapoints.
+
+```java
+public JDpSet dpSet()
+```
+
+**Returns:** JDpSet builder instance
+
+**Builder Methods:**
+
+| Method | Description |
+|--------|-------------|
+| `add(String dp, Object value)` | Add a datapoint/value pair |
+| `send()` | Execute asynchronously (fire and forget) |
+| `await()` | Execute synchronously and wait for confirmation |
+
+**Example:**
+
+```java
+// Fire and forget
+oa.dpSet()
+    .add("ExampleDP_Arg1.", 100)
+    .add("ExampleDP_Arg2.", "Hello")
+    .add("ExampleDP_Arg3.", true)
+    .add("Device1.temperature", 25.5)
+    .add("Device1.humidity", 60.0)
+    .send();
+
+// Wait for confirmation
+JDpMsgAnswer answer = oa.dpSet()
+    .add("ExampleDP_Arg1.", 42)
+    .add("ExampleDP_Arg2.", "Test")
+    .await();
+
+if (answer.getErrorCode() == 0) {
+    System.out.println("All writes successful");
+}
+```
+
+---
+
+## Subscribing to Changes
+
+### Basic Subscription (Hotlink)
+
+#### dpConnect()
+
+Creates a subscription that triggers a callback when datapoint values change.
+
+```java
+public JDpConnect dpConnect()
+```
+
+**Returns:** JDpConnect builder instance
+
+**Builder Methods:**
+
+| Method | Description |
+|--------|-------------|
+| `add(String dp)` | Add datapoint to subscribe to |
+| `action(Consumer<JDpHLGroup> callback)` | Set the callback function |
+| `connect()` | Activate the subscription |
+| `disconnect()` | Deactivate the subscription |
+
+**Callback Parameter:**
+- `JDpHLGroup` - Group of changed datapoints (can contain 1 or more items)
+
+**Example - Simple Subscription:**
+
+```java
+// Subscribe to a single datapoint
+JDpConnect connection = oa.dpConnect()
+    .add("ExampleDP_Arg1.")
+    .action(hlg -> {
+        for (JDpVCItem item : hlg) {
+            System.out.println(item.getDpName() + " changed to " + item.getVariable());
+        }
+    })
+    .connect();
+
+// Later, to stop receiving updates:
+connection.disconnect();
+```
+
+**Example - Multiple Datapoints:**
+
+```java
+JDpConnect connection = oa.dpConnect()
+    .add("ExampleDP_Arg1.")
+    .add("ExampleDP_Arg2.")
+    .add("ExampleDP_Arg3.")
+    .action(hlg -> {
+        hlg.forEach(item -> {
+            String name = item.getDpName();
+            Variable value = item.getVariable();
+            TimeVar timestamp = item.getTimeStamp();
+            System.out.println(name + " = " + value + " at " + timestamp);
+        });
+    })
+    .connect();
+```
+
+**Example - Extracting Values:**
+
+```java
+oa.dpConnect()
+    .add("Device1.temperature")
+    .add("Device1.pressure")
+    .action(hlg -> {
+        for (JDpVCItem item : hlg) {
+            if (item.getDpName().contains("temperature")) {
+                FloatVar temp = (FloatVar) item.getVariable();
+                System.out.println("Temperature: " + temp.getValue() + " °C");
+            } else if (item.getDpName().contains("pressure")) {
+                FloatVar press = (FloatVar) item.getVariable();
+                System.out.println("Pressure: " + press.getValue() + " bar");
+            }
+        }
+    })
+    .connect();
+```
+
+**Important Notes:**
+
+- The callback runs in a separate thread
+- Callbacks should execute quickly to avoid blocking the event loop
+- Store the `JDpConnect` instance to disconnect later
+- Always disconnect subscriptions when no longer needed
+
+---
+
+### Alert Subscription
+
+#### alertConnect()
+
+Creates a subscription for WinCC OA alerts (alarms).
+
+```java
+public JAlertConnect alertConnect()
+```
+
+**Returns:** JAlertConnect builder instance
+
+**Example:**
+
+```java
+JAlertConnect alertConn = oa.alertConnect()
+    .action(alert -> {
+        System.out.println("Alert: " + alert);
+    })
+    .connect();
+
+// Later:
+alertConn.disconnect();
+```
+
+---
+
+## Querying Datapoints
+
+### Basic Query
+
+#### dpQuery(String query)
+
+Executes a WinCC OA SQL-like query.
+
+```java
+public JDpQuery dpQuery(String query)
+```
+
+**Parameters:**
+- `query` - Query string in WinCC OA query syntax
+
+**Returns:** JDpQuery instance (use `.await()` to get results)
+
+**Query Syntax:**
+
+```
+SELECT '<attribute>' [, '<attribute>', ...] FROM '<pattern>' [WHERE <condition>]
+```
+
+**Example - Simple Query:**
+
+```java
+// Get all datapoints matching pattern
+JDpMsgAnswer answer = oa.dpQuery(
+    "SELECT '_online.._value' FROM 'ExampleDP_*'"
+).await();
 
 for (JDpVCItem item : answer) {
     System.out.println(item.getDpName() + " = " + item.getVariable());
 }
 ```
 
----
-
-#### `dpGet(String dp)`
+**Example - Multiple Attributes:**
 
 ```java
-public static Variable dpGet(String dp)
+// Get value and timestamp
+JDpMsgAnswer answer = oa.dpQuery(
+    "SELECT '_online.._value', '_online.._stime' FROM 'ExampleDP_Arg*'"
+).await();
+
+for (JDpVCItem item : answer) {
+    System.out.println(item.getDpName() + ":");
+    System.out.println("  Value: " + item.getVariable());
+    System.out.println("  Time: " + item.getTimeStamp());
+}
 ```
 
-Reads a single datapoint value synchronously.
+**Example - With Filter:**
+
+```java
+// Filter by datapoint type
+JDpMsgAnswer answer = oa.dpQuery(
+    "SELECT '_online.._value' FROM 'ExampleDP_*' WHERE _DPT = \"ExampleDP_Float\""
+).await();
+```
+
+**Common Attributes:**
+
+| Attribute | Description |
+|-----------|-------------|
+| `_online.._value` | Current value |
+| `_online.._stime` | Last update timestamp |
+| `_online.._status` | Status flags |
+| `_offline.._value` | Historical/archive value |
+| `_original.._value` | Original value (before conversions) |
+
+---
+
+### Query-Based Subscriptions
+
+#### dpQueryConnectSingle(String query)
+
+Creates a query-based subscription that triggers only on the first matching change.
+
+```java
+public JDpQueryConnect dpQueryConnectSingle(String query)
+```
 
 **Parameters:**
-- `dp` - The datapoint name (e.g., `"System1:ExampleDP_Arg1."`)
+- `query` - Query string
 
-**Returns:** The datapoint value, or `null` if not found.
+**Returns:** JDpQueryConnectSingle instance
 
 **Example:**
+
 ```java
-Variable value = JClient.dpGet("ExampleDP_Arg1.");
-double d = ((FloatVar)value).getValue();
+JDpQueryConnect conn = oa.dpQueryConnectSingle(
+    "SELECT '_online.._value' FROM 'ExampleDP_*'"
+)
+.action(hlg -> {
+    // Triggers only once, even if multiple datapoints match
+    System.out.println("First change detected!");
+})
+.connect();
 ```
 
 ---
 
-#### `dpGet(String dp, VariablePtr var)`
+#### dpQueryConnectAll(String query)
+
+Creates a query-based subscription that triggers on all matching changes.
 
 ```java
-public static int dpGet(String dp, VariablePtr var)
+public JDpQueryConnect dpQueryConnectAll(String query)
 ```
 
-Reads a single datapoint value into a variable pointer.
-
 **Parameters:**
-- `dp` - The datapoint name
-- `var` - Output parameter that receives the value
+- `query` - Query string
 
-**Returns:** Return code (0 = success).
-
----
-
-#### `dpGet(List<String> dps)`
-
-```java
-public static List<Variable> dpGet(List<String> dps)
-```
-
-Reads multiple datapoint values synchronously.
-
-**Parameters:**
-- `dps` - List of datapoint names to read
-
-**Returns:** List of values in the same order as the input.
-
----
-
-### Historical Data (dpGetPeriod)
-
-#### `dpGetPeriod(TimeVar start, TimeVar stop, int num)`
-
-```java
-public static JDpGetPeriod dpGetPeriod(TimeVar start, TimeVar stop, int num)
-```
-
-Creates a historical data query for a time period.
-
-**Parameters:**
-- `start` - Start time of the period
-- `stop` - End time of the period
-- `num` - Maximum number of values (0 = unlimited)
-
-**Returns:** A new `JDpGetPeriod` builder instance.
+**Returns:** JDpQueryConnectAll instance
 
 **Example:**
+
 ```java
-TimeVar start = new TimeVar(System.currentTimeMillis() - 3600000); // 1 hour ago
+JDpQueryConnect conn = oa.dpQueryConnectAll(
+    "SELECT '_online.._value' FROM 'Sensor_*.temperature'"
+)
+.action(hlg -> {
+    // Triggers whenever any matching datapoint changes
+    hlg.forEach(item -> {
+        System.out.println(item.getDpName() + " changed to " + item.getVariable());
+    });
+})
+.connect();
+```
+
+---
+
+## Historical Data
+
+### Time Period Query
+
+#### dpGetPeriod(TimeVar start, TimeVar stop, int maxCount)
+
+Queries historical data for a time period.
+
+```java
+public JDpGetPeriod dpGetPeriod(TimeVar start, TimeVar stop, int maxCount)
+```
+
+**Parameters:**
+- `start` - Start time
+- `stop` - End time
+- `maxCount` - Maximum number of values to return (0 = unlimited)
+
+**Returns:** JDpGetPeriod builder instance
+
+**Example:**
+
+```java
+import at.rocworks.oa4j.var.TimeVar;
+
+// Get last hour of data
+TimeVar start = new TimeVar(System.currentTimeMillis() - 3600000);  // 1 hour ago
 TimeVar stop = new TimeVar(System.currentTimeMillis());
 
-JDpMsgAnswer answer = JClient.dpGetPeriod(start, stop, 100)
+JDpMsgAnswer answer = oa.dpGetPeriod(start, stop, 0)
+    .add("ExampleDP_Trend1.:_offline.._value")
+    .await();
+
+for (JDpVCItem item : answer) {
+    System.out.println(item.getTimeStamp() + " : " + item.getVariable());
+}
+```
+
+---
+
+#### dpGetPeriod(Date start, Date stop, int maxCount)
+
+Queries historical data using Java Date objects.
+
+```java
+public JDpGetPeriod dpGetPeriod(Date start, Date stop, int maxCount)
+```
+
+**Example:**
+
+```java
+import java.util.Date;
+import java.util.Calendar;
+
+Calendar cal = Calendar.getInstance();
+cal.add(Calendar.HOUR, -24);  // 24 hours ago
+Date start = cal.getTime();
+Date stop = new Date();
+
+JDpMsgAnswer answer = oa.dpGetPeriod(start, stop, 100)
+    .add("ExampleDP_Trend1.:_offline.._value")
+    .add("ExampleDP_Trend2.:_offline.._value")
+    .await();
+```
+
+---
+
+#### dpGetPeriod(long start, long stop, int maxCount)
+
+Queries historical data using millisecond timestamps.
+
+```java
+public JDpGetPeriod dpGetPeriod(long start, long stop, int maxCount)
+```
+
+**Example:**
+
+```java
+long now = System.currentTimeMillis();
+long oneHourAgo = now - 3600000;
+
+JDpMsgAnswer answer = oa.dpGetPeriod(oneHourAgo, now, 0)
     .add("ExampleDP_Trend1.:_offline.._value")
     .await();
 ```
 
 ---
 
-#### `dpGetPeriod(Date start, Date stop, int num)`
-
-```java
-public static JDpGetPeriod dpGetPeriod(Date start, Date stop, int num)
-```
-
-Creates a historical data query using Java Date objects.
-
----
-
-#### `dpGetPeriod(Long start, long stop, int num)`
-
-```java
-public static JDpGetPeriod dpGetPeriod(long start, long stop, int num)
-```
-
-Creates a historical data query using millisecond timestamps.
-
----
-
-### Writing Datapoints (dpSet)
-
-#### `dpSet()`
-
-```java
-public static JDpSet dpSet()
-```
-
-Creates a new datapoint set request builder for writing multiple datapoints.
-
-**Returns:** A new `JDpSet` builder instance.
-
-**Example:**
-```java
-JClient.dpSet()
-    .add("ExampleDP_Arg1.", 100)
-    .add("ExampleDP_Arg2.", "Hello")
-    .add("ExampleDP_Arg3.", true)
-    .send();
-```
-
----
-
-#### `dpSet(String dp, Object var)`
-
-```java
-public static JDpSet dpSet(String dp, Object var)
-```
-
-Writes a single datapoint value asynchronously (fire and forget).
-
-**Parameters:**
-- `dp` - The datapoint name
-- `var` - The value to write (automatically converted)
-
-**Returns:** The `JDpSet` instance (already sent).
-
-**Example:**
-```java
-JClient.dpSet("ExampleDP_Arg1.", 42);
-JClient.dpSet("ExampleDP_Arg2.", "text value");
-JClient.dpSet("ExampleDP_Arg3.", 3.14159);
-```
-
----
-
-#### `dpSetWait(String dp, Object var)`
-
-```java
-public static int dpSetWait(String dp, Object var)
-```
-
-Writes a single datapoint value synchronously and waits for confirmation.
-
-**Parameters:**
-- `dp` - The datapoint name
-- `var` - The value to write
-
-**Returns:** Return code (0 = success).
-
-**Example:**
-```java
-int result = JClient.dpSetWait("ExampleDP_Arg1.", 42);
-if (result != 0) {
-    System.err.println("Write failed with code: " + result);
-}
-```
-
----
-
-### Subscribing to Changes (dpConnect)
-
-#### `dpConnect()`
-
-```java
-public static JDpConnect dpConnect()
-```
-
-Creates a new datapoint connection (hotlink) builder. Hotlinks provide real-time notifications when datapoint values change.
-
-**Returns:** A new `JDpConnect` builder instance.
-
-**Example:**
-```java
-JDpConnect connection = JClient.dpConnect()
-    .add("ExampleDP_Arg1.")
-    .add("ExampleDP_Arg2.")
-    .action((JDpHLGroup hlg) -> {
-        hlg.forEach(item -> {
-            System.out.println(item.getDpName() + " changed to " + item.getVariable());
-        });
-    })
-    .connect();
-
-// Later, to disconnect:
-connection.disconnect();
-```
-
----
-
-### Alert Subscriptions
-
-#### `alertConnect()`
-
-```java
-public static JAlertConnect alertConnect()
-```
-
-Creates a new alert connection builder for subscribing to alarm/alert notifications.
-
-**Returns:** A new `JAlertConnect` builder instance.
-
----
-
-### Querying Datapoints (dpQuery)
-
-#### `dpQuery(String query)`
-
-```java
-public static JDpQuery dpQuery(String query)
-```
-
-Executes a datapoint query using WinCC OA SQL-like syntax.
-
-**Parameters:**
-- `query` - The query string in WinCC OA query syntax
-
-**Returns:** A `JDpQuery` instance (already sent).
-
-**Example:**
-```java
-// Query all online values matching a pattern
-JDpMsgAnswer answer = JClient.dpQuery(
-    "SELECT '_online.._value' FROM 'ExampleDP_*'"
-).await();
-
-// Query with multiple attributes
-JDpMsgAnswer answer2 = JClient.dpQuery(
-    "SELECT '_online.._value', '_online.._stime' FROM 'ExampleDP_Arg*' WHERE _DPT = \"ExampleDP_Float\""
-).await();
-```
-
----
-
-#### `dpQueryConnectSingle(String query)`
-
-```java
-public static JDpQueryConnect dpQueryConnectSingle(String query)
-```
-
-Creates a query-based hotlink that triggers only on the first matching change.
-
-**Parameters:**
-- `query` - The query string
-
-**Returns:** A new `JDpQueryConnectSingle` builder instance.
-
----
-
-#### `dpQueryConnectAll(String query)`
-
-```java
-public static JDpQueryConnect dpQueryConnectAll(String query)
-```
-
-Creates a query-based hotlink that triggers on all matching changes.
-
-**Parameters:**
-- `query` - The query string
-
-**Returns:** A new `JDpQueryConnectAll` builder instance.
-
----
+## Datapoint Metadata
 
 ### Datapoint Names
 
-#### `dpNames(String pattern)`
+#### dpNames(String pattern)
+
+Gets all datapoint names matching a wildcard pattern.
 
 ```java
-public static String[] dpNames(String pattern)
+public String[] dpNames(String pattern)
 ```
 
-Returns datapoint names matching a pattern.
-
 **Parameters:**
-- `pattern` - Wildcard pattern (e.g., `"ExampleDP_*"`)
+- `pattern` - Wildcard pattern (`*` matches any characters)
 
-**Returns:** Array of matching datapoint names.
+**Returns:** Array of matching datapoint names
 
 **Example:**
+
 ```java
-String[] dps = JClient.dpNames("ExampleDP_*");
-for (String dp : dps) {
+// Get all datapoints starting with "Sensor"
+String[] sensors = oa.dpNames("Sensor*");
+for (String dp : sensors) {
     System.out.println(dp);
 }
+
+// Get all datapoints
+String[] allDps = oa.dpNames("*");
+
+// Get datapoints matching a pattern
+String[] temps = oa.dpNames("*temperature*");
 ```
 
 ---
 
-#### `dpNames(String pattern, String type)`
+#### dpNames(String pattern, String type)
+
+Gets datapoint names matching both a pattern and a type.
 
 ```java
-public static String[] dpNames(String pattern, String type)
+public String[] dpNames(String pattern, String type)
 ```
-
-Returns datapoint names matching a pattern and type.
 
 **Parameters:**
 - `pattern` - Wildcard pattern
 - `type` - Datapoint type name to filter by
 
-**Returns:** Array of matching datapoint names.
+**Returns:** Array of matching datapoint names
+
+**Example:**
+
+```java
+// Get all "Sensor" type datapoints starting with "Device"
+String[] devices = oa.dpNames("Device*", "Sensor");
+```
+
+---
+
+### Datapoint Existence
+
+#### dpExists(String dpName)
+
+Checks if a datapoint exists.
+
+```java
+public boolean dpExists(String dpName)
+```
+
+**Parameters:**
+- `dpName` - Datapoint name to check
+
+**Returns:** `true` if datapoint exists, `false` otherwise
+
+**Example:**
+
+```java
+if (oa.dpExists("Device_1")) {
+    System.out.println("Device_1 exists");
+    Variable value = oa.dpGet("Device_1.value");
+} else {
+    System.out.println("Device_1 does not exist");
+}
+```
 
 ---
 
 ### Datapoint Comments
 
-#### `dpGetComment(DpIdentifierVar dpid)`
+#### dpGetComment(DpIdentifierVar dpid)
+
+Gets the multi-language comment/description for a datapoint.
 
 ```java
-public static LangTextVar dpGetComment(DpIdentifierVar dpid)
+public LangTextVar dpGetComment(DpIdentifierVar dpid)
 ```
 
-Retrieves the comment/description for a datapoint.
-
 **Parameters:**
-- `dpid` - The datapoint identifier
+- `dpid` - Datapoint identifier
 
-**Returns:** The language-dependent comment text.
+**Returns:** LangTextVar containing language-specific comments
 
 ---
-
-### User Authentication
-
-#### `checkPassword(String username, String password)`
-
-```java
-public static int checkPassword(String username, String password)
-```
-
-Verifies if the given password is valid for the requested user.
-
-**Parameters:**
-- `username` - The username to check
-- `password` - The password to verify
-
-**Returns:**
-- `0` - OK (valid)
-- `-1` - Invalid user
-- `-2` - Wrong password
-
----
-
-#### `setUserId(String username, String password)`
-
-```java
-public static boolean setUserId(String username, String password)
-```
-
-Sets a new user ID for the current session. The user is set when:
-- The ID matches the password, or
-- The current ID is ROOT_USER and the new user exists, or
-- The new user ID is DEFAULT_USER
-
-**Parameters:**
-- `username` - The username to set
-- `password` - The user's password
-
-**Returns:** `true` if the user was successfully set.
-
----
-
-## Related Classes
-
-| Class | Description |
-|-------|-------------|
-| `JDpGet` | Builder for reading datapoint values |
-| `JDpSet` | Builder for writing datapoint values |
-| `JDpConnect` | Builder for subscribing to datapoint changes |
-| `JDpQuery` | Builder for querying datapoints |
-| `JDpGetPeriod` | Builder for historical data queries |
-| `JAlertConnect` | Builder for alert subscriptions |
-| `JDpMsgAnswer` | Response container for datapoint operations |
-| `JDpVCItem` | Individual datapoint value/change item |
-| `JDpHLGroup` | Group of hotlink items received in a callback |
-| `Variable` | Base class for all WinCC OA variable types |
 
 ## Variable Types
 
-| Java Class | WinCC OA Type |
-|------------|---------------|
-| `FloatVar` | float |
-| `IntegerVar` | int |
-| `LongVar` | long |
-| `UIntegerVar` | uint |
-| `TextVar` | string |
-| `TimeVar` | time |
-| `CharVar` | char |
-| `BitVar` | bit |
-| `Bit32Var` | bit32 |
-| `Bit64Var` | bit64 |
-| `DynVar` | dyn_* (dynamic arrays) |
-| `DpIdentifierVar` | dpidentifier |
+WinCC OA uses strongly-typed variables. All values are represented as `Variable` objects that must be cast to their specific type.
 
-Use `Variable.valueOf()` for automatic type conversion.
+### Type Hierarchy
+
+```
+Variable (abstract base class)
+├── FloatVar
+├── IntegerVar
+├── LongVar
+├── UIntegerVar
+├── TextVar
+├── TimeVar
+├── CharVar
+├── BitVar
+├── Bit32Var
+├── Bit64Var
+├── DpIdentifierVar
+├── LangTextVar
+└── DynVar (for arrays)
+    ├── DynFloatVar
+    ├── DynIntegerVar
+    ├── DynTextVar
+    └── ...
+```
+
+### Primitive Types
+
+| Java Class | WinCC OA Type | Java Equivalent | Example |
+|------------|---------------|-----------------|---------|
+| `FloatVar` | float | double | `new FloatVar(3.14)` |
+| `IntegerVar` | int | int | `new IntegerVar(42)` |
+| `LongVar` | long | long | `new LongVar(1234567890L)` |
+| `UIntegerVar` | uint | int (unsigned) | `new UIntegerVar(100)` |
+| `TextVar` | string | String | `new TextVar("Hello")` |
+| `TimeVar` | time | Date/timestamp | `new TimeVar(System.currentTimeMillis())` |
+| `CharVar` | char | char | `new CharVar('A')` |
+| `BitVar` | bit | boolean | `new BitVar(true)` |
+| `Bit32Var` | bit32 | int (bitfield) | `new Bit32Var(0xFF)` |
+| `Bit64Var` | bit64 | long (bitfield) | `new Bit64Var(0xFFL)` |
+
+### Working with Variables
+
+**Creating Variables:**
+
+```java
+FloatVar temp = new FloatVar(25.5);
+IntegerVar count = new IntegerVar(100);
+TextVar name = new TextVar("Device1");
+BitVar active = new BitVar(true);
+TimeVar now = new TimeVar(System.currentTimeMillis());
+```
+
+**Reading Values:**
+
+```java
+Variable value = oa.dpGet("ExampleDP_Float.");
+
+// Type checking
+if (value instanceof FloatVar) {
+    FloatVar floatVal = (FloatVar) value;
+    double d = floatVal.getValue();
+    System.out.println("Float value: " + d);
+}
+
+// Or direct cast (if you know the type)
+FloatVar floatVal = (FloatVar) oa.dpGet("ExampleDP_Float.");
+double d = floatVal.getValue();
+```
+
+**Type Conversion:**
+
+```java
+// Using Variable.valueOf() for automatic conversion
+Variable var = Variable.valueOf(42);        // Creates IntegerVar
+Variable var2 = Variable.valueOf(3.14);     // Creates FloatVar
+Variable var3 = Variable.valueOf("text");   // Creates TextVar
+Variable var4 = Variable.valueOf(true);     // Creates BitVar
+```
+
+### Dynamic Arrays
+
+**Creating Dynamic Arrays:**
+
+```java
+import at.rocworks.oa4j.var.*;
+
+// Float array
+DynFloatVar floatArray = new DynFloatVar();
+floatArray.add(new FloatVar(1.1));
+floatArray.add(new FloatVar(2.2));
+floatArray.add(new FloatVar(3.3));
+
+// Integer array
+DynIntegerVar intArray = new DynIntegerVar();
+intArray.add(new IntegerVar(10));
+intArray.add(new IntegerVar(20));
+
+// Text array
+DynTextVar textArray = new DynTextVar();
+textArray.add(new TextVar("First"));
+textArray.add(new TextVar("Second"));
+```
+
+**Reading Dynamic Arrays:**
+
+```java
+DynFloatVar arr = (DynFloatVar) oa.dpGet("ExampleDP_DynFloat.");
+for (int i = 0; i < arr.getSize(); i++) {
+    FloatVar element = (FloatVar) arr.get(i);
+    System.out.println("Element " + i + ": " + element.getValue());
+}
+```
+
+**Writing Dynamic Arrays:**
+
+```java
+DynFloatVar temperatures = new DynFloatVar();
+temperatures.add(new FloatVar(20.5));
+temperatures.add(new FloatVar(21.3));
+temperatures.add(new FloatVar(19.8));
+
+oa.dpSet("Device1.temperatures", temperatures);
+```
+
+### Time Values
+
+**Creating Time Variables:**
+
+```java
+// Current time
+TimeVar now = new TimeVar(System.currentTimeMillis());
+
+// Specific time
+Calendar cal = Calendar.getInstance();
+cal.set(2024, Calendar.JANUARY, 15, 10, 30, 0);
+TimeVar specific = new TimeVar(cal.getTimeInMillis());
+
+// From Date
+Date date = new Date();
+TimeVar fromDate = new TimeVar(date.getTime());
+```
+
+**Reading Time Values:**
+
+```java
+TimeVar timestamp = (TimeVar) oa.dpGet("ExampleDP_Time.");
+long millis = timestamp.getTime();
+Date date = new Date(millis);
+System.out.println("Timestamp: " + date);
+```
+
+---
+
+## Error Handling
+
+### Return Codes
+
+Most write and management operations return integer codes:
+
+| Return Value | Meaning |
+|--------------|---------|
+| `0` | Success |
+| Non-zero | Error code (see WinCC OA documentation) |
+
+**Example:**
+
+```java
+int result = oa.dpSetWait("ExampleDP_Arg1.", 42);
+if (result != 0) {
+    WinCCOA.logError("dpSet failed with error code: " + result);
+}
+```
+
+---
+
+### Null Checks
+
+Read operations return `null` if a datapoint doesn't exist:
+
+```java
+Variable value = oa.dpGet("NonExistent.");
+if (value == null) {
+    System.err.println("Datapoint not found!");
+} else {
+    System.out.println("Value: " + value);
+}
+```
+
+---
+
+### Exception Handling
+
+Connection and operation errors throw exceptions:
+
+```java
+try {
+    WinCCOA oa = WinCCOA.connect("MyProject");
+
+    Variable value = oa.dpGet("ExampleDP_Arg1.");
+    if (value != null) {
+        System.out.println("Value: " + value);
+    }
+
+} catch (Exception e) {
+    WinCCOA.logStackTrace(e);
+} finally {
+    if (oa != null) {
+        oa.disconnect();
+    }
+}
+```
+
+---
+
+### Logging
+
+#### log(String message)
+
+Logs an info message to the WinCC OA log system.
+
+```java
+public static void log(String message)
+```
+
+**Example:**
+
+```java
+WinCCOA.log("Application started");
+```
+
+---
+
+#### logError(String message)
+
+Logs an error message.
+
+```java
+public static void logError(String message)
+```
+
+**Example:**
+
+```java
+WinCCOA.logError("Failed to process data");
+```
+
+---
+
+#### logStackTrace(Throwable exception)
+
+Logs an exception's stack trace.
+
+```java
+public static void logStackTrace(Throwable exception)
+```
+
+**Example:**
+
+```java
+try {
+    // ...
+} catch (Exception e) {
+    WinCCOA.logStackTrace(e);
+}
+```
+
+---
+
+#### log(ErrPrio prio, ErrCode code, String text)
+
+Logs with specific priority and error code.
+
+```java
+public static void log(ErrPrio prio, ErrCode code, String text)
+```
+
+**Parameters:**
+- `prio` - Priority level (PRIO_INFO, PRIO_WARNING, PRIO_SEVERE)
+- `code` - Error code (NOERR, UNEXPECTEDSTATE, etc.)
+- `text` - Message text
+
+**Example:**
+
+```java
+import at.rocworks.oa4j.jni.ErrPrio;
+import at.rocworks.oa4j.jni.ErrCode;
+
+WinCCOA.log(ErrPrio.PRIO_WARNING, ErrCode.NOERR, "Temperature exceeded threshold");
+```
+
+---
+
+## Complete Examples
+
+### Example 1: Read and Write
+
+```java
+import at.rocworks.oa4j.WinCCOA;
+import at.rocworks.oa4j.var.*;
+
+public class ReadWriteExample {
+    public static void main(String[] args) throws Exception {
+        WinCCOA oa = WinCCOA.connect(args);
+
+        try {
+            // Read a value
+            FloatVar currentTemp = (FloatVar) oa.dpGet("Device1.temperature");
+            System.out.println("Current temperature: " + currentTemp.getValue());
+
+            // Write a value
+            oa.dpSet("Device1.setpoint", 25.0);
+
+            // Write multiple values
+            oa.dpSet()
+                .add("Device1.temperature", 22.5)
+                .add("Device1.pressure", 1.013)
+                .add("Device1.active", true)
+                .send();
+
+            WinCCOA.log("Read/Write operations completed");
+
+        } finally {
+            oa.disconnect();
+        }
+    }
+}
+```
+
+---
+
+### Example 2: Monitoring Changes
+
+```java
+import at.rocworks.oa4j.WinCCOA;
+import at.rocworks.oa4j.base.JDpConnect;
+import at.rocworks.oa4j.var.FloatVar;
+
+public class MonitoringExample {
+    public static void main(String[] args) throws Exception {
+        WinCCOA oa = WinCCOA.connect(args);
+
+        try {
+            // Monitor temperature changes
+            JDpConnect tempMonitor = oa.dpConnect()
+                .add("Device1.temperature")
+                .action(hlg -> {
+                    hlg.forEach(item -> {
+                        FloatVar temp = (FloatVar) item.getVariable();
+                        double value = temp.getValue();
+
+                        if (value > 30.0) {
+                            WinCCOA.logError("Temperature too high: " + value);
+                        } else {
+                            WinCCOA.log("Temperature: " + value);
+                        }
+                    });
+                })
+                .connect();
+
+            // Keep running
+            WinCCOA.log("Monitoring started. Press Ctrl+C to stop.");
+            Thread.sleep(Long.MAX_VALUE);
+
+        } finally {
+            oa.disconnect();
+        }
+    }
+}
+```
+
+---
+
+### Example 3: Querying and Processing
+
+```java
+import at.rocworks.oa4j.WinCCOA;
+import at.rocworks.oa4j.base.JDpMsgAnswer;
+import at.rocworks.oa4j.base.JDpVCItem;
+import at.rocworks.oa4j.var.FloatVar;
+
+public class QueryExample {
+    public static void main(String[] args) throws Exception {
+        WinCCOA oa = WinCCOA.connect(args);
+
+        try {
+            // Find all temperature sensors
+            JDpMsgAnswer answer = oa.dpQuery(
+                "SELECT '_online.._value' FROM 'Sensor_*.temperature'"
+            ).await();
+
+            double sum = 0;
+            int count = 0;
+
+            for (JDpVCItem item : answer) {
+                FloatVar temp = (FloatVar) item.getVariable();
+                sum += temp.getValue();
+                count++;
+                System.out.println(item.getDpName() + ": " + temp.getValue());
+            }
+
+            if (count > 0) {
+                double average = sum / count;
+                System.out.println("Average temperature: " + average);
+            }
+
+        } finally {
+            oa.disconnect();
+        }
+    }
+}
+```
+
+---
+
+### Example 4: Historical Data Analysis
+
+```java
+import at.rocworks.oa4j.WinCCOA;
+import at.rocworks.oa4j.base.JDpMsgAnswer;
+import at.rocworks.oa4j.base.JDpVCItem;
+import at.rocworks.oa4j.var.FloatVar;
+
+public class HistoricalDataExample {
+    public static void main(String[] args) throws Exception {
+        WinCCOA oa = WinCCOA.connect(args);
+
+        try {
+            // Get last 24 hours of data
+            long now = System.currentTimeMillis();
+            long dayAgo = now - (24 * 3600 * 1000);
+
+            JDpMsgAnswer answer = oa.dpGetPeriod(dayAgo, now, 0)
+                .add("Sensor1.temperature:_offline.._value")
+                .await();
+
+            double min = Double.MAX_VALUE;
+            double max = Double.MIN_VALUE;
+            double sum = 0;
+            int count = 0;
+
+            for (JDpVCItem item : answer) {
+                FloatVar temp = (FloatVar) item.getVariable();
+                double value = temp.getValue();
+
+                min = Math.min(min, value);
+                max = Math.max(max, value);
+                sum += value;
+                count++;
+            }
+
+            System.out.println("Statistics for last 24 hours:");
+            System.out.println("  Samples: " + count);
+            System.out.println("  Minimum: " + min);
+            System.out.println("  Maximum: " + max);
+            System.out.println("  Average: " + (sum / count));
+
+        } finally {
+            oa.disconnect();
+        }
+    }
+}
+```
+
+---
+
+### Example 5: Multi-Device Control
+
+```java
+import at.rocworks.oa4j.WinCCOA;
+import at.rocworks.oa4j.base.JDpConnect;
+import at.rocworks.oa4j.var.BitVar;
+
+public class MultiDeviceControl {
+
+    private static WinCCOA oa;
+
+    public static void main(String[] args) throws Exception {
+        oa = WinCCOA.connect(args);
+
+        try {
+            // Get all devices
+            String[] devices = oa.dpNames("Device_*");
+            System.out.println("Found " + devices.length + " devices");
+
+            // Initialize all devices
+            for (String device : devices) {
+                oa.dpSet()
+                    .add(device + ".active", true)
+                    .add(device + ".mode", "AUTO")
+                    .add(device + ".setpoint", 25.0)
+                    .send();
+            }
+
+            // Monitor all device states
+            JDpConnect stateMonitor = oa.dpConnect();
+            for (String device : devices) {
+                stateMonitor.add(device + ".alarm");
+            }
+            stateMonitor
+                .action(hlg -> {
+                    hlg.forEach(item -> {
+                        BitVar alarm = (BitVar) item.getVariable();
+                        if (alarm.getValue()) {
+                            handleAlarm(item.getDpName());
+                        }
+                    });
+                })
+                .connect();
+
+            WinCCOA.log("Multi-device control active");
+            Thread.sleep(Long.MAX_VALUE);
+
+        } finally {
+            oa.disconnect();
+        }
+    }
+
+    private static void handleAlarm(String dpName) {
+        WinCCOA.logError("ALARM: " + dpName);
+
+        // Extract device name
+        String device = dpName.substring(0, dpName.indexOf('.'));
+
+        // Take corrective action
+        oa.dpSet(device + ".mode", "SAFE");
+    }
+}
+```
+
+---
+
+## Best Practices
+
+1. **Always Disconnect:** Use try-finally blocks to ensure `disconnect()` is called
+
+```java
+WinCCOA oa = WinCCOA.connect(args);
+try {
+    // Your code
+} finally {
+    oa.disconnect();
+}
+```
+
+2. **Check for Null:** Always check if `dpGet()` returns null
+
+```java
+Variable value = oa.dpGet("SomeDP.");
+if (value != null) {
+    // Process value
+}
+```
+
+3. **Use Type Checking:** Verify variable types before casting
+
+```java
+Variable value = oa.dpGet("SomeDP.");
+if (value instanceof FloatVar) {
+    FloatVar fv = (FloatVar) value;
+    // ...
+}
+```
+
+4. **Keep Callbacks Fast:** Hotlink callbacks should execute quickly
+
+```java
+// Good - fast processing
+oa.dpConnect()
+    .add("DP.")
+    .action(hlg -> System.out.println("Changed!"))
+    .connect();
+
+// Bad - slow processing blocks event loop
+oa.dpConnect()
+    .add("DP.")
+    .action(hlg -> {
+        Thread.sleep(10000);  // DON'T DO THIS
+    })
+    .connect();
+```
+
+5. **Use Batch Operations:** Write multiple values in one call
+
+```java
+// Good - single operation
+oa.dpSet()
+    .add("DP1.", 1)
+    .add("DP2.", 2)
+    .add("DP3.", 3)
+    .send();
+
+// Less efficient - three separate operations
+oa.dpSet("DP1.", 1);
+oa.dpSet("DP2.", 2);
+oa.dpSet("DP3.", 3);
+```
+
+6. **Use Logging:** Use WinCC OA logging instead of System.out
+
+```java
+// Good
+WinCCOA.log("Application started");
+
+// Less good
+System.out.println("Application started");
+```
+
+---
+
+## Related Classes Reference
+
+| Class | Package | Purpose |
+|-------|---------|---------|
+| `WinCCOA` | at.rocworks.oa4j | Main API class |
+| `JDpGet` | at.rocworks.oa4j.base | Builder for reading datapoints |
+| `JDpSet` | at.rocworks.oa4j.base | Builder for writing datapoints |
+| `JDpConnect` | at.rocworks.oa4j.base | Builder for subscribing to changes |
+| `JDpQuery` | at.rocworks.oa4j.base | Builder for queries |
+| `JDpGetPeriod` | at.rocworks.oa4j.base | Builder for historical data |
+| `JAlertConnect` | at.rocworks.oa4j.base | Builder for alert subscriptions |
+| `JDpMsgAnswer` | at.rocworks.oa4j.base | Response container |
+| `JDpVCItem` | at.rocworks.oa4j.base | Individual value/change item |
+| `JDpHLGroup` | at.rocworks.oa4j.base | Group of hotlink items |
+| `Variable` | at.rocworks.oa4j.var | Base class for all variables |
+| `FloatVar` | at.rocworks.oa4j.var | Float variable |
+| `IntegerVar` | at.rocworks.oa4j.var | Integer variable |
+| `TextVar` | at.rocworks.oa4j.var | Text variable |
+| `BitVar` | at.rocworks.oa4j.var | Boolean variable |
+| `TimeVar` | at.rocworks.oa4j.var | Time variable |
+| `DynVar` | at.rocworks.oa4j.var | Dynamic array base |
+| `ErrPrio` | at.rocworks.oa4j.jni | Error priority enumeration |
+| `ErrCode` | at.rocworks.oa4j.jni | Error code enumeration |
