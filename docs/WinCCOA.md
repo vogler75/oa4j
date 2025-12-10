@@ -5,7 +5,7 @@ The `WinCCOA` class provides a simplified, unified API for interacting with WinC
 ## Quick Start
 
 ```java
-import at.rocworks.oa4j.base.WinCCOA;
+import at.rocworks.oa4j.WinCCOA;
 import at.rocworks.oa4j.var.Variable;
 
 public class MyApp {
@@ -470,7 +470,7 @@ oa.removeRedundancyStateListener(callback);
 ## Complete Example
 
 ```java
-import at.rocworks.oa4j.base.WinCCOA;
+import at.rocworks.oa4j.WinCCOA;
 import at.rocworks.oa4j.var.*;
 
 public class CompleteExample {
