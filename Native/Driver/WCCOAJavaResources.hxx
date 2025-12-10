@@ -6,7 +6,11 @@
 //  - Interpret commandline and read config file
 //  - Be an interface to internal datapoints
 
+#include <map>
+#include <string>
 #include <DrvRsrce.hxx>
+
+using namespace std;
 
 class WCCOAJavaResources : public DrvRsrce
 {

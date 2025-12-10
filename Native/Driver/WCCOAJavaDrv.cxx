@@ -54,7 +54,7 @@ void WCCOAJavaDrv::javaInitialize(JNIEnv *env, jobject obj)
 
 	//----------------------------------------------------------------------------
 	javaManagerClass = env->FindClass(ManagerClassName);
-	if (javaManagerClass == nil) {
+	if (javaManagerClass == nullptr) {
 		std::cout << "class " << ManagerClassName << " not found" << std::endl;
 	}
 }
@@ -362,7 +362,7 @@ VariableType WCCOAJavaDrv::JavaTransformationGetVariableType(jobject jtrans)
 	return VariableType(type);
 }
 
-PVSSboolean WCCOAJavaDrv::JavaTransformationToPeriph(jobject jtrans, PVSSchar *buffer, PVSSuint len, const Variable &var, const PVSSuint subix)
+PVSSboolean WCCOAJavaDrv::JavaTransformationToPeriph(jobject jtrans, PVSSchar *buffer, PVSSushort len, const Variable &var, const PVSSushort subix)
 {
 	PVSSboolean ret = PVSS_FALSE;
 	VariablePtr ptr = VariablePtr(&var);
@@ -403,7 +403,7 @@ PVSSboolean WCCOAJavaDrv::JavaTransformationToPeriph(jobject jtrans, PVSSchar *b
 	return ret;
 }
 
-VariablePtr WCCOAJavaDrv::JavaTransformationToVar(jobject jtrans, const PVSSchar *buffer, const PVSSuint dlen, const PVSSuint subix)
+VariablePtr WCCOAJavaDrv::JavaTransformationToVar(jobject jtrans, const PVSSchar *buffer, const PVSSushort dlen, const PVSSushort subix)
 {
 	jclass cls = g_env->GetObjectClass(jtrans);
 	jmethodID jm = g_env->GetMethodID(cls, "toVar", "([BII)Lat/rocworks/oa4j/var/Variable;");

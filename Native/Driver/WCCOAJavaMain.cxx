@@ -151,7 +151,7 @@ int main(int argc, char **argv)
 	vm_args.ignoreUnrecognized = false;     // invalid options make the JVM init fail 
 
 	jint rc = JNI_CreateJavaVM(&jvm, (void**)&env, &vm_args);
-	delete options;    // we then no longer need the initialisation options. 
+	delete[] options;    // we then no longer need the initialisation options. 
 	if (rc != JNI_OK) {
 		exit(EXIT_FAILURE);
 	}
@@ -208,7 +208,7 @@ int main(int argc, char **argv)
 	env->SetObjectArrayElement(jargv, i, str);
 	i++;
 
-	CharString manNum = Resources::getManNum();
+	CharString manNum = CharString(Resources::getManNum());
 	str = env->NewStringUTF(manNum);
 	env->SetObjectArrayElement(jargv, i, str);
 	i++;

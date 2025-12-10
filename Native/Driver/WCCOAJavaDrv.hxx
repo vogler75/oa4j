@@ -44,8 +44,8 @@ public:
 	void         JavaTransformationDelObject(jobject jtrans);
 	int		     JavaTransformationGetSize(jobject jtrans);
 	VariableType JavaTransformationGetVariableType(jobject jtrans);
-	PVSSboolean  JavaTransformationToPeriph(jobject jtrans, PVSSchar *buffer, PVSSuint len, const Variable &var, const PVSSuint subix);
-	VariablePtr  JavaTransformationToVar(jobject jtrans, const PVSSchar *buffer, const PVSSuint dlen, const PVSSuint subix);
+	PVSSboolean  JavaTransformationToPeriph(jobject jtrans, PVSSchar *buffer, PVSSushort len, const Variable &var, const PVSSushort subix);
+	VariablePtr  JavaTransformationToVar(jobject jtrans, const PVSSchar *buffer, const PVSSushort dlen, const PVSSushort subix);
 
 private:
 	JNIEnv *g_env;
