@@ -477,12 +477,6 @@ public class ApiTestWinCCOA {
         int result = oa.dpSet()
             .add(testDp + ":_archive.._type", 45)
             .add(testDp + ":_archive.._archive", true)
-            .await().getRetCode();
-        WinCCOA.log("Archive config set: result=" + result);
-
-        Thread.sleep(1000);
-
-        result = oa.dpSet()
             .add(testDp + ":_archive.1._type", 15)
             .add(testDp + ":_archive.1._class", Variable.newDpIdentifierVar("_NGA_G_EVENT"))
             .await().getRetCode();
