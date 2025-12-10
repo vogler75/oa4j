@@ -24,6 +24,8 @@ import at.rocworks.oa4j.base.JDpQueryConnect;
 import at.rocworks.oa4j.var.*;
 
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -473,13 +475,13 @@ public class ApiTestWinCCOA {
         // _archive.1._class = "_NGA_G_EVENT" (archive on value change)
         WinCCOA.log("Configuring archive for " + testDp + "...");
 
-        // Set all archive config attributes in one dpSet call
-        int result = oa.dpSet()
-            .add(testDp + ":_archive.._type", 45)
-            .add(testDp + ":_archive.._archive", true)
-            .add(testDp + ":_archive.1._type", 15)
-            .add(testDp + ":_archive.1._class", Variable.newDpIdentifierVar("_NGA_G_EVENT"))
-            .await().getRetCode();
+        // Set all archive config attributes in one dpSetWait call using Map.Entry
+        int result = oa.dpSetWait(List.of(
+            Map.entry(testDp + ":_archive.._type", 45),
+            Map.entry(testDp + ":_archive.._archive", true),
+            Map.entry(testDp + ":_archive.1._type", 15),
+            Map.entry(testDp + ":_archive.1._class", Variable.newDpIdentifierVar("_NGA_G_EVENT"))
+        ));
         WinCCOA.log("Archive config set: result=" + result);
 
         // Wait for archive config to be applied

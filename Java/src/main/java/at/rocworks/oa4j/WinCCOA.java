@@ -24,6 +24,7 @@ import at.rocworks.oa4j.var.*;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 
 /**
@@ -289,6 +290,50 @@ public class WinCCOA {
      */
     public int dpSetWait(String dp, Object value) {
         return JClient.dpSetWait(dp, value);
+    }
+
+    /**
+     * Writes multiple datapoint values asynchronously (fire and forget).
+     *
+     * @param dps    array of datapoint names
+     * @param values array of values to write (must match length of dps)
+     * @return the JDpSet instance (already sent)
+     * @throws IllegalArgumentException if arrays have different lengths
+     */
+    public JDpSet dpSet(String[] dps, Object[] values) {
+        return JClient.dpSet(dps, values);
+    }
+
+    /**
+     * Writes multiple datapoint values synchronously and waits for confirmation.
+     *
+     * @param dps    array of datapoint names
+     * @param values array of values to write (must match length of dps)
+     * @return 0 on success, non-zero on failure
+     * @throws IllegalArgumentException if arrays have different lengths
+     */
+    public int dpSetWait(String[] dps, Object[] values) {
+        return JClient.dpSetWait(dps, values);
+    }
+
+    /**
+     * Writes multiple datapoint values asynchronously (fire and forget).
+     *
+     * @param pairs list of datapoint name and value pairs
+     * @return the JDpSet instance (already sent)
+     */
+    public JDpSet dpSet(List<Map.Entry<String, Object>> pairs) {
+        return JClient.dpSet(pairs);
+    }
+
+    /**
+     * Writes multiple datapoint values synchronously and waits for confirmation.
+     *
+     * @param pairs list of datapoint name and value pairs
+     * @return 0 on success, non-zero on failure
+     */
+    public int dpSetWait(List<Map.Entry<String, Object>> pairs) {
+        return JClient.dpSetWait(pairs);
     }
 
     // ========== Datapoint Subscriptions ==========

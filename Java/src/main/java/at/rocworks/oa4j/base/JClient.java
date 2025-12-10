@@ -23,6 +23,7 @@ import at.rocworks.oa4j.var.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Static utility class providing the main API for WinCC OA datapoint operations.
@@ -234,6 +235,72 @@ public class JClient {
      */
     public static int dpSetWait(String dp, Object var) {
         return dpSet(dp, var).await().getRetCode();
+    }
+
+    /**
+     * Writes multiple datapoint values asynchronously (fire and forget).
+     *
+     * @param dps    array of datapoint names
+     * @param values array of values to write (must match length of dps)
+     * @return the JDpSet instance (already sent)
+     * @throws IllegalArgumentException if arrays have different lengths
+     */
+    public static JDpSet dpSet(String[] dps, Object[] values) {
+        if (dps.length != values.length) {
+            throw new IllegalArgumentException("Arrays must have same length: dps=" + dps.length + ", values=" + values.length);
+        }
+        JDpSet builder = new JDpSet();
+        for (int i = 0; i < dps.length; i++) {
+            builder.add(dps[i], Variable.newVariable(values[i]));
+        }
+        return builder.send();
+    }
+
+    /**
+     * Writes multiple datapoint values synchronously and waits for confirmation.
+     *
+     * @param dps    array of datapoint names
+     * @param values array of values to write (must match length of dps)
+     * @return return code (0 = success)
+     * @throws IllegalArgumentException if arrays have different lengths
+     */
+    public static int dpSetWait(String[] dps, Object[] values) {
+        if (dps.length != values.length) {
+            throw new IllegalArgumentException("Arrays must have same length: dps=" + dps.length + ", values=" + values.length);
+        }
+        JDpSet builder = new JDpSet();
+        for (int i = 0; i < dps.length; i++) {
+            builder.add(dps[i], Variable.newVariable(values[i]));
+        }
+        return builder.await().getRetCode();
+    }
+
+    /**
+     * Writes multiple datapoint values asynchronously (fire and forget).
+     *
+     * @param pairs list of datapoint name and value pairs
+     * @return the JDpSet instance (already sent)
+     */
+    public static JDpSet dpSet(List<Map.Entry<String, Object>> pairs) {
+        JDpSet builder = new JDpSet();
+        for (Map.Entry<String, Object> pair : pairs) {
+            builder.add(pair.getKey(), Variable.newVariable(pair.getValue()));
+        }
+        return builder.send();
+    }
+
+    /**
+     * Writes multiple datapoint values synchronously and waits for confirmation.
+     *
+     * @param pairs list of datapoint name and value pairs
+     * @return return code (0 = success)
+     */
+    public static int dpSetWait(List<Map.Entry<String, Object>> pairs) {
+        JDpSet builder = new JDpSet();
+        for (Map.Entry<String, Object> pair : pairs) {
+            builder.add(pair.getKey(), Variable.newVariable(pair.getValue()));
+        }
+        return builder.await().getRetCode();
     }
 
     // ========== dpConnect ==========
